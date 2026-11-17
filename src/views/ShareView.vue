@@ -33,6 +33,8 @@ let buildToken = 0
 let buildTimer = null
 function rebuild() {
   clearTimeout(buildTimer)
+  // invalidate any build still running for the previous selection
+  const mine = ++buildToken
   prepared.value = null
   error.value = ''
   if (nothingSelected.value) {
@@ -41,7 +43,6 @@ function rebuild() {
   }
   preparing.value = true
   buildTimer = setTimeout(async () => {
-    const mine = ++buildToken
     try {
       const selection = {
         zineIds: [...sel.zineIds],

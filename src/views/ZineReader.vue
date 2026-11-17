@@ -29,6 +29,8 @@ function onKey(e) {
 }
 
 onMounted(async () => {
+  // added before any await, so onBeforeUnmount always removes it
+  window.addEventListener('keydown', onKey)
   zine.value = await getZine(props.id)
   if (!zine.value) {
     notFound.value = true
@@ -36,7 +38,6 @@ onMounted(async () => {
   }
   settings.lastZineId = props.id
   pages.value = await listPages(props.id)
-  window.addEventListener('keydown', onKey)
 })
 onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 </script>

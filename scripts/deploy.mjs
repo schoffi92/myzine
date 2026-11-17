@@ -1,7 +1,7 @@
 /*
  * Build on this machine and publish dist/ to the server over SSH.
  *
- *   npm run deploy               check git â†’ build â†’ verify â†’ upload â†’ switch
+ *   npm run deploy               check git → build → verify → upload → switch
  *   npm run deploy -- --dry-run  everything except upload/switch
  *   npm run deploy -- --force    skip the git checks (quick test deploys)
  *   npm run deploy -- --skip-build   deploy the existing dist/ (still verified)
@@ -9,7 +9,7 @@
  *
  * Server layout (DEPLOY_PATH):
  *   releases/<YYYYMMDD-HHMMSS>-<commit>/   one folder per deploy (last DEPLOY_KEEP kept)
- *   current â†’ releases/â€¦                   symlink, switched atomically; nginx root
+ *   current → releases/…                   symlink, switched atomically; nginx root
  *
  * Settings come from the local, git-ignored .env (see .env.example):
  *   DEPLOY_HOST=user@server   DEPLOY_PATH=/var/www/myzine
@@ -114,7 +114,7 @@ if (FORCE) {
 /* ---------- 2. build (vite + pre-render; exits non-zero unless every page rendered) ---------- */
 if (SKIP_BUILD) log('--skip-build: using existing dist/')
 else {
-  log('buildingâ€¦')
+  log('building…')
   await run('npm', ['run', 'build']).catch(() => fail('build or pre-rendering failed; nothing was uploaded.'))
 }
 
@@ -154,7 +154,7 @@ if (DRY) {
 
 /* ---------- 5. upload + 6. unpack, switch, prune ---------- */
 try {
-  log(`uploading to ${HOST}â€¦`)
+  log(`uploading to ${HOST}…`)
   await remote(`mkdir -p ${q(REMOTE)}/releases`)
   await run('scp', [...scpArgs, '-q', tarball, `${HOST}:${REMOTE}/releases/${release}.tar.gz`])
   await remote(`

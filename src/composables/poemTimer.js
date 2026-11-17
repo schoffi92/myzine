@@ -85,7 +85,8 @@ let audioCtx = null
 let ringInterval = null
 let ringTimeout = null
 let titleInterval = null
-const originalTitle = document.title
+// the page's own title while the alarm flashes "Time's up" in the tab
+let pageTitle = null
 
 function unlockAudio() {
   try {
@@ -121,9 +122,13 @@ function startAlarm() {
   ringInterval = setInterval(beepPattern, 1200)
   ringTimeout = setTimeout(stopAlarm, ALARM_MAX_MS)
   navigator.vibrate?.([400, 200, 400, 200, 400])
+  const alarmTitle = () => `⏰ ${t('writing.timed.timesUp')}`
+  pageTitle = document.title
   let flip = false
   titleInterval = setInterval(() => {
-    document.title = (flip = !flip) ? `⏰ ${t('writing.timed.timesUp')}` : originalTitle
+    // navigating while it rings sets a new page title: remember that one
+    if (document.title !== alarmTitle() && document.title !== pageTitle) pageTitle = document.title
+    document.title = (flip = !flip) ? alarmTitle() : pageTitle
   }, 1000)
 }
 
@@ -132,7 +137,8 @@ export function stopAlarm() {
   clearInterval(ringInterval)
   clearInterval(titleInterval)
   clearTimeout(ringTimeout)
-  document.title = originalTitle
+  if (pageTitle !== null) document.title = pageTitle // only if the alarm changed it
+  pageTitle = null
   navigator.vibrate?.(0)
 }
 

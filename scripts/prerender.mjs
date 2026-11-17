@@ -26,7 +26,19 @@ const log = (...a) => console.log('[prerender]', ...a)
 
 /* ---------- 1. app shell ---------- */
 const shellPath = path.join(DIST, 'app.html')
-await copyFile(path.join(DIST, 'index.html'), shellPath)
+const indexPath = path.join(DIST, 'index.html')
+// Fresh from `vite build`, index.html is the empty shell. After a previous
+// pre-render it is the rendered home page, so it must not become app.html again
+// (re-running this script alone, e.g. to retry, would break app-only pages).
+const isShell = (html) => /<div id="app"><\/div>/.test(html)
+if (isShell(await readFile(indexPath, 'utf8'))) {
+  await copyFile(indexPath, shellPath)
+} else if (!existsSync(shellPath) || !isShell(await readFile(shellPath, 'utf8'))) {
+  log('ERROR: dist/ was already pre-rendered and has no clean app.html; run "npm run build".')
+  process.exit(1)
+} else {
+  log('dist/ was already pre-rendered: keeping the existing app.html')
+}
 const shell = await readFile(shellPath)
 
 /* ---------- site URL from config (same .env files `vite build` reads) ---------- */

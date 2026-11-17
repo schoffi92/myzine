@@ -35,12 +35,28 @@ export function openDB() {
     }
     req.onsuccess = () => {
       const db = req.result
-      // If another tab upgrades the schema, close so it isn't blocked.
-      db.onversionchange = () => db.close()
+      // If another tab upgrades the schema, close so it isn't blocked, and
+      // forget the connection so the next call opens a fresh one.
+      db.onversionchange = () => {
+        db.close()
+        dbPromise = null
+      }
+      db.onclose = () => {
+        dbPromise = null
+      }
       resolve(db)
     }
-    req.onerror = () => reject(req.error)
-    req.onblocked = () => reject(new Error('Database upgrade blocked — close other MyZine tabs.'))
+    req.onerror = () => {
+      dbPromise = null // allow a retry instead of failing forever
+      reject(
+        req.error?.name === 'VersionError'
+          ? new Error('MyZine was updated in another tab. Reload this page.')
+          : req.error,
+      )
+    }
+    // Another tab still has the old version open. Don't fail: the open
+    // continues by itself once that tab closes its connection (see onversionchange).
+    req.onblocked = () => console.warn('MyZine: waiting for other tabs to close the old database')
   })
   return dbPromise
 }

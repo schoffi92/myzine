@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
 import CardBoard from '../components/CardBoard.vue'
@@ -64,7 +64,11 @@ async function startOver() {
   if (!confirm(t('writing.story.confirmClear'))) return
   clearTimeout(saveTimer)
   saveTimer = null
+  // pause autosave while resetting, or the watcher re-saves an empty draft
+  loaded.value = false
   Object.assign(story, blankStory())
+  await nextTick()
+  loaded.value = true
   await deleteStory()
 }
 

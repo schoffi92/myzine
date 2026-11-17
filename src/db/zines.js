@@ -179,9 +179,21 @@ export async function importAll(data) {
   const images = await Promise.all(
     (data.images || []).map(async (img) => ({ id: img.id, blob: await (await fetch(img.dataURL)).blob() })),
   )
+  // An imported zine replaces the local copy of that zine: pages that are no
+  // longer in the backup (deleted on the other device) are removed too.
+  const incoming = data.pages || []
+  const keepPages = new Set(incoming.map((p) => p.id))
+  const keepImages = new Set(incoming.map((p) => p.imageId).filter(Boolean))
+  const stale = (await Promise.all(data.zines.map((z) => listPages(z.id))))
+    .flat()
+    .filter((p) => !keepPages.has(p.id))
   await transaction(['zines', 'pages', 'images', 'drafts'], 'readwrite', (s) => {
+    for (const p of stale) {
+      s.pages.delete(p.id)
+      if (p.imageId && !keepImages.has(p.imageId)) s.images.delete(p.imageId)
+    }
     for (const z of data.zines) s.zines.put(z)
-    for (const p of data.pages || []) s.pages.put(p)
+    for (const p of incoming) s.pages.put(p)
     for (const i of images) s.images.put(i)
     for (const d of data.drafts || []) s.drafts.put(d)
   })

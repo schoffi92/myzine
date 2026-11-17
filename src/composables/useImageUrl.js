@@ -23,6 +23,9 @@ export function useImageUrl(idRef) {
     { immediate: true },
   )
 
-  onBeforeUnmount(revoke)
+  onBeforeUnmount(() => {
+    token++ // a load still in flight must not create a URL nobody revokes
+    revoke()
+  })
   return url
 }

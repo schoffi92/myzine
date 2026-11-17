@@ -11,11 +11,14 @@ watch(
   () => settings.locale,
   async (locale) => {
     const load = loaders[`./${locale}.js`]
+    let next = en
     try {
-      texts.value = load ? (await load()).default : en
+      if (load) next = (await load()).default
     } catch {
-      texts.value = en
+      /* keep English */
     }
+    // a quicker switch to another language may have finished first
+    if (settings.locale === locale) texts.value = next
   },
   { immediate: true },
 )
