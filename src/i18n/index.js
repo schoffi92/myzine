@@ -36,6 +36,14 @@ function detectLocale() {
   return 'en'
 }
 
+/**
+ * Button label for use next to an <Icon>: the translation without the
+ * decorative symbols some labels carry ('Next →', '+ New zine', '🖶 Print').
+ */
+export function tl(key, params) {
+  return t(key, params).replace(/^[\s←→‹›▸▶+⤓⤒🖶✂↩]+|[\s←→‹›▸▶+⤓⤒🖶✂↩]+$/gu, '')
+}
+
 if (!messages[settings.locale]) settings.locale = detectLocale()
 
 watchEffect(() => {

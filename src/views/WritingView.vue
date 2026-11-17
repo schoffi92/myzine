@@ -1,5 +1,6 @@
 <script setup>
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from '../components/Icon.vue'
 
 const practices = [
   { to: { name: 'blackout' }, icon: '▬', key: 'writing.blackout' },
@@ -13,7 +14,7 @@ const practices = [
 
 <template>
   <section class="container prose">
-    <RouterLink :to="{ name: 'home' }" class="back">← {{ t('nav.home') }}</RouterLink>
+    <RouterLink :to="{ name: 'home' }" class="back" :title="tl('nav.home')" :aria-label="tl('nav.home')"><Icon name="arrow-left" :label="tl('nav.home')" /></RouterLink>
     <h1>{{ t('writing.title') }}</h1>
     <p class="lead">{{ t('writing.intro') }}</p>
 

@@ -1,10 +1,11 @@
 <script setup>
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from '../components/Icon.vue'
 </script>
 
 <template>
   <section class="container prose about">
-    <RouterLink :to="{ name: 'home' }" class="back">← {{ t('nav.home') }}</RouterLink>
+    <RouterLink :to="{ name: 'home' }" class="back" :title="tl('nav.home')" :aria-label="tl('nav.home')"><Icon name="arrow-left" :label="tl('nav.home')" /></RouterLink>
     <h1>{{ t('about.title') }}</h1>
 
     <div v-for="(section, si) in t('about.sections')" :key="si" class="info-block">

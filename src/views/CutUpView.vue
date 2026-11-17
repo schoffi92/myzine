@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from '../components/Icon.vue'
 import { loadDraft, saveDraft, loadDraftData, saveDraftData } from '../db/drafts'
 import { drawCards, CARD_BY_ID } from '../tarot/deck'
 import { cardText } from '../tarot'
@@ -280,7 +281,7 @@ onBeforeUnmount(() => {
 
 <template>
   <section class="container prose cutup">
-    <RouterLink :to="{ name: 'writing' }" class="back">← {{ t('writing.title') }}</RouterLink>
+    <RouterLink :to="{ name: 'writing' }" class="back" :title="tl('writing.title')" :aria-label="tl('writing.title')"><Icon name="arrow-left" :label="tl('writing.title')" /></RouterLink>
     <h1>{{ t('writing.cutup.title') }}</h1>
     <p class="lead">{{ t('writing.cutup.intro') }}</p>
 
@@ -318,7 +319,7 @@ onBeforeUnmount(() => {
       <div class="poem-foot">
         <span class="muted">{{ t('writing.timed.words', { n: wordCount }) }} · {{ t('writing.timed.savedLocally') }}</span>
         <span class="spacer" />
-        <button class="primary" :disabled="!text.trim()" @click="goToArrange">{{ t('writing.cutup.next') }}</button>
+        <button class="primary" :disabled="!text.trim()" @click="goToArrange" :title="tl('writing.cutup.next')" :aria-label="tl('writing.cutup.next')"><Icon name="arrow-right" :label="tl('writing.cutup.next')" /></button>
       </div>
       <p v-if="loaded && !text.trim()" class="muted small">{{ t('writing.cutup.needText') }}</p>
     </template>
@@ -326,7 +327,7 @@ onBeforeUnmount(() => {
     <!-- ============ Step 2 ============ -->
     <template v-else-if="arr">
       <div class="step2-bar">
-        <button class="ghost" @click="backToWriting">{{ t('writing.cutup.back') }}</button>
+        <button class="ghost" @click="backToWriting" :title="tl('writing.cutup.back')" :aria-label="tl('writing.cutup.back')"><Icon name="arrow-left" :label="tl('writing.cutup.back')" /></button>
       </div>
 
       <div v-if="textChanged" class="notice">
@@ -412,13 +413,13 @@ onBeforeUnmount(() => {
             >✕</button>
           </li>
         </ol>
-        <button class="ghost" @click="addLine">{{ t('writing.cutup.addLine') }}</button>
+        <button class="ghost" @click="addLine" :title="tl('writing.cutup.addLine')" :aria-label="tl('writing.cutup.addLine')"><Icon name="plus" :label="tl('writing.cutup.addLine')" /></button>
       </div>
 
       <!-- Result -->
       <div v-if="poemText" class="panel result">
         <pre class="poem-preview">{{ poemText }}</pre>
-        <button class="primary" @click="copyPoem">{{ copied ? '✓ ' + t('writing.cutup.copied') : t('writing.cutup.copy') }}</button>
+        <button class="primary" @click="copyPoem" :title="copied ? tl('writing.cutup.copied') : tl('writing.cutup.copy')" :aria-label="copied ? tl('writing.cutup.copied') : tl('writing.cutup.copy')"><Icon :name="copied ? 'check' : 'copy'" :label="copied ? tl('writing.cutup.copied') : tl('writing.cutup.copy')" /></button>
       </div>
     </template>
   </section>

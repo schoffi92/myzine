@@ -59,6 +59,7 @@ export default {
     notImage: 'Choisis un fichier image.',
     preview: 'Aperçu',
     noPages: 'Ce zine n’a aucune page.',
+    choosePage: 'Choisir une page',
     notFound: 'Ce zine n’existe pas dans ce navigateur.',
     back: '← Retour à tes zines',
   },

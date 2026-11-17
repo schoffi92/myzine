@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from '../components/Icon.vue'
 import { loadDraft, saveDraft, deleteDraft } from '../db/drafts'
 import TarotHelper from '../components/TarotHelper.vue'
 import TimerPanel from '../components/TimerPanel.vue'
@@ -45,7 +46,7 @@ onBeforeUnmount(() => {
 
 <template>
   <section class="container prose timed">
-    <RouterLink :to="{ name: 'writing' }" class="back">← {{ t('writing.title') }}</RouterLink>
+    <RouterLink :to="{ name: 'writing' }" class="back" :title="tl('writing.title')" :aria-label="tl('writing.title')"><Icon name="arrow-left" :label="tl('writing.title')" /></RouterLink>
     <h1>{{ t('writing.timed.title') }}</h1>
     <p class="lead">{{ t('writing.timed.intro') }}</p>
 
@@ -70,7 +71,7 @@ onBeforeUnmount(() => {
     <div class="poem-foot">
       <span class="muted">{{ t('writing.timed.words', { n: words }) }} · {{ t('writing.timed.savedLocally') }}</span>
       <span class="spacer" />
-      <button class="ghost danger" :disabled="!text" @click="clearText">{{ t('writing.timed.clear') }}</button>
+      <button class="ghost danger" :disabled="!text" @click="clearText" :title="tl('writing.timed.clear')" :aria-label="tl('writing.timed.clear')"><Icon name="trash" :label="tl('writing.timed.clear')" /></button>
     </div>
   </section>
 </template>

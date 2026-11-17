@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from '../components/Icon.vue'
 import { loadDraftData, saveDraftData, deleteDraft } from '../db/drafts'
 
 const ID = 'mosaic' // IndexedDB drafts id
@@ -143,7 +144,7 @@ onBeforeUnmount(() => {
 
 <template>
   <section class="container prose mosaic">
-    <RouterLink :to="{ name: 'writing' }" class="back">← {{ t('writing.title') }}</RouterLink>
+    <RouterLink :to="{ name: 'writing' }" class="back" :title="tl('writing.title')" :aria-label="tl('writing.title')"><Icon name="arrow-left" :label="tl('writing.title')" /></RouterLink>
     <h1>{{ t('writing.mosaic.title') }}</h1>
     <p class="lead">{{ t('writing.mosaic.intro') }}</p>
 
@@ -210,7 +211,7 @@ onBeforeUnmount(() => {
           <p class="muted small count">{{ t('writing.mosaic.words', { n: countWords(tile.text) }) }}</p>
         </div>
 
-        <button class="primary" @click="addTile">{{ t('writing.mosaic.addTile') }}</button>
+        <button class="primary" @click="addTile" :title="tl('writing.mosaic.addTile')" :aria-label="tl('writing.mosaic.addTile')"><Icon name="plus" :label="tl('writing.mosaic.addTile')" /></button>
         <p class="muted small">
           {{ t('writing.mosaic.tilesCount', { n: filledTiles.length }) }} · {{ t('writing.mosaic.words', { n: totalWords }) }}
         </p>
@@ -268,19 +269,19 @@ onBeforeUnmount(() => {
               <p>{{ tile.text.trim() }}</p>
             </article>
           </template>
-          <button class="primary" @click="copyStory">
-            {{ copied ? '✓ ' + t('writing.mosaic.copied') : t('writing.mosaic.copy') }}
+          <button class="primary" @click="copyStory" :title="copied ? tl('writing.mosaic.copied') : tl('writing.mosaic.copy')" :aria-label="copied ? tl('writing.mosaic.copied') : tl('writing.mosaic.copy')">
+            <Icon :name="copied ? 'check' : 'copy'" :label="copied ? tl('writing.mosaic.copied') : tl('writing.mosaic.copy')" />
           </button>
         </template>
         <p v-else class="muted">{{ t('writing.mosaic.empty') }}</p>
       </div>
 
       <div class="step-nav">
-        <button v-if="state.step > 1" class="ghost" @click="go(state.step - 1)">{{ t('writing.mosaic.back') }}</button>
+        <button v-if="state.step > 1" class="ghost" @click="go(state.step - 1)" :title="tl('writing.mosaic.back')" :aria-label="tl('writing.mosaic.back')"><Icon name="arrow-left" :label="tl('writing.mosaic.back')" /></button>
         <span class="spacer" />
-        <button class="ghost danger" @click="startOver">{{ t('writing.mosaic.clear') }}</button>
-        <button v-if="state.step < 4" class="primary" :disabled="state.step + 1 > maxStep" @click="go(state.step + 1)">
-          {{ t('writing.mosaic.next') }}
+        <button class="ghost danger" @click="startOver" :title="tl('writing.mosaic.clear')" :aria-label="tl('writing.mosaic.clear')"><Icon name="trash" :label="tl('writing.mosaic.clear')" /></button>
+        <button v-if="state.step < 4" class="primary" :disabled="state.step + 1 > maxStep" @click="go(state.step + 1)" :title="tl('writing.mosaic.next')" :aria-label="tl('writing.mosaic.next')">
+          <Icon name="arrow-right" :label="tl('writing.mosaic.next')" />
         </button>
       </div>
     </template>

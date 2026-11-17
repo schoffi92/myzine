@@ -3,7 +3,8 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import ZinePage from '../components/ZinePage.vue'
 import { getZine, listPages, ZINE_PAGE_COUNT } from '../db/zines'
 import { settings } from '../composables/settings'
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from '../components/Icon.vue'
 
 const props = defineProps({ id: { type: String, required: true } })
 
@@ -78,7 +79,7 @@ const print = () => window.print()
         <input v-model="showGuides" type="checkbox" />
         {{ t('print.guides') }}
       </label>
-      <button class="primary" :disabled="!zine" @click="print">🖶 {{ t('print.print') }}</button>
+      <button class="primary" :disabled="!zine" @click="print" :title="tl('print.print')" :aria-label="tl('print.print')"><Icon name="printer" :label="tl('print.print')" /></button>
     </div>
 
     <p v-if="notFound" class="error no-print">{{ t('editor.notFound') }}</p>

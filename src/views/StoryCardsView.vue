@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from '../components/Icon.vue'
 import CardBoard from '../components/CardBoard.vue'
 import {
   BOARD_COLORS, blankStory, loadStory, saveStory, deleteStory, uid, chapterTitle, chapterDesc,
@@ -83,10 +84,10 @@ onBeforeUnmount(() => {
 
 <template>
   <section class="container story">
-    <RouterLink :to="{ name: 'writing' }" class="back">← {{ t('writing.title') }}</RouterLink>
+    <RouterLink :to="{ name: 'writing' }" class="back" :title="tl('writing.title')" :aria-label="tl('writing.title')"><Icon name="arrow-left" :label="tl('writing.title')" /></RouterLink>
     <div class="story__head">
       <h1>{{ t('writing.story.title') }}</h1>
-      <RouterLink :to="{ name: 'story-print' }" class="btn">{{ t('writing.story.print') }}</RouterLink>
+      <RouterLink :to="{ name: 'story-print' }" class="btn" :title="tl('writing.story.print')" :aria-label="tl('writing.story.print')"><Icon name="printer" :label="tl('writing.story.print')" /></RouterLink>
     </div>
     <p class="lead prose-w">{{ t('writing.story.intro') }}</p>
 
@@ -137,7 +138,7 @@ onBeforeUnmount(() => {
             </div>
           </li>
         </ol>
-        <button class="primary" @click="addChapter">{{ t('writing.story.addChapter') }}</button>
+        <button class="primary" @click="addChapter" :title="tl('writing.story.addChapter')" :aria-label="tl('writing.story.addChapter')"><Icon name="plus" :label="tl('writing.story.addChapter')" /></button>
       </div>
 
       <!-- ============ Step 2: characters & worlds ============ -->
@@ -210,11 +211,11 @@ onBeforeUnmount(() => {
       </template>
 
       <div class="step-nav">
-        <button v-if="story.step > 1" class="ghost" @click="go(story.step - 1)">{{ t('writing.story.back') }}</button>
+        <button v-if="story.step > 1" class="ghost" @click="go(story.step - 1)" :title="tl('writing.story.back')" :aria-label="tl('writing.story.back')"><Icon name="arrow-left" :label="tl('writing.story.back')" /></button>
         <span class="spacer" />
-        <button class="ghost danger" @click="startOver">{{ t('writing.story.clear') }}</button>
-        <button v-if="story.step < 3" class="primary" @click="go(story.step + 1)">{{ t('writing.story.next') }}</button>
-        <RouterLink v-else :to="{ name: 'story-print' }" class="btn primary">{{ t('writing.story.print') }}</RouterLink>
+        <button class="ghost danger" @click="startOver" :title="tl('writing.story.clear')" :aria-label="tl('writing.story.clear')"><Icon name="trash" :label="tl('writing.story.clear')" /></button>
+        <button v-if="story.step < 3" class="primary" @click="go(story.step + 1)" :title="tl('writing.story.next')" :aria-label="tl('writing.story.next')"><Icon name="arrow-right" :label="tl('writing.story.next')" /></button>
+        <RouterLink v-else :to="{ name: 'story-print' }" class="btn primary" :title="tl('writing.story.print')" :aria-label="tl('writing.story.print')"><Icon name="printer" :label="tl('writing.story.print')" /></RouterLink>
       </div>
     </template>
   </section>

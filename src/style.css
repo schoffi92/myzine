@@ -430,3 +430,39 @@ input[type='color'] { padding: 2px; width: 40px; height: 36px; }
   }
   .icon-btn { padding: 0.5em; }
 }
+
+/* ---------- Reader bar on phones ---------- */
+.reader__bar h1 { min-width: 0; } /* let long zine titles shrink to "…" instead of pushing buttons off-screen */
+.btn-ico {
+  width: 1.15em;
+  height: 1.15em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .hide-mobile { display: none; }
+  .reader__bar { gap: 0.2rem; }
+  .reader__bar .btn,
+  .reader__bar button { padding: 0.45em 0.6em; }
+}
+
+/* ---------- Editor: page dropdown on phones ---------- */
+.page-select { display: none; width: 100%; font-weight: 600; }
+@media (max-width: 640px) {
+  .pages ol { display: none; }
+  .page-select { display: block; margin-bottom: 0.25rem; }
+}
+
+/* ---------- Icon buttons: icon + label on desktop, icon only on phones ---------- */
+.back { display: inline-flex; align-items: center; gap: 0.35em; }
+@media (max-width: 640px) {
+  .btn-label { display: none; }
+  .back { font-size: 1.15rem; padding: 0.2rem 0.1rem; }
+  button:has(> .btn-ico),
+  .btn:has(> .btn-ico) { padding: 0.5em 0.7em; }
+  .big:has(> .btn-ico) { padding: 0.6em 1em; }
+}

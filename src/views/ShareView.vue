@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, shallowRef } from 'vue'
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from '../components/Icon.vue'
 import { listZines } from '../db/zines'
 import { countDrafts } from '../db/drafts'
 import { buildShareFiles, canShareFiles, shareFile, downloadFile, pickAndImportBackup } from '../composables/backup'
@@ -87,7 +88,7 @@ onMounted(async () => {
 
 <template>
   <section class="container prose share">
-    <RouterLink :to="{ name: 'home' }" class="back">← {{ t('nav.home') }}</RouterLink>
+    <RouterLink :to="{ name: 'home' }" class="back" :title="tl('nav.home')" :aria-label="tl('nav.home')"><Icon name="arrow-left" :label="tl('nav.home')" /></RouterLink>
     <h1>{{ t('share.title') }}</h1>
     <p class="lead">{{ t('share.intro') }}</p>
 

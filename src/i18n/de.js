@@ -59,6 +59,7 @@ export default {
     notImage: 'Bitte wähle eine Bilddatei.',
     preview: 'Vorschau',
     noPages: 'Dieses Zine hat keine Seiten.',
+    choosePage: 'Seite wählen',
     notFound: 'Dieses Zine existiert in diesem Browser nicht.',
     back: '← Zurück zu deinen Zines',
   },

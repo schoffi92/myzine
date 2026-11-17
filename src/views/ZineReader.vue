@@ -3,7 +3,8 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import ZinePage from '../components/ZinePage.vue'
 import { getZine, listPages } from '../db/zines'
 import { settings } from '../composables/settings'
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from '../components/Icon.vue'
 
 const props = defineProps({ id: { type: String, required: true } })
 
@@ -53,8 +54,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
       <span class="spacer" />
       <button class="ghost" :title="t('reader.smaller')" @click="font(-2)">A−</button>
       <button class="ghost" :title="t('reader.larger')" @click="font(2)">A+</button>
-      <RouterLink class="btn ghost" :to="{ name: 'print', params: { id } }">🖶 {{ t('print.button') }}</RouterLink>
-      <RouterLink class="btn" :to="{ name: 'edit', params: { id } }">{{ t('reader.edit') }}</RouterLink>
+      <RouterLink class="btn ghost" :to="{ name: 'print', params: { id } }" :title="t('print.button')" :aria-label="t('print.button')">
+        <svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2M6 14h12v7H6z" /></svg>
+        <span class="hide-mobile">{{ t('print.button') }}</span>
+      </RouterLink>
+      <RouterLink class="btn" :to="{ name: 'edit', params: { id } }" :title="tl('reader.edit')" :aria-label="tl('reader.edit')"><Icon name="pencil" :label="tl('reader.edit')" /></RouterLink>
     </div>
 
     <p v-if="!pages.length" class="empty">{{ t('reader.empty') }}</p>
@@ -63,9 +67,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
         <ZinePage :key="current.id" :page="current" :accent="zine.color" :font-size="settings.readerFontSize" class="reader__page" />
       </Transition>
       <div class="reader__nav">
-        <button :disabled="index === 0" @click="go(-1)">{{ t('reader.prev') }}</button>
+        <button :disabled="index === 0" @click="go(-1)" :title="tl('reader.prev')" :aria-label="tl('reader.prev')"><Icon name="chevron-left" :label="tl('reader.prev')" /></button>
         <span class="muted">{{ index + 1 }} / {{ pages.length }}</span>
-        <button :disabled="index === pages.length - 1" @click="go(1)">{{ t('reader.next') }}</button>
+        <button :disabled="index === pages.length - 1" @click="go(1)" :title="tl('reader.next')" :aria-label="tl('reader.next')"><Icon name="chevron-right" :label="tl('reader.next')" /></button>
       </div>
     </template>
   </section>

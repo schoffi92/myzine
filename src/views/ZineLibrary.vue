@@ -5,7 +5,8 @@ import { listZines, createZine, deleteZine } from '../db/zines'
 import { downloadBackup, pickAndImportBackup } from '../composables/backup'
 import { storageEstimate } from '../db/idb'
 import { settings } from '../composables/settings'
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from '../components/Icon.vue'
 
 const router = useRouter()
 const zines = ref([])
@@ -51,7 +52,7 @@ onMounted(refresh)
 
 <template>
   <section class="container">
-    <RouterLink :to="{ name: 'home' }" class="back">← {{ t('nav.home') }}</RouterLink>
+    <RouterLink :to="{ name: 'home' }" class="back" :title="tl('nav.home')" :aria-label="tl('nav.home')"><Icon name="arrow-left" :label="tl('nav.home')" /></RouterLink>
     <div class="hero">
       <h1>{{ t('library.title') }}</h1>
       <p class="muted">{{ t('library.intro') }}</p>
@@ -59,7 +60,7 @@ onMounted(refresh)
 
     <form class="create" @submit.prevent="create">
       <input v-model="newTitle" :placeholder="t('library.placeholder')" maxlength="80" />
-      <button type="submit" class="primary">{{ t('library.new') }}</button>
+      <button type="submit" class="primary" :title="tl('library.new')" :aria-label="tl('library.new')"><Icon name="plus" :label="tl('library.new')" /></button>
     </form>
 
     <p v-if="lastZine" class="continue">
@@ -81,10 +82,10 @@ onMounted(refresh)
             {{ t('library.pages', { n: z.pageCount }) }} · {{ t('library.edited', { date: fmt(z.updatedAt) }) }}
           </p>
           <div class="actions">
-            <RouterLink class="btn" :to="{ name: 'read', params: { id: z.id } }">{{ t('library.read') }}</RouterLink>
-            <RouterLink class="btn" :to="{ name: 'edit', params: { id: z.id } }">{{ t('library.edit') }}</RouterLink>
-            <RouterLink class="btn" :to="{ name: 'print', params: { id: z.id } }">{{ t('print.button') }}</RouterLink>
-            <button class="ghost danger" @click="remove(z)">{{ t('library.delete') }}</button>
+            <RouterLink class="btn" :to="{ name: 'read', params: { id: z.id } }" :title="tl('library.read')" :aria-label="tl('library.read')"><Icon name="book" :label="tl('library.read')" /></RouterLink>
+            <RouterLink class="btn" :to="{ name: 'edit', params: { id: z.id } }" :title="tl('library.edit')" :aria-label="tl('library.edit')"><Icon name="pencil" :label="tl('library.edit')" /></RouterLink>
+            <RouterLink class="btn" :to="{ name: 'print', params: { id: z.id } }" :title="tl('print.button')" :aria-label="tl('print.button')"><Icon name="printer" :label="tl('print.button')" /></RouterLink>
+            <button class="ghost danger" @click="remove(z)" :title="tl('library.delete')" :aria-label="tl('library.delete')"><Icon name="trash" :label="tl('library.delete')" /></button>
           </div>
         </div>
       </li>
@@ -93,8 +94,8 @@ onMounted(refresh)
     <footer class="data-bar">
       <span class="muted">{{ usage ? t('library.usage', usage) : '' }}</span>
       <span class="spacer" />
-      <button class="ghost" @click="downloadBackup">{{ t('library.export') }}</button>
-      <button class="ghost" @click="pickAndImportBackup">{{ t('library.import') }}</button>
+      <button class="ghost" @click="downloadBackup" :title="tl('library.export')" :aria-label="tl('library.export')"><Icon name="download" :label="tl('library.export')" /></button>
+      <button class="ghost" @click="pickAndImportBackup" :title="tl('library.import')" :aria-label="tl('library.import')"><Icon name="upload" :label="tl('library.import')" /></button>
     </footer>
   </section>
 </template>

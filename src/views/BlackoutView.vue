@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from '../components/Icon.vue'
 
 const revealed = ref(false)
 
@@ -26,7 +27,7 @@ const poem = computed(() =>
 
 <template>
   <section class="container prose">
-    <RouterLink :to="{ name: 'writing' }" class="back">← {{ t('writing.title') }}</RouterLink>
+    <RouterLink :to="{ name: 'writing' }" class="back" :title="tl('writing.title')" :aria-label="tl('writing.title')"><Icon name="arrow-left" :label="tl('writing.title')" /></RouterLink>
     <h1>{{ t('writing.blackout.title') }}</h1>
     <p class="lead">{{ t('writing.blackout.intro') }}</p>
 

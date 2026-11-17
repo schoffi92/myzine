@@ -59,6 +59,7 @@ export default {
     notImage: 'Elige un archivo de imagen.',
     preview: 'Vista previa',
     noPages: 'Este fanzine no tiene páginas.',
+    choosePage: 'Elegir página',
     notFound: 'Este fanzine no existe en este navegador.',
     back: '← Volver a tus fanzines',
   },

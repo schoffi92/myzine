@@ -3,7 +3,8 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import ZinePage from '../components/ZinePage.vue'
 import { settings } from '../composables/settings'
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from '../components/Icon.vue'
 import { getZine, updateZine, listPages, updatePage, swapPages, saveImage, deleteImage } from '../db/zines'
 
 const props = defineProps({ id: { type: String, required: true } })
@@ -124,8 +125,11 @@ onBeforeRouteLeave(() => flush())
       <span class="status" :class="status">
         {{ status === 'saving' ? t('editor.saving') : status === 'error' ? t('editor.saveFailed') : t('editor.saved') }}
       </span>
-      <RouterLink class="btn" :to="{ name: 'print', params: { id } }">🖶 {{ t('print.button') }}</RouterLink>
-      <RouterLink class="btn primary" :to="{ name: 'read', params: { id } }">{{ t('editor.read') }}</RouterLink>
+      <RouterLink class="btn" :to="{ name: 'print', params: { id } }" :title="t('print.button')" :aria-label="t('print.button')">
+        <svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2M6 14h12v7H6z" /></svg>
+        <span class="hide-mobile">{{ t('print.button') }}</span>
+      </RouterLink>
+      <RouterLink class="btn primary" :to="{ name: 'read', params: { id } }" :title="tl('editor.read')" :aria-label="tl('editor.read')"><Icon name="book" :label="tl('editor.read')" /></RouterLink>
     </div>
     <textarea v-model="zine.description" class="desc-input" rows="1" :placeholder="t('editor.description')" @input="saveZine" />
 
@@ -145,6 +149,17 @@ onBeforeRouteLeave(() => flush())
             </span>
           </li>
         </ol>
+        <!-- Phones: a dropdown instead of the list of page buttons -->
+        <select
+          class="page-select"
+          :value="selectedId"
+          :aria-label="t('editor.choosePage')"
+          @change="flush(); selectedId = $event.target.value"
+        >
+          <option v-for="(p, i) in pages" :key="p.id" :value="p.id">
+            {{ i + 1 }} · {{ slotLabel(i) }}{{ p.title.trim() ? ` — ${p.title.trim()}` : '' }}
+          </option>
+        </select>
       </aside>
 
       <div v-if="page" class="page-form">
@@ -159,11 +174,11 @@ onBeforeRouteLeave(() => flush())
         </div>
         <textarea v-model="page.body" rows="12" :placeholder="t('editor.body')" @input="savePage()" />
         <div class="row">
-          <label class="btn">
-            {{ page.imageId ? t('editor.replaceImage') : t('editor.addImage') }}
+          <label class="btn" :title="tl(page.imageId ? 'editor.replaceImage' : 'editor.addImage')" :aria-label="tl(page.imageId ? 'editor.replaceImage' : 'editor.addImage')">
+            <Icon name="image" :label="tl(page.imageId ? 'editor.replaceImage' : 'editor.addImage')" />
             <input type="file" accept="image/*" hidden @change="onImage" />
           </label>
-          <button v-if="page.imageId" class="ghost" @click="removeImage">{{ t('editor.removeImage') }}</button>
+          <button v-if="page.imageId" class="ghost" @click="removeImage" :title="tl('editor.removeImage')" :aria-label="tl('editor.removeImage')"><Icon name="x" :label="tl('editor.removeImage')" /></button>
           <span class="spacer" />
           <button class="ghost" :disabled="pageIndex <= 0" :title="t('editor.moveUp')" @click="move(-1)">↑</button>
           <button class="ghost" :disabled="pageIndex >= pages.length - 1" :title="t('editor.moveDown')" @click="move(1)">↓</button>

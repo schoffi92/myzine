@@ -1,5 +1,6 @@
 <script setup>
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from './Icon.vue'
 import { status, mmss, progress, ringing, start, pause, reset, stopAlarm } from '../composables/poemTimer'
 
 // Route name of the practice using this panel; the timer links back here when it rings.
@@ -11,10 +12,10 @@ const props = defineProps({ owner: { type: String, required: true } })
     <div class="timer__clock" role="timer" aria-live="off">{{ mmss }}</div>
     <div class="timer__bar"><span /></div>
     <div class="timer__buttons">
-      <button v-if="status === 'idle'" class="primary big" @click="start(props.owner)">▶ {{ t('writing.timed.start') }}</button>
-      <button v-else-if="status === 'running'" class="big" @click="pause">❚❚ {{ t('writing.timed.pause') }}</button>
-      <button v-else-if="status === 'paused'" class="primary big" @click="start(props.owner)">▶ {{ t('writing.timed.resume') }}</button>
-      <button v-if="status !== 'idle'" class="ghost" @click="reset">↺ {{ t('writing.timed.reset') }}</button>
+      <button v-if="status === 'idle'" class="primary big" @click="start(props.owner)" :title="tl('writing.timed.start')" :aria-label="tl('writing.timed.start')"><Icon name="play" :label="tl('writing.timed.start')" /></button>
+      <button v-else-if="status === 'running'" class="big" @click="pause" :title="tl('writing.timed.pause')" :aria-label="tl('writing.timed.pause')"><Icon name="pause" :label="tl('writing.timed.pause')" /></button>
+      <button v-else-if="status === 'paused'" class="primary big" @click="start(props.owner)" :title="tl('writing.timed.resume')" :aria-label="tl('writing.timed.resume')"><Icon name="play" :label="tl('writing.timed.resume')" /></button>
+      <button v-if="status !== 'idle'" class="ghost" @click="reset" :title="tl('writing.timed.reset')" :aria-label="tl('writing.timed.reset')"><Icon name="reset" :label="tl('writing.timed.reset')" /></button>
     </div>
   </div>
 

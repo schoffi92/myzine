@@ -59,6 +59,7 @@ export default {
     notImage: 'Válassz egy képfájlt.',
     preview: 'Előnézet',
     noPages: 'Ennek a zine-nak nincsenek oldalai.',
+    choosePage: 'Oldal kiválasztása',
     notFound: 'Ez a zine nem létezik ebben a böngészőben.',
     back: '← Vissza a zine-jaidhoz',
   },

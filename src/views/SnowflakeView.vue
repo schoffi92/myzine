@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from '../components/Icon.vue'
 import { loadDraftData, saveDraftData, deleteDraft } from '../db/drafts'
 
 const ID = 'snowflake' // IndexedDB drafts id
@@ -87,7 +88,7 @@ onBeforeUnmount(() => {
 
 <template>
   <section class="container prose snowflake">
-    <RouterLink :to="{ name: 'writing' }" class="back">← {{ t('writing.title') }}</RouterLink>
+    <RouterLink :to="{ name: 'writing' }" class="back" :title="tl('writing.title')" :aria-label="tl('writing.title')"><Icon name="arrow-left" :label="tl('writing.title')" /></RouterLink>
     <h1>❄ {{ t('writing.snowflake.title') }}</h1>
     <p class="lead">{{ t('writing.snowflake.intro') }}</p>
 
@@ -137,19 +138,19 @@ onBeforeUnmount(() => {
         <blockquote class="seed">{{ state.one }}</blockquote>
         <template v-if="finalParagraphs.length">
           <p v-for="(p, i) in finalParagraphs" :key="i" class="final-p">{{ p }}</p>
-          <button class="primary" @click="copyText">
-            {{ copied ? '✓ ' + t('writing.snowflake.copied') : t('writing.snowflake.copy') }}
+          <button class="primary" @click="copyText" :title="copied ? tl('writing.snowflake.copied') : tl('writing.snowflake.copy')" :aria-label="copied ? tl('writing.snowflake.copied') : tl('writing.snowflake.copy')">
+            <Icon :name="copied ? 'check' : 'copy'" :label="copied ? tl('writing.snowflake.copied') : tl('writing.snowflake.copy')" />
           </button>
         </template>
         <p v-else class="muted">{{ t('writing.snowflake.empty') }}</p>
       </div>
 
       <div class="step-nav">
-        <button v-if="state.step > 1" class="ghost" @click="go(state.step - 1)">{{ t('writing.snowflake.back') }}</button>
+        <button v-if="state.step > 1" class="ghost" @click="go(state.step - 1)" :title="tl('writing.snowflake.back')" :aria-label="tl('writing.snowflake.back')"><Icon name="arrow-left" :label="tl('writing.snowflake.back')" /></button>
         <span class="spacer" />
-        <button class="ghost danger" @click="startOver">{{ t('writing.snowflake.clear') }}</button>
-        <button v-if="state.step < 4" class="primary" :disabled="!canNext" @click="go(state.step + 1)">
-          {{ t('writing.snowflake.next') }}
+        <button class="ghost danger" @click="startOver" :title="tl('writing.snowflake.clear')" :aria-label="tl('writing.snowflake.clear')"><Icon name="trash" :label="tl('writing.snowflake.clear')" /></button>
+        <button v-if="state.step < 4" class="primary" :disabled="!canNext" @click="go(state.step + 1)" :title="tl('writing.snowflake.next')" :aria-label="tl('writing.snowflake.next')">
+          <Icon name="arrow-right" :label="tl('writing.snowflake.next')" />
         </button>
       </div>
     </template>

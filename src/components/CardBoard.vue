@@ -1,6 +1,7 @@
 <script setup>
 import { nextTick } from 'vue'
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from './Icon.vue'
 import { uid } from '../composables/storyCards'
 
 /*
@@ -57,7 +58,7 @@ function moveNote(col, j, dir) {
         <p v-if="!col.notes.length" class="col__empty">{{ t('writing.story.emptyColumn') }}</p>
       </div>
 
-      <button v-if="!readonly" class="ghost add-note" @click="addNote(col, ci)">{{ t('writing.story.addNote') }}</button>
+      <button v-if="!readonly" class="ghost add-note" @click="addNote(col, ci)" :title="tl('writing.story.addNote')" :aria-label="tl('writing.story.addNote')"><Icon name="plus" :label="tl('writing.story.addNote')" /></button>
     </div>
 
     <slot name="after" />

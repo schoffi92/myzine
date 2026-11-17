@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
-import { t } from '../i18n'
+import { t, tl } from '../i18n'
+import Icon from '../components/Icon.vue'
 import { BOARD_COLORS, loadStory, chapterTitle, chapterDesc } from '../composables/storyCards'
 
 const story = ref(null)
@@ -56,7 +57,7 @@ const printPage = () => window.print()
       <label><input v-model="include.chapters" type="checkbox" /> {{ t('writing.story.steps')[2] }}</label>
       <label><input v-model="include.characters" type="checkbox" /> {{ t('writing.story.characters') }}</label>
       <label><input v-model="include.worlds" type="checkbox" /> {{ t('writing.story.worlds') }}</label>
-      <button class="primary" :disabled="!sections.length" @click="printPage">🖶 {{ t('writing.story.printBtn') }}</button>
+      <button class="primary" :disabled="!sections.length" @click="printPage" :title="tl('writing.story.printBtn')" :aria-label="tl('writing.story.printBtn')"><Icon name="printer" :label="tl('writing.story.printBtn')" /></button>
     </div>
     <p class="muted no-print hint">{{ t('writing.story.printHint') }}</p>
 

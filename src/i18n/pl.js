@@ -59,6 +59,7 @@ export default {
     notImage: 'Wybierz plik graficzny.',
     preview: 'Podgląd',
     noPages: 'Ten zin nie ma stron.',
+    choosePage: 'Wybierz stronę',
     notFound: 'Ten zin nie istnieje w tej przeglądarce.',
     back: '← Wróć do swoich zinów',
   },
