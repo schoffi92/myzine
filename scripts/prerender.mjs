@@ -148,13 +148,33 @@ const browser = await puppeteer.launch({
 })
 log(`using ${path.basename(executablePath)} (timeout ${TIMEOUT} ms)`)
 
+/**
+ * Render one page. A watchdog makes sure a hung browser call (e.g. opening a
+ * tab) also ends in an error that says which step it was stuck on.
+ */
 async function renderOnce(url) {
+  const state = { stage: 'start', context: null }
+  let timer
+  const watchdog = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`stuck at "${state.stage}" for ${TIMEOUT + 15000} ms`)), TIMEOUT + 15000)
+  })
+  try {
+    return await Promise.race([renderSteps(url, state), watchdog])
+  } finally {
+    clearTimeout(timer)
+    await state.context?.close().catch(() => {})
+  }
+}
+
+async function renderSteps(url, state) {
   // fresh profile per page: no stored language preference, English browser
-  const context = await browser.createBrowserContext()
+  state.stage = 'new browser context'
+  const context = (state.context = await browser.createBrowserContext())
   // for the error message: what the page was still waiting for, and what broke
   const pending = new Set()
   const problems = []
   try {
+    state.stage = 'new tab'
     const page = await context.newPage()
     page.setDefaultTimeout(TIMEOUT)
     page.on('pageerror', (e) => problems.push(`page error: ${e.message}`))
@@ -167,6 +187,7 @@ async function renderOnce(url) {
       }
     })
     // images/fonts/media don't change the HTML; skipping them makes pages settle faster
+    state.stage = 'request interception'
     await page.setRequestInterception(true)
     page.on('request', (req) => {
       if (['image', 'font', 'media'].includes(req.resourceType())) return req.abort()
@@ -175,21 +196,23 @@ async function renderOnce(url) {
     })
     // 'load' + waiting for the rendered heading, instead of 'networkidle0',
     // which can time out when the server is slow to go fully quiet
+    state.stage = 'loading the page'
     await page.goto(origin + url, { waitUntil: 'load', timeout: TIMEOUT })
+    state.stage = 'waiting for the app to render'
     await page.waitForFunction(
       (expected) => location.pathname === expected && document.querySelector('#app h1'),
       { timeout: TIMEOUT },
       url,
     )
     // let lazy chunks (translations, tarot texts) finish; don't fail if it never fully settles
+    state.stage = 'waiting for lazy chunks'
     await page.waitForNetworkIdle({ idleTime: 300, timeout: 5000 }).catch(() => {})
+    state.stage = 'reading the HTML'
     return '<!doctype html>\n' + (await page.evaluate(() => document.documentElement.outerHTML))
   } catch (err) {
     const detail = [...[...pending].map((u) => `still loading: ${u}`), ...problems]
-    err.message += detail.length ? '\n    ' + detail.slice(0, 8).join('\n    ') : ''
+    err.message += ` [step: ${state.stage}]` + (detail.length ? '\n    ' + detail.slice(0, 8).join('\n    ') : '')
     throw err
-  } finally {
-    await context.close().catch(() => {})
   }
 }
 
@@ -201,8 +224,10 @@ try {
       const url = localizedPath(locale, p)
       let html = null
       for (let attempt = 1; attempt <= RETRIES && !html; attempt++) {
+        const started = Date.now()
         try {
           html = await renderOnce(url)
+          log(`(${count + failed + 1}/${LOCALES.length * PUBLIC_PATHS.length}) ${url}  ${Date.now() - started} ms`)
         } catch (err) {
           log(`${attempt < RETRIES ? 'retrying' : 'FAILED'} ${url} (attempt ${attempt}): ${err.message}`)
         }

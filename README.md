@@ -20,6 +20,7 @@ Site-specific settings live in a local `.env` file (not committed). Copy
 | Variable | Used for |
 |---|---|
 | `VITE_SITE_URL` | Public URL without trailing slash, e.g. `https://example.com`. Used for canonical URLs, `hreflang` links, link previews and `sitemap.xml`. Without it, the app uses its current address and the build skips pre-rendering and the sitemap. |
+| `DEPLOY_HOST`, `DEPLOY_PATH` | SSH login (`user@server`) and folder on the server for `npm run deploy` (see Hosting). Optional: `DEPLOY_PORT`, `DEPLOY_KEEP` (releases kept, default 5). |
 
 ## Run
 
@@ -60,10 +61,35 @@ Deploy the contents of `dist/`. The server must serve pre-rendered pages and
 fall back to the app shell (`app.html`) for everything else. For nginx:
 
 ```nginx
+root /var/www/myzine/current;   # with npm run deploy (below)
+
 location / {
     try_files $uri $uri/index.html /app.html;
 }
 ```
+
+### Publishing with `npm run deploy`
+
+Builds and pre-renders on your machine, then publishes over SSH. The server
+only serves static files (no Node or Chrome needed there).
+
+1. Add to `.env`: `DEPLOY_HOST=user@server` and `DEPLOY_PATH=/var/www/myzine`
+   (optional: `DEPLOY_PORT`, `DEPLOY_KEEP`). Set up SSH key login.
+2. Point nginx `root` at `$DEPLOY_PATH/current` and reload nginx.
+3. Deploy:
+
+```sh
+npm run deploy                  # git check → build → verify → upload → switch
+npm run deploy -- --dry-run     # everything except upload
+npm run deploy -- --force       # skip the git checks (main, clean, pushed)
+npm run deploy -- --skip-build  # publish the existing dist/
+npm run deploy:rollback         # switch back to the previous release
+```
+
+Each deploy goes to `releases/<date>-<commit>/` and the `current` symlink is
+switched in one step, so visitors never see a half-uploaded site. The last 5
+releases are kept. Nothing is uploaded unless every public page was
+pre-rendered.
 
 `robots.txt` and `sitemap.xml` are not in the repository (see `.gitignore`).
 The build generates `sitemap.xml`; `robots.txt` is copied from a local
