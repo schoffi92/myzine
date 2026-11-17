@@ -95,6 +95,10 @@ export default {
     intro: 'Rövid gyakorlatok bemelegítésnek, mielőtt megtöltesz egy zine-t.',
     soon: 'Hamarosan újabb gyakorlatok érkeznek.',
     open: 'Kezdjük',
+    sections: {
+      poems: { title: 'Versek', desc: 'Szavak keresése, játék a véletlennel, gyors írás.' },
+      novels: { title: 'Regények és történetek', desc: 'Cselekmény építése, szereplők és világok, fejezetek tervezése.' },
+    },
     blackout: {
       title: 'Blackout-vers',
       card: 'Találd meg a verset, amely egy oldalnyi idegen szöveg között rejtőzik.',

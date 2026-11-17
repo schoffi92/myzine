@@ -95,6 +95,10 @@ export default {
     intro: 'Kurze Übungen zum Aufwärmen, bevor du ein Zine füllst.',
     soon: 'Weitere Übungen folgen bald.',
     open: 'Los geht’s',
+    sections: {
+      poems: { title: 'Gedichte', desc: 'Wörter finden, mit dem Zufall spielen und schnell schreiben.' },
+      novels: { title: 'Romane & Geschichten', desc: 'Eine Handlung wachsen lassen, Figuren und Welten bauen, Kapitel planen.' },
+    },
     blackout: {
       title: 'Blackout-Poesie',
       card: 'Finde ein Gedicht, das in einer Seite fremder Worte verborgen ist.',

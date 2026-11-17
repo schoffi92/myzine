@@ -95,6 +95,10 @@ export default {
     intro: 'Ejercicios breves para calentar antes de llenar un fanzine.',
     soon: 'Pronto habrá más prácticas.',
     open: 'Empezar',
+    sections: {
+      poems: { title: 'Poemas', desc: 'Encuentra palabras, juega con el azar y escribe rápido.' },
+      novels: { title: 'Novelas y relatos', desc: 'Haz crecer una trama, crea personajes y mundos, planifica capítulos.' },
+    },
     blackout: {
       title: 'Poesía blackout',
       card: 'Encuentra un poema escondido en una página de palabras ajenas.',

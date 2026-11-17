@@ -95,6 +95,10 @@ export default {
     intro: 'Krótkie ćwiczenia na rozgrzewkę przed wypełnieniem zina.',
     soon: 'Wkrótce pojawią się kolejne ćwiczenia.',
     open: 'Zaczynamy',
+    sections: {
+      poems: { title: 'Wiersze', desc: 'Szukaj słów, baw się przypadkiem i pisz szybko.' },
+      novels: { title: 'Powieści i opowiadania', desc: 'Rozwijaj fabułę, twórz postacie i światy, planuj rozdziały.' },
+    },
     blackout: {
       title: 'Wiersz blackout',
       card: 'Odkryj wiersz ukryty na stronie cudzych słów.',

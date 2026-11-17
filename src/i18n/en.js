@@ -95,6 +95,10 @@ export default {
     intro: 'Short exercises to warm up before you fill a zine.',
     soon: 'More practices coming soon.',
     open: 'Start',
+    sections: {
+      poems: { title: 'Poems', desc: 'Find words, play with chance and write fast.' },
+      novels: { title: 'Novels & stories', desc: 'Grow a plot, build characters and worlds, plan chapters.' },
+    },
     blackout: {
       title: 'Blackout poetry',
       card: 'Find a poem hidden inside a page of someone else’s words.',

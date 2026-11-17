@@ -95,6 +95,10 @@ export default {
     intro: 'De courts exercices pour s’échauffer avant de remplir un zine.',
     soon: 'D’autres exercices arrivent bientôt.',
     open: 'Commencer',
+    sections: {
+      poems: { title: 'Poèmes', desc: 'Trouver des mots, jouer avec le hasard et écrire vite.' },
+      novels: { title: 'Romans & récits', desc: 'Faire grandir une intrigue, créer personnages et mondes, planifier les chapitres.' },
+    },
     blackout: {
       title: 'Poésie caviardée',
       card: 'Trouve un poème caché dans une page écrite par quelqu’un d’autre.',
