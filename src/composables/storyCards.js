@@ -1,0 +1,61 @@
+import { loadDraftData, saveDraftData, deleteDraft } from '../db/drafts'
+
+/*
+ * Data for the "Storytelling cards" practice, shared by the editor and the print view.
+ * Stored in IndexedDB (drafts store) under STORY_ID.
+ *
+ * chapter = { id, key: beat key | null (custom), title, desc, enabled, notes: [note] }
+ * column  = { id, name, notes: [note] }   (characters and worlds)
+ * note    = { id, text }
+ */
+
+export const STORY_ID = 'story-cards'
+export const BEATS = ['prologue', 'incident', 'doorway1', 'midpoint', 'blackmoment', 'doorway2', 'epilogue']
+export const BOARD_COLORS = { chapter: '#e85d3f', character: '#2a6fb0', world: '#3c9a5f' }
+
+let seq = 0
+export const uid = () => `s${Date.now().toString(36)}${(seq++).toString(36)}`
+
+export function blankStory() {
+  return {
+    step: 1,
+    title: '',
+    chapters: BEATS.map((key) => ({ id: uid(), key, title: '', desc: '', enabled: true, notes: [] })),
+    characters: [],
+    worlds: [],
+  }
+}
+
+const notesOf = (x) => (Array.isArray(x?.notes) ? x.notes.filter((n) => n && n.id) : [])
+
+function normalize(d) {
+  if (!d || !Array.isArray(d.chapters)) return blankStory()
+  return {
+    step: [1, 2, 3].includes(d.step) ? d.step : 1,
+    title: d.title ?? '',
+    chapters: d.chapters.map((c) => ({
+      id: c.id ?? uid(),
+      key: BEATS.includes(c.key) ? c.key : null,
+      title: c.title ?? '',
+      desc: c.desc ?? '',
+      enabled: c.enabled !== false,
+      notes: notesOf(c),
+    })),
+    characters: (d.characters ?? []).map((c) => ({ id: c.id ?? uid(), name: c.name ?? '', notes: notesOf(c) })),
+    worlds: (d.worlds ?? []).map((c) => ({ id: c.id ?? uid(), name: c.name ?? '', notes: notesOf(c) })),
+  }
+}
+
+export const loadStory = async () => normalize(await loadDraftData(STORY_ID))
+export const saveStory = (story) => saveDraftData(STORY_ID, story)
+export const deleteStory = () => deleteDraft(STORY_ID)
+
+/** Display title of a chapter: built-in beats follow the current language. */
+export function chapterTitle(ch, t) {
+  if (ch.key) return t(`writing.story.beats.${ch.key}.t`)
+  return ch.title.trim() || t('writing.story.unnamed')
+}
+
+export function chapterDesc(ch, t) {
+  return ch.key ? t(`writing.story.beats.${ch.key}.d`) : ch.desc.trim()
+}
