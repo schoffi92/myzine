@@ -99,6 +99,7 @@ export default {
       poems: { title: 'Poems', desc: 'Find words, play with chance and write fast.' },
       novels: { title: 'Novels & stories', desc: 'Grow a plot, build characters and worlds, plan chapters.' },
     },
+    difficulty: { label: 'Difficulty', levels: ['Getting started', 'Building skills', 'Skilled writer', 'Experienced writer'] },
     taboo: {
       title: 'Taboo writing',
       card: 'Bring a character to life without ever naming their traits.',

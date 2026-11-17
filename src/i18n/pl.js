@@ -99,6 +99,7 @@ export default {
       poems: { title: 'Wiersze', desc: 'Szukaj słów, baw się przypadkiem i pisz szybko.' },
       novels: { title: 'Powieści i opowiadania', desc: 'Rozwijaj fabułę, twórz postacie i światy, planuj rozdziały.' },
     },
+    difficulty: { label: 'Poziom trudności', levels: ['Pierwsze kroki', 'Rozwijanie umiejętności', 'Wprawny autor', 'Doświadczony autor'] },
     taboo: {
       title: 'Pisanie z tabu',
       card: 'Ożyw postać, nie nazywając ani razu jej cech.',

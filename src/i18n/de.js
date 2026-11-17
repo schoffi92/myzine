@@ -99,6 +99,7 @@ export default {
       poems: { title: 'Gedichte', desc: 'Wörter finden, mit dem Zufall spielen und schnell schreiben.' },
       novels: { title: 'Romane & Geschichten', desc: 'Eine Handlung wachsen lassen, Figuren und Welten bauen, Kapitel planen.' },
     },
+    difficulty: { label: 'Schwierigkeit', levels: ['Erste Schritte', 'Fähigkeiten aufbauen', 'Geübte Schreibende', 'Erfahrene Schreibende'] },
     taboo: {
       title: 'Tabu-Schreiben',
       card: 'Erwecke eine Figur zum Leben, ohne ihre Eigenschaften je zu nennen.',

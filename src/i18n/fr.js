@@ -99,6 +99,7 @@ export default {
       poems: { title: 'Poèmes', desc: 'Trouver des mots, jouer avec le hasard et écrire vite.' },
       novels: { title: 'Romans & récits', desc: 'Faire grandir une intrigue, créer personnages et mondes, planifier les chapitres.' },
     },
+    difficulty: { label: 'Difficulté', levels: ['Premiers pas', 'Gagner en aisance', 'Auteur aguerri', 'Auteur expérimenté'] },
     taboo: {
       title: 'Écriture tabou',
       card: 'Donne vie à un personnage sans jamais nommer ses traits.',

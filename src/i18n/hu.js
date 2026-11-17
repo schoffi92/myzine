@@ -99,6 +99,7 @@ export default {
       poems: { title: 'Versek', desc: 'Szavak keresése, játék a véletlennel, gyors írás.' },
       novels: { title: 'Regények és történetek', desc: 'Cselekmény építése, szereplők és világok, fejezetek tervezése.' },
     },
+    difficulty: { label: 'Nehézség', levels: ['Első lépések', 'Készségfejlesztés', 'Gyakorlott író', 'Tapasztalt író'] },
     taboo: {
       title: 'Tabuírás',
       card: 'Kelts életre egy szereplőt anélkül, hogy megneveznéd a tulajdonságait.',
