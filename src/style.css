@@ -383,3 +383,8 @@ input[type='color'] { padding: 2px; width: 40px; height: 36px; }
 }
 @media (max-width: 420px) { .icon-btn { padding: 0.3em; } }
 .icon-btn.danger-hover:hover { color: var(--danger); }
+
+/* ---------- Brand logo ---------- */
+.brand { display: inline-flex; align-items: center; gap: 0.4rem; }
+.brand__logo { width: 1.9rem; height: 1.9rem; fill: currentColor; flex-shrink: 0; }
+@media (max-width: 420px) { .brand__text { display: none; } }

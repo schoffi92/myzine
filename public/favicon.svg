@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+  <title>MyZine</title>
+  <rect width="40" height="40" rx="8" fill="#171717"/>
+  <g transform="translate(20 20) scale(1.12) translate(-20 -20)" fill="#fff">
+    <path d="M5 7 12.5 13v16L5 33Z"/>
+    <path fill-opacity=".6" d="M12.5 13 20 19v14l-7.5-4Z"/>
+    <path d="M20 19 27.5 13v16L20 33Z"/>
+    <path fill-opacity=".6" d="M27.5 13 35 7v26l-7.5-4Z"/>
+  </g>
+</svg>

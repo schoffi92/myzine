@@ -19,7 +19,16 @@ watchEffect(() => {
 
 <template>
   <header class="topbar">
-    <RouterLink to="/" class="brand">My<span>Zine</span></RouterLink>
+    <RouterLink to="/" class="brand">
+      <!-- same shapes as public/logo.svg, inlined so it follows the theme colour -->
+      <svg class="brand__logo" viewBox="0 0 40 40" aria-hidden="true">
+        <path d="M5 7 12.5 13v16L5 33Z" />
+        <path fill-opacity=".55" d="M12.5 13 20 19v14l-7.5-4Z" />
+        <path d="M20 19 27.5 13v16L20 33Z" />
+        <path fill-opacity=".55" d="M27.5 13 35 7v26l-7.5-4Z" />
+      </svg>
+      <span class="brand__text">My<span>Zine</span></span>
+    </RouterLink>
     <div class="topbar__controls">
       <RouterLink
         v-if="timerActive && !onTimerPage"
