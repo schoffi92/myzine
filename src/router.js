@@ -14,6 +14,7 @@ export const router = createRouter({
     { path: '/writing/mosaic-story', name: 'mosaic', component: () => import('./views/MosaicView.vue') },
     { path: '/writing/story-cards', name: 'story', component: () => import('./views/StoryCardsView.vue') },
     { path: '/writing/story-cards/print', name: 'story-print', component: () => import('./views/StoryPrintView.vue') },
+    { path: '/share', name: 'share', component: () => import('./views/ShareView.vue') },
     { path: '/zines', name: 'zines', component: () => import('./views/ZineLibrary.vue') },
     { path: '/storage', name: 'storage', component: () => import('./views/StorageView.vue') },
     { path: '/about', name: 'about', component: () => import('./views/AboutView.vue') },

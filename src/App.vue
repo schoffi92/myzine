@@ -39,6 +39,9 @@ watchEffect(() => {
       >
         ⏱ {{ mmss }}
       </RouterLink>
+      <RouterLink :to="{ name: 'share' }" class="btn ghost icon-btn" :title="t('share.tip')" :aria-label="t('share.tip')">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" /></svg>
+      </RouterLink>
       <button class="ghost icon-btn" :title="t('nav.exportTip')" :aria-label="t('nav.exportTip')" @click="downloadBackup">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16" /></svg>
       </button>

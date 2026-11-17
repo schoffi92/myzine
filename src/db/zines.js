@@ -137,19 +137,40 @@ const blobToDataURL = (blob) =>
     r.readAsDataURL(blob)
   })
 
-export async function exportAll() {
-  const [zines, pages, images, drafts] = await Promise.all([
+/**
+ * Build a backup object.
+ * selection: { zineIds?: string[] (default: all), includeImages = true, includeDrafts = true }
+ * Same format as a full backup, so importAll() reads both.
+ */
+export async function exportSelection({ zineIds = null, includeImages = true, includeDrafts = true } = {}) {
+  const [allZines, allPages, allImages, drafts] = await Promise.all([
     getAll('zines'),
     getAll('pages'),
     getAll('images'),
-    getAll('drafts'),
+    includeDrafts ? getAll('drafts') : [],
   ])
-  const encoded = await Promise.all(
-    images.map(async (img) => ({ id: img.id, dataURL: await blobToDataURL(img.blob) })),
-  )
+  const ids = zineIds ? new Set(zineIds) : null
+  const zines = ids ? allZines.filter((z) => ids.has(z.id)) : allZines
+  let pages = ids ? allPages.filter((p) => ids.has(p.zineId)) : allPages
+
+  let images = []
+  if (includeImages) {
+    const needed = new Set(pages.map((p) => p.imageId).filter(Boolean))
+    images = await Promise.all(
+      allImages
+        .filter((img) => needed.has(img.id))
+        .map(async (img) => ({ id: img.id, dataURL: await blobToDataURL(img.blob) })),
+    )
+  } else {
+    // no dangling references to images that aren't in the file
+    pages = pages.map((p) => ({ ...p, imageId: null }))
+  }
+
   // v2 adds `drafts` (writing-practice texts). v1 backups still import fine.
-  return { app: 'myzine', version: 2, exportedAt: new Date().toISOString(), zines, pages, images: encoded, drafts }
+  return { app: 'myzine', version: 2, exportedAt: new Date().toISOString(), zines, pages, images, drafts }
 }
+
+export const exportAll = () => exportSelection()
 
 export async function importAll(data) {
   if (data?.app !== 'myzine' || !Array.isArray(data.zines)) {
@@ -164,5 +185,5 @@ export async function importAll(data) {
     for (const i of images) s.images.put(i)
     for (const d of data.drafts || []) s.drafts.put(d)
   })
-  return data.zines.length
+  return { zines: data.zines.length, drafts: (data.drafts || []).length }
 }
