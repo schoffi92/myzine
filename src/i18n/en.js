@@ -411,6 +411,11 @@ export default {
           'I hope this gives you a better understanding of the project’s background and its original purpose. I also hope that MyZine can be of help to you.',
         ],
       },
+      {
+        h: 'GitHub',
+        p: [],
+        link: 'https://github.com/schoffi92/myzine',
+      },
     ],
   },
 }

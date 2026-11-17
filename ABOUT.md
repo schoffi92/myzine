@@ -17,3 +17,7 @@ The platform was designed to support collaborative writing and content moderatio
 Unfortunately, the project proved to be quite challenging, both technically and in terms of its overall scope. As a result, I eventually decided to scale down the original concept and transform MyZine into a platform focused on sharing writing techniques and providing tools and guidance to help people create their own zines.
 
 I hope this gives you a better understanding of the project's background and its original purpose. I also hope that MyZine can be of help to you.
+
+## GitHub
+
+https://github.com/schoffi92/myzine

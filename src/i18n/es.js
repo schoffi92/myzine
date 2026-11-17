@@ -411,6 +411,11 @@ export default {
           'Espero que esto te ayude a entender mejor el origen del proyecto y su propósito inicial. También espero que MyZine te resulte útil.',
         ],
       },
+      {
+        h: 'GitHub',
+        p: [],
+        link: 'https://github.com/schoffi92/myzine',
+      },
     ],
   },
 }

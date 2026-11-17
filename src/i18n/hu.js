@@ -411,6 +411,11 @@ export default {
           'Remélem, így jobban érted a projekt hátterét és eredeti célját. Azt is remélem, hogy a MyZine a segítségedre lehet.',
         ],
       },
+      {
+        h: 'GitHub',
+        p: [],
+        link: 'https://github.com/schoffi92/myzine',
+      },
     ],
   },
 }
