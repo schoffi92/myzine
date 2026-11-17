@@ -398,6 +398,15 @@ export default {
     mergeNote: 'Az importálás hozzáad a meglévőkhöz, és soha nem töröl semmit. Az azonos azonosítójú elemeket a fájlban lévő változat váltja fel.',
     importBtn: 'Biztonsági mentés importálása',
     importedBoth: '{z} zine és {d} írásgyakorlat-elem importálva.',
+    formatTitle: 'Formátum',
+    formatBackup: 'Biztonsági mentésfájl (.json)',
+    formatBackupHint: 'Teljes másolat képekkel együtt. A MyZine-ba újra importálható.',
+    formatMd: 'Markdown (.md)',
+    formatMdHint: 'Olvasható szöveg jegyzetalkalmazásokhoz és szerkesztőkhöz, például Obsidianhoz, Notionhöz vagy Typorához. A képek kimaradnak, és nem importálható vissza.',
+    mdExported: 'Exportálva a MyZine-ból: {date}',
+    mdImage: 'kép',
+    mdTarot: 'Tarotkártyák',
+    mdOriginal: 'Eredeti szöveg',
   },
 
   storage: {

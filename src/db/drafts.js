@@ -3,6 +3,9 @@ import { get, getAll, put, del } from './idb'
 /** Number of saved writing-practice items. */
 export const countDrafts = async () => (await getAll('drafts')).length
 
+/** All saved writing-practice records ({ id, text | data, updatedAt }). */
+export const getAllDrafts = () => getAll('drafts')
+
 /** Writing-practice drafts, stored in IndexedDB by a fixed id per practice. */
 export async function loadDraft(id) {
   return (await get('drafts', id))?.text ?? ''

@@ -4,12 +4,13 @@ import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
 import { listZines } from '../db/zines'
 import { countDrafts } from '../db/drafts'
-import { buildShareFiles, canShareFiles, shareFile, downloadFile, pickAndImportBackup } from '../composables/backup'
+import { buildShareFiles, buildMarkdownFiles, canShareFiles, shareFile, downloadFile, pickAndImportBackup } from '../composables/backup'
 
 const zines = ref([])
 const draftCount = ref(0)
 const loaded = ref(false)
-const sel = reactive({ zineIds: [], includeImages: true, includeDrafts: true })
+// format: 'backup' (JSON, importable) | 'markdown' (readable, not importable)
+const sel = reactive({ format: 'backup', zineIds: [], includeImages: true, includeDrafts: true })
 
 const prepared = shallowRef(null) // { share: File, download: File, size }
 const preparing = ref(false)
@@ -42,11 +43,12 @@ function rebuild() {
   buildTimer = setTimeout(async () => {
     const mine = ++buildToken
     try {
-      const files = await buildShareFiles({
+      const selection = {
         zineIds: [...sel.zineIds],
         includeImages: sel.includeImages,
         includeDrafts: sel.includeDrafts && draftCount.value > 0,
-      })
+      }
+      const files = sel.format === 'markdown' ? await buildMarkdownFiles(selection) : await buildShareFiles(selection)
       if (mine === buildToken) prepared.value = files
     } catch (e) {
       if (mine === buildToken) error.value = e.message
@@ -98,6 +100,26 @@ onMounted(async () => {
         <h2>1 · {{ t('share.whatTitle') }}</h2>
 
         <div class="group">
+          <strong>{{ t('share.formatTitle') }}</strong>
+          <div class="formats" role="radiogroup" :aria-label="t('share.formatTitle')">
+            <label class="toggle format" :class="{ on: sel.format === 'backup' }">
+              <input v-model="sel.format" type="radio" value="backup" name="format" />
+              <span>
+                {{ t('share.formatBackup') }}
+                <small class="muted">{{ t('share.formatBackupHint') }}</small>
+              </span>
+            </label>
+            <label class="toggle format" :class="{ on: sel.format === 'markdown' }">
+              <input v-model="sel.format" type="radio" value="markdown" name="format" />
+              <span>
+                {{ t('share.formatMd') }}
+                <small class="muted">{{ t('share.formatMdHint') }}</small>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="group">
           <div class="group__head">
             <strong>{{ t('share.zines') }}</strong>
             <span v-if="zines.length" class="group__links">
@@ -116,8 +138,8 @@ onMounted(async () => {
               </label>
             </li>
           </ul>
-          <label v-if="zines.length" class="toggle">
-            <input v-model="sel.includeImages" type="checkbox" />
+          <label v-if="zines.length" class="toggle" :class="{ disabled: sel.format === 'markdown' }">
+            <input v-model="sel.includeImages" type="checkbox" :disabled="sel.format === 'markdown'" />
             <span>
               {{ t('share.images') }}
               <small class="muted">{{ t('share.imagesHint') }}</small>
@@ -201,6 +223,10 @@ onMounted(async () => {
 .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .size { margin: 0.75rem 0 0; font-weight: 600; }
+.formats { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.4rem; }
+.format { border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 0.6rem; }
+.format.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.toggle.disabled { opacity: 0.5; cursor: default; }
 
 .send-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
 .big { font-size: 1.05rem; padding: 0.6em 1.1em; }

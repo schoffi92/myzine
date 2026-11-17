@@ -398,6 +398,15 @@ export default {
     mergeNote: 'Import dodaje do tego, co już jest, i nigdy niczego nie usuwa. Elementy o tym samym identyfikatorze zostają zastąpione wersją z pliku.',
     importBtn: 'Importuj kopię zapasową',
     importedBoth: 'Zaimportowano ziny: {z}, elementy ćwiczeń: {d}.',
+    formatTitle: 'Format',
+    formatBackup: 'Plik kopii zapasowej (.json)',
+    formatBackupHint: 'Pełna kopia razem z obrazami. Można ją ponownie zaimportować do MyZine.',
+    formatMd: 'Markdown (.md)',
+    formatMdHint: 'Czytelny tekst dla aplikacji do notatek i edytorów, takich jak Obsidian, Notion czy Typora. Obrazy są pomijane, a pliku nie można zaimportować z powrotem.',
+    mdExported: 'Wyeksportowano z MyZine {date}',
+    mdImage: 'obraz',
+    mdTarot: 'Karty tarota',
+    mdOriginal: 'Tekst oryginalny',
   },
 
   storage: {

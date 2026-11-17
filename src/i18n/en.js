@@ -398,6 +398,15 @@ export default {
     mergeNote: 'Importing adds to what is already there and never deletes anything. Items with the same ID are replaced by the version in the file.',
     importBtn: 'Import a backup file',
     importedBoth: 'Imported {z} zine(s) and {d} writing practice item(s).',
+    formatTitle: 'Format',
+    formatBackup: 'Backup file (.json)',
+    formatBackupHint: 'A complete copy, including images. It can be imported again in MyZine.',
+    formatMd: 'Markdown (.md)',
+    formatMdHint: 'Readable text for notes apps and editors such as Obsidian, Notion or Typora. Images are left out, and it can’t be imported back.',
+    mdExported: 'Exported from MyZine on {date}',
+    mdImage: 'image',
+    mdTarot: 'Tarot cards',
+    mdOriginal: 'Original text',
   },
 
   storage: {

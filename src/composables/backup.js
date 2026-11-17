@@ -37,6 +37,21 @@ export async function buildShareFiles(selection) {
   }
 }
 
+/**
+ * Markdown version of a selection, for reading/editing elsewhere (not importable).
+ * The shared copy is .txt because share menus refuse .md; the download is a real .md.
+ */
+export async function buildMarkdownFiles(selection) {
+  const { buildMarkdown } = await import('../export/markdown')
+  const text = await buildMarkdown(selection)
+  const base = `myzine-${today()}`
+  return {
+    share: new File([text], `${base}.txt`, { type: 'text/plain' }),
+    download: new File([text], `${base}.md`, { type: 'text/markdown' }),
+    size: new Blob([text]).size,
+  }
+}
+
 /** Can this browser open the system share menu with a file? */
 export function canShareFiles() {
   try {

@@ -398,6 +398,15 @@ export default {
     mergeNote: 'Beim Importieren wird nur ergänzt, nie etwas gelöscht. Einträge mit derselben ID werden durch die Version aus der Datei ersetzt.',
     importBtn: 'Sicherung importieren',
     importedBoth: '{z} Zine(s) und {d} Schreibübungs-Einträge importiert.',
+    formatTitle: 'Format',
+    formatBackup: 'Sicherungsdatei (.json)',
+    formatBackupHint: 'Eine vollständige Kopie mit Bildern. Sie kann in MyZine wieder importiert werden.',
+    formatMd: 'Markdown (.md)',
+    formatMdHint: 'Lesbarer Text für Notiz-Apps und Editoren wie Obsidian, Notion oder Typora. Bilder werden weggelassen, und die Datei kann nicht wieder importiert werden.',
+    mdExported: 'Aus MyZine exportiert am {date}',
+    mdImage: 'Bild',
+    mdTarot: 'Tarotkarten',
+    mdOriginal: 'Ursprünglicher Text',
   },
 
   storage: {

@@ -398,6 +398,15 @@ export default {
     mergeNote: 'Importar añade a lo que ya hay y nunca borra nada. Los elementos con el mismo ID se sustituyen por la versión del archivo.',
     importBtn: 'Importar una copia',
     importedBoth: 'Se importaron {z} fanzine(s) y {d} elemento(s) de prácticas de escritura.',
+    formatTitle: 'Formato',
+    formatBackup: 'Archivo de copia (.json)',
+    formatBackupHint: 'Una copia completa, con imágenes. Se puede volver a importar en MyZine.',
+    formatMd: 'Markdown (.md)',
+    formatMdHint: 'Texto legible para apps de notas y editores como Obsidian, Notion o Typora. Las imágenes no se incluyen y no se puede volver a importar.',
+    mdExported: 'Exportado de MyZine el {date}',
+    mdImage: 'imagen',
+    mdTarot: 'Cartas del tarot',
+    mdOriginal: 'Texto original',
   },
 
   storage: {
