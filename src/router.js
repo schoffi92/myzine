@@ -23,6 +23,7 @@ const views = {
   snowflake: () => import('./views/SnowflakeView.vue'),
   mosaic: () => import('./views/MosaicView.vue'),
   story: () => import('./views/StoryCardsView.vue'),
+  taboo: () => import('./views/TabooView.vue'),
   'story-print': () => import('./views/StoryPrintView.vue'),
   share: () => import('./views/ShareView.vue'),
   zines: () => import('./views/ZineLibrary.vue'),

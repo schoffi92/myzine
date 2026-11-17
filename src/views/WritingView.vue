@@ -17,6 +17,7 @@ const sections = [
       { to: { name: 'snowflake' }, icon: '❄', key: 'writing.snowflake' },
       { to: { name: 'mosaic' }, icon: '▦', key: 'writing.mosaic' },
       { to: { name: 'story' }, icon: '🂡', key: 'writing.story' },
+      { to: { name: 'taboo' }, icon: '⊘', key: 'writing.taboo' },
     ],
   },
 ]

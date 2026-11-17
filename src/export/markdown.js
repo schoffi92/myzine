@@ -155,6 +155,16 @@ function storySection(d) {
   return out.join('\n\n')
 }
 
+function tabooSection(d) {
+  const s = d.taboo?.data
+  if (!s || (!s.text?.trim() && !s.traits?.length)) return null
+  const out = [`## ${t('writing.taboo.title')}`]
+  if (s.situation?.trim()) out.push(`**${t('writing.taboo.situation')}:** ${inline(s.situation)}`)
+  if (s.traits?.length) out.push(`**${t('writing.taboo.traitsWere')}:** ${s.traits.map(inline).join(', ')}`)
+  if (s.text?.trim()) out.push(paragraphs(s.text))
+  return out.join('\n\n')
+}
+
 /* ---------- whole document ---------- */
 
 /** selection: { zineIds: string[], includeDrafts: boolean } */
@@ -168,7 +178,7 @@ export async function buildMarkdown({ zineIds = [], includeDrafts = true } = {})
 
   if (includeDrafts) {
     const d = Object.fromEntries((await getAllDrafts()).map((r) => [r.id, r]))
-    const practices = [timedSection(d), cutupSection(d), snowflakeSection(d), mosaicSection(d), storySection(d)].filter(Boolean)
+    const practices = [timedSection(d), cutupSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d)].filter(Boolean)
     if (practices.length) parts.push(`# ${tl('writing.title')}\n\n${practices.join('\n\n')}`)
   }
   return parts.join('\n\n') + '\n'
