@@ -9,12 +9,12 @@ import pl from './pl'
 
 // To add a language: create xx.js with the same keys as en.js and list it here.
 export const languages = [
-  { code: 'en', name: 'English' },
-  { code: 'de', name: 'Deutsch' },
-  { code: 'es', name: 'Español' },
-  { code: 'hu', name: 'Magyar' },
-  { code: 'fr', name: 'Français' },
-  { code: 'pl', name: 'Polski' },
+  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'hu', name: 'Magyar', flag: '🇭🇺' },
+  { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  { code: 'pl', name: 'Polski', flag: '🇵🇱' },
 ]
 const messages = { en, de, es, hu, fr, pl }
 

@@ -388,3 +388,45 @@ input[type='color'] { padding: 2px; width: 40px; height: 36px; }
 .brand { display: inline-flex; align-items: center; gap: 0.4rem; }
 .brand__logo { width: 1.9rem; height: 1.9rem; fill: currentColor; flex-shrink: 0; }
 @media (max-width: 420px) { .brand__text { display: none; } }
+
+/* ---------- Top bar: SVG select icons + icon-only layout on phones ---------- */
+.select-wrap svg.select-icon {
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 1;
+}
+.select-wrap svg.select-icon .fill { fill: currentColor; stroke: none; }
+
+@media (max-width: 640px) {
+  .topbar { padding: 0.6rem 0.75rem; gap: 0.5rem; }
+  .brand__text { display: none; }
+  .topbar__controls { gap: 0.1rem; }
+
+  /* The select stays (so the phone's own picker opens), but becomes an
+     invisible tap target laid over its icon. */
+  .select-wrap {
+    width: 2.25rem;
+    height: 2.25rem;
+    justify-content: center;
+    border-radius: 8px;
+  }
+  .select-wrap:hover,
+  .select-wrap:focus-within { background: var(--surface); }
+  .select-wrap svg.select-icon { position: static; width: 1.25rem; height: 1.25rem; }
+  .select-wrap select {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    padding: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .icon-btn { padding: 0.5em; }
+}

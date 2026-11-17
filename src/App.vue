@@ -1,10 +1,16 @@
 <script setup>
-import { computed, watchEffect } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import { settings } from './composables/settings'
 import { t, languages } from './i18n'
 import { status, mmss, ringing, stopAlarm, owner } from './composables/poemTimer'
 import { downloadBackup, pickAndImportBackup, backupAndClearAll } from './composables/backup'
+import FlagIcon from './components/FlagIcon.vue'
+
+// Same breakpoint as the icon-only top bar in style.css
+const mobileQuery = window.matchMedia('(max-width: 640px)')
+const isMobile = ref(mobileQuery.matches)
+mobileQuery.addEventListener('change', (e) => (isMobile.value = e.matches))
 
 const route = useRoute()
 const onTimerPage = computed(() => route.name === owner.value)
@@ -52,13 +58,15 @@ watchEffect(() => {
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6" /></svg>
       </button>
       <label class="select-wrap" :title="t('nav.language')">
-        <span class="select-icon" aria-hidden="true">🌐</span>
+        <svg v-if="!isMobile" class="select-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" /></svg>
+        <FlagIcon v-else :code="settings.locale" />
         <select v-model="settings.locale" :aria-label="t('nav.language')">
-          <option v-for="l in languages" :key="l.code" :value="l.code">{{ l.name }}</option>
+          <!-- flag emoji only on phones: their pickers render them; Windows doesn't -->
+          <option v-for="l in languages" :key="l.code" :value="l.code">{{ isMobile ? `${l.flag} ${l.name}` : l.name }}</option>
         </select>
       </label>
       <label class="select-wrap" :title="t('nav.theme')">
-        <span class="select-icon" aria-hidden="true">◐</span>
+        <svg class="select-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 3a9 9 0 0 1 0 18z" class="fill" /></svg>
         <select v-model="settings.theme" :aria-label="t('nav.theme')">
           <option value="system">{{ t('theme.system') }}</option>
           <option value="light">{{ t('theme.light') }}</option>
