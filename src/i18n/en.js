@@ -345,6 +345,7 @@ export default {
       s3Title: 'Step 3 · Fill the chapter grid',
       s3Help: 'Add cards to each chapter: scenes, events, lines of dialogue, images. Your characters and worlds are shown below for reference.',
       noChapters: 'No chapters chosen yet. Go back to step 1 and tick at least one.',
+      chooseChapter: 'Choose a chapter',
       cardsCount: '{n} cards',
       print: '🖶 Print layout',
       printTitle: 'Storytelling cards: print layout',

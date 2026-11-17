@@ -345,6 +345,7 @@ export default {
       s3Title: '3. lépés · Töltsd ki a fejezetrácsot',
       s3Help: 'Adj kártyákat minden fejezethez: jeleneteket, eseményeket, párbeszédsorokat, képeket. Alul a szereplőidet és világaidat is látod.',
       noChapters: 'Még nem választottál fejezetet. Lépj vissza az 1. lépéshez, és jelölj be legalább egyet.',
+      chooseChapter: 'Fejezet kiválasztása',
       cardsCount: '{n} kártya',
       print: '🖶 Elrendezés nyomtatása',
       printTitle: 'Történetmesélő kártyák: nyomtatás',

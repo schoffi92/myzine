@@ -345,6 +345,7 @@ export default {
       s3Title: 'Paso 3 · Llena la cuadrícula de capítulos',
       s3Help: 'Añade cartas a cada capítulo: escenas, sucesos, frases de diálogo, imágenes. Debajo tienes tus personajes y mundos como referencia.',
       noChapters: 'Todavía no has elegido capítulos. Vuelve al paso 1 y marca al menos uno.',
+      chooseChapter: 'Elegir capítulo',
       cardsCount: '{n} cartas',
       print: '🖶 Imprimir tablero',
       printTitle: 'Cartas para contar historias: impresión',

@@ -345,6 +345,7 @@ export default {
       s3Title: 'Krok 3 · Wypełnij siatkę rozdziałów',
       s3Help: 'Dodawaj karty do każdego rozdziału: sceny, wydarzenia, kwestie dialogowe, obrazy. Poniżej widzisz swoje postacie i światy.',
       noChapters: 'Nie wybrano jeszcze żadnych rozdziałów. Wróć do kroku 1 i zaznacz co najmniej jeden.',
+      chooseChapter: 'Wybierz rozdział',
       cardsCount: 'Karty: {n}',
       print: '🖶 Drukuj układ',
       printTitle: 'Karty opowieści: wydruk',

@@ -345,6 +345,7 @@ export default {
       s3Title: 'Schritt 3 · Füll das Kapitelraster',
       s3Help: 'Füge jedem Kapitel Karten hinzu: Szenen, Ereignisse, Dialogzeilen, Bilder. Deine Figuren und Welten siehst du darunter zum Nachschlagen.',
       noChapters: 'Noch keine Kapitel gewählt. Geh zurück zu Schritt 1 und hak mindestens eines an.',
+      chooseChapter: 'Kapitel wählen',
       cardsCount: '{n} Karten',
       print: '🖶 Layout drucken',
       printTitle: 'Erzählkarten: Drucklayout',

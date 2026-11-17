@@ -103,7 +103,8 @@ input[type='color'] { padding: 2px; width: 40px; height: 36px; }
 /* ---------- Home ---------- */
 .hero h1 { font-size: clamp(2rem, 5vw, 3rem); }
 .create { display: flex; gap: 0.5rem; margin: 1.5rem 0 1rem; }
-.create input { flex: 1; }
+.create input { flex: 1; min-width: 0; } /* stretch, and allow shrinking on narrow phones */
+.create button { flex-shrink: 0; }
 .continue { margin: 0 0 1.5rem; }
 .empty { padding: 3rem 1rem; text-align: center; color: var(--muted); border: 2px dashed var(--border); border-radius: var(--radius); }
 .grid { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
@@ -172,7 +173,6 @@ input[type='color'] { padding: 2px; width: 40px; height: 36px; }
 .flip-leave-to { opacity: 0; transform: translateX(-16px); }
 
 @media (max-width: 600px) {
-  .create { flex-direction: column; }
   .editor__head { flex-wrap: wrap; }
   .title-input { flex-basis: 100%; order: -1; }
 }

@@ -3,6 +3,7 @@ import { ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
 import CardBoard from '../components/CardBoard.vue'
+import { isMobile } from '../composables/useMobile'
 import {
   BOARD_COLORS, blankStory, loadStory, saveStory, deleteStory, uid, chapterTitle, chapterDesc,
 } from '../composables/storyCards'
@@ -11,6 +12,19 @@ const story = reactive(blankStory())
 const loaded = ref(false)
 
 const activeChapters = computed(() => story.chapters.filter((c) => c.enabled))
+
+// Phones show one chapter at a time in step 3, chosen from a dropdown.
+const currentChapterId = ref(null)
+watch(
+  activeChapters,
+  (list) => {
+    if (!list.some((c) => c.id === currentChapterId.value)) currentChapterId.value = list[0]?.id ?? null
+  },
+  { immediate: true },
+)
+const visibleChapters = computed(() =>
+  isMobile.value ? activeChapters.value.filter((c) => c.id === currentChapterId.value) : activeChapters.value,
+)
 const noteCount = (cols) => cols.reduce((n, c) => n + c.notes.length, 0)
 
 function go(n) {
@@ -160,8 +174,9 @@ onBeforeUnmount(() => {
             <template #header="{ col, index }">
               <input v-model="col.name" class="col-name" :placeholder="t(`writing.story.${group.ph}`)" />
               <div class="col-tools">
-                <button class="ghost" :disabled="index === 0" :aria-label="t('writing.story.moveLeft')" :title="t('writing.story.moveLeft')" @click="moveIn(group.list, index, -1)">←</button>
-                <button class="ghost" :disabled="index === group.list.length - 1" :aria-label="t('writing.story.moveRight')" :title="t('writing.story.moveRight')" @click="moveIn(group.list, index, 1)">→</button>
+                <!-- columns stack vertically on phones, so they move up/down there -->
+                <button class="ghost" :disabled="index === 0" :aria-label="t(isMobile ? 'writing.story.moveUp' : 'writing.story.moveLeft')" :title="t(isMobile ? 'writing.story.moveUp' : 'writing.story.moveLeft')" @click="moveIn(group.list, index, -1)">{{ isMobile ? '↑' : '←' }}</button>
+                <button class="ghost" :disabled="index === group.list.length - 1" :aria-label="t(isMobile ? 'writing.story.moveDown' : 'writing.story.moveRight')" :title="t(isMobile ? 'writing.story.moveDown' : 'writing.story.moveRight')" @click="moveIn(group.list, index, 1)">{{ isMobile ? '↓' : '→' }}</button>
                 <span class="spacer" />
                 <button class="ghost danger" :aria-label="t('writing.story.removeColumn')" :title="t('writing.story.removeColumn')" @click="removeColumn(group.list, index)">✕</button>
               </div>
@@ -188,9 +203,20 @@ onBeforeUnmount(() => {
             ▤ {{ story.title.trim() || t('writing.story.storyTitlePh') }}
             <small class="muted">· {{ t('writing.story.cardsCount', { n: noteCount(activeChapters) }) }}</small>
           </h2>
-          <CardBoard :columns="activeChapters" :color="BOARD_COLORS.chapter">
-            <template #header="{ col, index }">
-              <strong class="ch-title"><span class="ch-no">{{ index + 1 }}</span>{{ chapterTitle(col, t) }}</strong>
+          <!-- Phones: pick one chapter to show and edit -->
+          <select
+            v-if="isMobile"
+            v-model="currentChapterId"
+            class="chapter-select"
+            :aria-label="t('writing.story.chooseChapter')"
+          >
+            <option v-for="(ch, i) in activeChapters" :key="ch.id" :value="ch.id">
+              {{ i + 1 }} · {{ chapterTitle(ch, t) }} ({{ t('writing.story.cardsCount', { n: ch.notes.length }) }})
+            </option>
+          </select>
+          <CardBoard :columns="visibleChapters" :color="BOARD_COLORS.chapter">
+            <template #header="{ col }">
+              <strong class="ch-title"><span class="ch-no">{{ activeChapters.indexOf(col) + 1 }}</span>{{ chapterTitle(col, t) }}</strong>
               <span v-if="chapterDesc(col, t)" class="ch-desc">{{ chapterDesc(col, t) }}</span>
             </template>
           </CardBoard>
@@ -268,6 +294,11 @@ onBeforeUnmount(() => {
   background: transparent;
   border-radius: 10px;
   font-weight: 600;
+}
+.chapter-select { width: 100%; margin-bottom: 0.6rem; font-weight: 600; }
+@media (max-width: 640px) {
+  /* boards stack vertically on phones: the add button becomes a full-width bar */
+  .add-col { flex: 0 0 auto; width: 100%; min-height: 3rem; }
 }
 .ch-title { display: flex; align-items: baseline; gap: 0.4rem; font-family: Georgia, serif; }
 .ch-no {

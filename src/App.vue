@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watchEffect } from 'vue'
+import { computed, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import { settings } from './composables/settings'
 import { t, languages } from './i18n'
@@ -7,10 +7,7 @@ import { status, mmss, ringing, stopAlarm, owner } from './composables/poemTimer
 import { downloadBackup, pickAndImportBackup, backupAndClearAll } from './composables/backup'
 import FlagIcon from './components/FlagIcon.vue'
 
-// Same breakpoint as the icon-only top bar in style.css
-const mobileQuery = window.matchMedia('(max-width: 640px)')
-const isMobile = ref(mobileQuery.matches)
-mobileQuery.addEventListener('change', (e) => (isMobile.value = e.matches))
+import { isMobile } from './composables/useMobile'
 
 const route = useRoute()
 const onTimerPage = computed(() => route.name === owner.value)

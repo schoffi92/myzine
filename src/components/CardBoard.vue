@@ -118,4 +118,16 @@ function moveNote(col, j, dir) {
 .note__tools button.danger { color: var(--danger); }
 .note__text { margin: 0; padding: 0.2rem 0.3rem; font: 0.88rem/1.4 Georgia, serif; white-space: pre-wrap; }
 .add-note { justify-content: center; border: 1px dashed color-mix(in srgb, var(--board) 45%, var(--border)); }
+
+/* Phones: stack columns vertically, full width, instead of scrolling sideways */
+@media (max-width: 640px) {
+  .board {
+    flex-direction: column;
+    align-items: stretch;
+    overflow-x: visible;
+    scroll-snap-type: none;
+  }
+  .col,
+  .readonly .col { flex: 0 0 auto; width: 100%; }
+}
 </style>

@@ -345,6 +345,7 @@ export default {
       s3Title: 'Étape 3 · Remplis la grille des chapitres',
       s3Help: 'Ajoute des cartes à chaque chapitre : scènes, événements, répliques, images. Tes personnages et tes mondes sont affichés en dessous pour t’y référer.',
       noChapters: 'Aucun chapitre choisi pour l’instant. Reviens à l’étape 1 et coches-en au moins un.',
+      chooseChapter: 'Choisir un chapitre',
       cardsCount: '{n} cartes',
       print: '🖶 Imprimer le tableau',
       printTitle: 'Cartes pour raconter : impression',
