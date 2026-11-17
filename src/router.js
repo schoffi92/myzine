@@ -20,6 +20,7 @@ const views = {
   blackout: () => import('./views/BlackoutView.vue'),
   timed: () => import('./views/TimedWritingView.vue'),
   cutup: () => import('./views/CutUpView.vue'),
+  haiku: () => import('./views/HaikuView.vue'),
   snowflake: () => import('./views/SnowflakeView.vue'),
   mosaic: () => import('./views/MosaicView.vue'),
   story: () => import('./views/StoryCardsView.vue'),

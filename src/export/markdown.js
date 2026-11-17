@@ -156,6 +156,15 @@ function storySection(d) {
   return out.join('\n\n')
 }
 
+function haikuSection(d) {
+  const h = d.haiku?.data
+  const poems = (h?.kept || []).filter((x) => x.lines?.some((l) => l.trim()))
+  const draft = h?.lines?.some((l) => l.trim()) ? h.lines : null
+  if (!poems.length && !draft) return null
+  const all = [...poems.map((x) => x.lines), ...(draft ? [draft] : [])]
+  return [`## ${t('writing.haiku.title')}`, all.map((ls) => lines(ls.join('\n'))).join('\n\n---\n\n')].join('\n\n')
+}
+
 function tabooSection(d) {
   const s = d.taboo?.data
   if (!s || (!s.text?.trim() && !s.traits?.length)) return null
@@ -179,7 +188,7 @@ export async function buildMarkdown({ zineIds = [], includeDrafts = true } = {})
 
   if (includeDrafts) {
     const d = Object.fromEntries((await getAllDrafts()).map((r) => [r.id, r]))
-    const practices = [timedSection(d), cutupSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d)].filter(Boolean)
+    const practices = [timedSection(d), haikuSection(d), cutupSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d)].filter(Boolean)
     if (practices.length) parts.push(`# ${tl('writing.title')}\n\n${practices.join('\n\n')}`)
   }
   return parts.join('\n\n') + '\n'
