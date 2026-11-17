@@ -128,36 +128,100 @@ await new Promise((r) => server.listen(0, '127.0.0.1', r))
 const origin = `http://127.0.0.1:${server.address().port}`
 
 /* ---------- 3. render every page in every language ---------- */
-const browser = await puppeteer.launch({ executablePath, headless: true, args: ['--no-sandbox'] })
-log(`using ${path.basename(executablePath)}`)
+// Slow servers (small VPS, snap Chromium) need more time: PRERENDER_TIMEOUT=ms
+const TIMEOUT = Number(process.env.PRERENDER_TIMEOUT) || 60000
+const RETRIES = 3
+
+const browser = await puppeteer.launch({
+  executablePath,
+  headless: true,
+  protocolTimeout: Math.max(TIMEOUT * 2, 180000),
+  args: [
+    '--no-sandbox',
+    '--disable-dev-shm-usage', // small /dev/shm on Linux servers makes Chrome hang
+    '--disable-gpu',
+    '--no-first-run',
+    '--no-default-browser-check',
+    '--disable-extensions',
+    '--disable-background-networking',
+  ],
+})
+log(`using ${path.basename(executablePath)} (timeout ${TIMEOUT} ms)`)
+
+async function renderOnce(url) {
+  // fresh profile per page: no stored language preference, English browser
+  const context = await browser.createBrowserContext()
+  // for the error message: what the page was still waiting for, and what broke
+  const pending = new Set()
+  const problems = []
+  try {
+    const page = await context.newPage()
+    page.setDefaultTimeout(TIMEOUT)
+    page.on('pageerror', (e) => problems.push(`page error: ${e.message}`))
+    page.on('console', (m) => m.type() === 'error' && problems.push(`console: ${m.text()}`))
+    page.on('requestfinished', (r) => pending.delete(r.url()))
+    page.on('requestfailed', (r) => {
+      pending.delete(r.url())
+      if (!['image', 'font', 'media'].includes(r.resourceType())) {
+        problems.push(`request failed: ${r.url()} (${r.failure()?.errorText})`)
+      }
+    })
+    // images/fonts/media don't change the HTML; skipping them makes pages settle faster
+    await page.setRequestInterception(true)
+    page.on('request', (req) => {
+      if (['image', 'font', 'media'].includes(req.resourceType())) return req.abort()
+      pending.add(req.url())
+      req.continue()
+    })
+    // 'load' + waiting for the rendered heading, instead of 'networkidle0',
+    // which can time out when the server is slow to go fully quiet
+    await page.goto(origin + url, { waitUntil: 'load', timeout: TIMEOUT })
+    await page.waitForFunction(
+      (expected) => location.pathname === expected && document.querySelector('#app h1'),
+      { timeout: TIMEOUT },
+      url,
+    )
+    // let lazy chunks (translations, tarot texts) finish; don't fail if it never fully settles
+    await page.waitForNetworkIdle({ idleTime: 300, timeout: 5000 }).catch(() => {})
+    return '<!doctype html>\n' + (await page.evaluate(() => document.documentElement.outerHTML))
+  } catch (err) {
+    const detail = [...[...pending].map((u) => `still loading: ${u}`), ...problems]
+    err.message += detail.length ? '\n    ' + detail.slice(0, 8).join('\n    ') : ''
+    throw err
+  } finally {
+    await context.close().catch(() => {})
+  }
+}
 
 let count = 0
 let failed = 0
 try {
-  for (const locale of LOCALES) {
+  pages: for (const locale of LOCALES) {
     for (const p of PUBLIC_PATHS) {
       const url = localizedPath(locale, p)
-      // fresh profile per page: no stored language preference, English browser
-      const context = await browser.createBrowserContext()
-      const page = await context.newPage()
-      try {
-        await page.goto(origin + url, { waitUntil: 'networkidle0', timeout: 30000 })
-        await page.waitForFunction(
-          (expected) => location.pathname === expected && document.querySelector('#app h1'),
-          { timeout: 15000 },
-          url,
-        )
-        const html = '<!doctype html>\n' + (await page.evaluate(() => document.documentElement.outerHTML))
-        const out = url === '/' ? path.join(DIST, 'index.html') : path.join(DIST, url, 'index.html')
-        await mkdir(path.dirname(out), { recursive: true })
-        await writeFile(out, html)
-        count++
-      } catch (err) {
-        failed++
-        log(`FAILED ${url}: ${err.message}`)
-      } finally {
-        await context.close()
+      let html = null
+      for (let attempt = 1; attempt <= RETRIES && !html; attempt++) {
+        try {
+          html = await renderOnce(url)
+        } catch (err) {
+          log(`${attempt < RETRIES ? 'retrying' : 'FAILED'} ${url} (attempt ${attempt}): ${err.message}`)
+        }
       }
+      if (!html) {
+        failed++
+        // nothing works at all → the browser itself is broken; don't spend hours retrying
+        if (count === 0 && failed >= 2) {
+          log('ABORTING: the first pages all failed, so the browser is not working here.')
+          log('On Ubuntu, the snap "chromium-browser" often hangs under automation; install')
+          log('Google Chrome (.deb) and/or set CHROME_PATH, or build on another machine.')
+          break pages
+        }
+        continue
+      }
+      const out = url === '/' ? path.join(DIST, 'index.html') : path.join(DIST, url, 'index.html')
+      await mkdir(path.dirname(out), { recursive: true })
+      await writeFile(out, html)
+      count++
     }
   }
 } finally {
@@ -165,5 +229,7 @@ try {
   server.close()
 }
 
-log(`${count} pages written${failed ? `, ${failed} failed` : ''}`)
+const total = LOCALES.length * PUBLIC_PATHS.length
+log(`${count} of ${total} pages written${failed ? `, ${failed} failed` : ''}`)
+if (count < total) process.exitCode = 1
 if (failed) process.exit(1)
