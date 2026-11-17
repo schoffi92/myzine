@@ -4,7 +4,7 @@ import { t } from '../i18n'
 
 <template>
   <section class="container prose about">
-    <RouterLink to="/" class="back">← {{ t('nav.home') }}</RouterLink>
+    <RouterLink :to="{ name: 'home' }" class="back">← {{ t('nav.home') }}</RouterLink>
     <h1>{{ t('about.title') }}</h1>
 
     <div v-for="(section, si) in t('about.sections')" :key="si" class="info-block">

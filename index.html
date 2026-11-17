@@ -3,15 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MyZine</title>
+    <title>MyZine · Write, fold and share your own little zines</title>
+    <meta
+      name="description"
+      content="Make 8-page zines from a single A4 sheet and practise writing: blackout poetry, 15-minute poems with tarot cards, cut-up poems, the snowflake method, mosaic stories and storytelling cards. Free, no sign-up; everything stays in your browser."
+    />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#f6f1e9" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#151412" media="(prefers-color-scheme: dark)" />
+
+    <!-- Link previews (social media, messaging apps). Per-page title/description/url/image are set by src/composables/seo.js -->
+    <!-- The public site URL comes from VITE_SITE_URL in .env, not from this file. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="MyZine" />
+    <meta property="og:title" content="MyZine · Write, fold and share your own little zines" />
+    <meta
+      property="og:description"
+      content="Make 8-page zines from a single A4 sheet and practise writing. Free, no sign-up; everything stays in your browser."
+    />
+    <meta name="twitter:card" content="summary" />
+
+    <!-- Old links used hash URLs (/#/about): turn them into normal URLs before the app's router starts. -->
+    <script>
+      if (location.hash.startsWith('#/')) history.replaceState(null, '', location.hash.slice(1))
+    </script>
   </head>
   <body>
     <div id="app"></div>
+    <noscript>MyZine needs JavaScript to run. It makes 8-page zines from a single A4 sheet and offers writing practices, all inside your browser.</noscript>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

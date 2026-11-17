@@ -13,7 +13,7 @@ const practices = [
 
 <template>
   <section class="container prose">
-    <RouterLink to="/" class="back">← {{ t('nav.home') }}</RouterLink>
+    <RouterLink :to="{ name: 'home' }" class="back">← {{ t('nav.home') }}</RouterLink>
     <h1>{{ t('writing.title') }}</h1>
     <p class="lead">{{ t('writing.intro') }}</p>
 

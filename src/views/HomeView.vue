@@ -11,7 +11,7 @@ const items = [
 
 <template>
   <section class="home">
-    <p class="home__tagline">{{ t('home.tagline') }}</p>
+    <h1 class="home__tagline">{{ t('home.tagline') }}</h1>
     <nav class="home__menu">
       <RouterLink v-for="item in items" :key="item.label" :to="item.to" class="menu-btn">
         <span class="menu-btn__icon" aria-hidden="true">{{ item.icon }}</span>

@@ -1,3 +1,8 @@
 node_modules
 dist
 .vite
+robots.txt
+sitemap.xml
+.env
+.env.*
+!.env.example

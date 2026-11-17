@@ -51,7 +51,7 @@ onMounted(refresh)
 
 <template>
   <section class="container">
-    <RouterLink to="/" class="back">← {{ t('nav.home') }}</RouterLink>
+    <RouterLink :to="{ name: 'home' }" class="back">← {{ t('nav.home') }}</RouterLink>
     <div class="hero">
       <h1>{{ t('library.title') }}</h1>
       <p class="muted">{{ t('library.intro') }}</p>

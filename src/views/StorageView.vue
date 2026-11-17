@@ -7,6 +7,8 @@ const estimate = ref(null)
 const persisted = ref(null)
 
 onMounted(async () => {
+  // Skip while pre-rendering (automated browser): these numbers belong to the visitor's own browser.
+  if (navigator.webdriver) return
   const est = await storageEstimate()
   if (est) {
     estimate.value = {
@@ -24,7 +26,7 @@ onMounted(async () => {
 
 <template>
   <section class="container prose">
-    <RouterLink to="/" class="back">← {{ t('nav.home') }}</RouterLink>
+    <RouterLink :to="{ name: 'home' }" class="back">← {{ t('nav.home') }}</RouterLink>
     <h1>{{ t('storage.title') }}</h1>
     <p class="lead">{{ t('storage.intro') }}</p>
 

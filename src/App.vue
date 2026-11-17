@@ -25,7 +25,7 @@ watchEffect(() => {
 
 <template>
   <header class="topbar">
-    <RouterLink to="/" class="brand">
+    <RouterLink :to="{ name: 'home' }" class="brand">
       <!-- same shapes as public/logo.svg, inlined so it follows the theme colour -->
       <svg class="brand__logo" viewBox="0 0 40 40" aria-hidden="true">
         <path d="M5 7 12.5 13v16L5 33Z" />

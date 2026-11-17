@@ -87,7 +87,7 @@ onMounted(async () => {
 
 <template>
   <section class="container prose share">
-    <RouterLink to="/" class="back">← {{ t('nav.home') }}</RouterLink>
+    <RouterLink :to="{ name: 'home' }" class="back">← {{ t('nav.home') }}</RouterLink>
     <h1>{{ t('share.title') }}</h1>
     <p class="lead">{{ t('share.intro') }}</p>
 
