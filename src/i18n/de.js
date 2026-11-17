@@ -442,6 +442,19 @@ export default {
     usage: 'Belegter Speicher: {used} MB von etwa {quota} MB verfügbar',
     persisted: 'Der Browser hat zugestimmt, diese Daten auch bei knappem Speicherplatz zu behalten.',
     notPersisted: 'Der Browser könnte diese Daten bei knappem Speicherplatz löschen. Mach eine Sicherung.',
+    access: {
+      title: 'Falls MyZine einmal offline geht',
+      intro: 'Deine Arbeit liegt in deinem Browser, nicht auf einem Server, und verschwindet deshalb nicht, wenn diese Seite nicht mehr funktioniert. Ein Browser lässt sie aber nur von Seiten dieser Webadresse lesen. So siehst du deine Daten selbst und behältst eine eigene Kopie.',
+      items: [
+        { h: 'Jetzt eine Kopie speichern', p: 'Am einfachsten: Nutze ab und zu „Sicherung exportieren“ in der oberen Leiste. Du bekommst eine Datei mit allen Zines, Bildern und Texten. Für eine Kopie, die du überall lesen kannst, wähle Markdown auf der Teilen-Seite.' },
+        { h: 'Die gespeicherten Daten ansehen', p: 'Öffne die Entwicklertools mit F12 (Mac: Cmd+Option+I). In Chrome und Edge: Anwendung (Application) → Speicher → IndexedDB → myzine. In Firefox: Tab „Web-Speicher“ → Indexed DB. In Safari aktivierst du zuerst „Funktionen für Webentwickler anzeigen“ unter Einstellungen → Erweitert, dann Entwickler → Webinformationen einblenden → Speicher. Dort findest du die Speicher zines, pages, images und drafts (Schreibübungen). Einstellungen liegen unter Local Storage, in Schlüsseln, die mit „myzine:“ beginnen.' },
+        { h: 'Alles ohne die Knöpfe sichern', p: 'Wenn die Seite noch lädt, aber die Knöpfe nicht funktionieren, öffne die Entwicklertools auf einer beliebigen MyZine-Seite, wechsle zum Tab „Konsole“, füge den Code unten ein und drücke Enter. Er lädt eine Datei myzine-backup.json im normalen Sicherungsformat herunter. Chrome bittet dich eventuell, zuerst „allow pasting“ einzutippen.', code: true },
+        { h: 'Die Sicherung anderswo nutzen', p: 'MyZine ist Open Source (MIT-Lizenz). Gibt es diese Seite nicht mehr, kann jeder eine Kopie aus dem Code auf GitHub betreiben und deine Sicherungsdatei dort importieren. Die Datei ist reines JSON, also können auch andere Programme deine Texte lesen.' },
+        { h: 'Mach es, solange die Seite funktioniert', p: 'Wenn diese Adresse gar nicht mehr lädt, behält dein Browser die Daten zwar, zeigt sie aber keiner anderen Seite. Lösche die Websitedaten dieser Seite nicht, bevor du eine Sicherungsdatei hast.' },
+      ],
+      copy: 'Code kopieren',
+      copied: 'Kopiert',
+    },
   },
 
   about: {

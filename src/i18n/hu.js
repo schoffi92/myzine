@@ -442,6 +442,19 @@ export default {
     usage: 'Felhasznált tárhely: {used} MB a kb. {quota} MB elérhetőből',
     persisted: 'A böngésző vállalta, hogy akkor is megőrzi ezeket az adatokat, ha kevés a szabad hely.',
     notPersisted: 'A böngésző törölheti ezeket az adatokat, ha kevés a szabad hely. Készíts biztonsági mentést.',
+    access: {
+      title: 'Ha a MyZine egyszer elérhetetlenné válik',
+      intro: 'A munkád a böngésződben van, nem egy szerveren, így nem tűnik el, ha ez az oldal megszűnik. A böngésző viszont csak erről a webcímről engedi olvasni. Így nézheted meg az adataidat magad, és így menthetsz saját másolatot.',
+      items: [
+        { h: 'Ments most egy másolatot', p: 'A legegyszerűbb: időnként használd a felső sávban a „Biztonsági mentés exportálása” gombot. Egyetlen fájlt kapsz az összes zine-eddel, képeddel és szövegeddel. Ha bárhol olvasható másolatot szeretnél, a Megosztás oldalon válaszd a Markdownt.' },
+        { h: 'A tárolt adatok megtekintése', p: 'Nyisd meg a fejlesztői eszközöket az F12 billentyűvel (Mac: Cmd+Option+I). Chrome-ban és Edge-ben: Alkalmazás (Application) → Tárhely → IndexedDB → myzine. Firefoxban: Tároló fül → Indexed DB. Safariban előbb kapcsold be a „Webfejlesztői funkciók megjelenítése” lehetőséget a Beállítások → Haladó alatt, majd Fejlesztés → Webfelügyelő megjelenítése → Tárhely. Itt találod a zines, pages, images és drafts (írásgyakorlatok) tárolókat. A beállítások a Local storage alatt vannak, „myzine:” kezdetű kulcsokban.' },
+        { h: 'Mentés gombok nélkül', p: 'Ha az oldal még betöltődik, de a gombok nem működnek, nyisd meg a fejlesztői eszközöket bármelyik MyZine-oldalon, lépj a Konzol fülre, illeszd be az alábbi kódot, és nyomj Entert. Letölt egy myzine-backup.json fájlt a szokásos mentési formátumban. A Chrome kérheti, hogy előbb írd be: „allow pasting”.', code: true },
+        { h: 'Használd a mentést máshol', p: 'A MyZine nyílt forráskódú (MIT licenc). Ha ez az oldal megszűnik, bárki futtathat egy példányt a GitHubon lévő kódból, és ott importálhatod a mentésedet. A fájl egyszerű JSON, így más programok is el tudják olvasni a szövegeidet.' },
+        { h: 'Tedd meg, amíg az oldal működik', p: 'Ha ez a cím már egyáltalán nem nyílik meg, a böngésző megőrzi ugyan az adatokat, de más oldalnak nem mutatja meg. Ne töröld az oldal adatait, amíg nincs mentésfájlod.' },
+      ],
+      copy: 'Kód másolása',
+      copied: 'Kimásolva',
+    },
   },
 
   about: {

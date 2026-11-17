@@ -442,6 +442,19 @@ export default {
     usage: 'Almacenamiento usado: {used} MB de unos {quota} MB disponibles',
     persisted: 'El navegador ha aceptado conservar estos datos aunque falte espacio en disco.',
     notPersisted: 'El navegador podría borrar estos datos si falta espacio en disco. Haz una copia.',
+    access: {
+      title: 'Si MyZine deja de estar en línea',
+      intro: 'Tu trabajo vive en tu navegador, no en un servidor, así que no desaparece si este sitio deja de funcionar. Pero el navegador solo deja que lo lean las páginas de esta dirección web. Así puedes ver tus datos tú mismo y guardar tu propia copia.',
+      items: [
+        { h: 'Guarda una copia ahora', p: 'Lo más fácil: usa de vez en cuando «Exportar copia» en la barra superior. Obtienes un archivo con todos tus fanzines, imágenes y textos. Para una copia que puedas leer en cualquier sitio, elige Markdown en la página Compartir.' },
+        { h: 'Ver los datos guardados', p: 'Abre las herramientas para desarrolladores con F12 (Mac: Cmd+Option+I). En Chrome y Edge: Aplicación (Application) → Almacenamiento → IndexedDB → myzine. En Firefox: pestaña Almacenamiento → Indexed DB. En Safari, activa primero «Mostrar funciones para desarrolladores web» en Ajustes → Avanzado, y luego Desarrollo → Mostrar inspector web → Almacenamiento. Verás los almacenes zines, pages, images y drafts (prácticas de escritura). Los ajustes están en Local storage, en claves que empiezan por «myzine:».' },
+        { h: 'Guardarlo todo sin los botones', p: 'Si la página aún carga pero los botones no funcionan, abre las herramientas para desarrolladores en cualquier página de MyZine, ve a la pestaña Consola, pega el código de abajo y pulsa Intro. Descarga un archivo myzine-backup.json con el formato normal de copia. Puede que Chrome te pida escribir antes «allow pasting».', code: true },
+        { h: 'Usa tu copia en otro lugar', p: 'MyZine es de código abierto (licencia MIT). Si este sitio desaparece, cualquiera puede ejecutar una copia con el código de GitHub e importar allí tu archivo. El archivo es JSON simple, así que otros programas también pueden leer tus textos.' },
+        { h: 'Hazlo mientras el sitio funcione', p: 'Si esta dirección ya no abre, tu navegador conserva los datos pero no se los muestra a ningún otro sitio. No borres los datos de este sitio hasta tener un archivo de copia.' },
+      ],
+      copy: 'Copiar código',
+      copied: 'Copiado',
+    },
   },
 
   about: {

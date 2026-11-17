@@ -442,6 +442,19 @@ export default {
     usage: 'Storage used: {used} MB of about {quota} MB available',
     persisted: 'The browser has agreed to keep this data even when disk space runs low.',
     notPersisted: 'The browser may clear this data if disk space runs low. Keep a backup.',
+    access: {
+      title: 'If MyZine ever goes offline',
+      intro: 'Your work lives in your browser, not on a server, so it doesn’t vanish if this site stops working. But a browser only lets pages from this web address read it. Here is how to see your data yourself and keep your own copy.',
+      items: [
+        { h: 'Save a copy now', p: 'The easiest way: use “Export backup” in the top bar from time to time. You get one file with all your zines, images and writing. For a copy you can read anywhere, choose Markdown on the Share page.' },
+        { h: 'Look at the stored data', p: 'Open the developer tools with F12 (Mac: Cmd+Option+I). In Chrome and Edge: Application → Storage → IndexedDB → myzine. In Firefox: the Storage tab → Indexed DB. In Safari, first turn on “Show features for web developers” in Settings → Advanced, then Develop → Show Web Inspector → Storage. You will find the stores zines, pages, images and drafts (writing practices). Settings are under Local storage, in keys starting with “myzine:”.' },
+        { h: 'Save everything without the buttons', p: 'If the page still opens but the buttons don’t work, open the developer tools on any MyZine page, go to the Console tab, paste the code below and press Enter. It downloads a myzine-backup.json file in the normal backup format. Chrome may ask you to type “allow pasting” first.', code: true },
+        { h: 'Use your backup elsewhere', p: 'MyZine is open source (MIT licence). If this site is gone, anyone can run a copy from the code on GitHub and import your backup file there. The file is plain JSON, so other programs can read your texts too.' },
+        { h: 'Do it while the site still works', p: 'If this address no longer opens at all, your browser still keeps the data but won’t show it to any other site. Don’t clear this site’s data until you have a backup file.' },
+      ],
+      copy: 'Copy code',
+      copied: 'Copied',
+    },
   },
 
   about: {

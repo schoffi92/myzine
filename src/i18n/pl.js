@@ -442,6 +442,19 @@ export default {
     usage: 'Wykorzystane miejsce: {used} MB z około {quota} MB dostępnych',
     persisted: 'Przeglądarka zgodziła się zachować te dane nawet przy braku miejsca na dysku.',
     notPersisted: 'Przeglądarka może usunąć te dane, gdy zabraknie miejsca na dysku. Zrób kopię zapasową.',
+    access: {
+      title: 'Jeśli MyZine kiedyś zniknie z sieci',
+      intro: 'Twoja praca jest w przeglądarce, a nie na serwerze, więc nie zniknie, jeśli ta strona przestanie działać. Przeglądarka pozwala ją jednak czytać tylko stronom spod tego adresu. Oto jak samodzielnie zobaczyć swoje dane i zachować własną kopię.',
+      items: [
+        { h: 'Zapisz kopię już teraz', p: 'Najprościej: co jakiś czas użyj „Eksportuj kopię zapasową” na górnym pasku. Dostaniesz jeden plik ze wszystkimi zinami, obrazami i tekstami. Jeśli chcesz kopię do czytania gdziekolwiek, wybierz Markdown na stronie Udostępnij.' },
+        { h: 'Podgląd zapisanych danych', p: 'Otwórz narzędzia deweloperskie klawiszem F12 (Mac: Cmd+Option+I). W Chrome i Edge: Aplikacja (Application) → Pamięć → IndexedDB → myzine. W Firefoksie: karta Dane → Indexed DB. W Safari najpierw włącz „Pokaż funkcje dla twórców witryn” w Ustawieniach → Zaawansowane, potem Programowanie → Pokaż inspektora → Przechowywanie. Znajdziesz tam magazyny zines, pages, images i drafts (ćwiczenia pisarskie). Ustawienia są w Local storage, w kluczach zaczynających się od „myzine:”.' },
+        { h: 'Zapisz wszystko bez przycisków', p: 'Jeśli strona jeszcze się otwiera, ale przyciski nie działają, otwórz narzędzia deweloperskie na dowolnej stronie MyZine, przejdź do karty Konsola, wklej poniższy kod i naciśnij Enter. Pobierze plik myzine-backup.json w zwykłym formacie kopii. Chrome może poprosić, by najpierw wpisać „allow pasting”.', code: true },
+        { h: 'Użyj kopii gdzie indziej', p: 'MyZine to otwarte oprogramowanie (licencja MIT). Jeśli ta strona zniknie, każdy może uruchomić jej kopię z kodu na GitHubie i zaimportować tam Twój plik. Plik to zwykły JSON, więc Twoje teksty odczytają też inne programy.' },
+        { h: 'Zrób to, póki strona działa', p: 'Jeśli ten adres w ogóle przestanie się otwierać, przeglądarka nadal przechowa dane, ale nie pokaże ich żadnej innej stronie. Nie usuwaj danych tej strony, dopóki nie masz pliku kopii.' },
+      ],
+      copy: 'Kopiuj kod',
+      copied: 'Skopiowano',
+    },
   },
 
   about: {

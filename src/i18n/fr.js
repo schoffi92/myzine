@@ -442,6 +442,19 @@ export default {
     usage: 'Espace utilisé : {used} Mo sur environ {quota} Mo disponibles',
     persisted: 'Le navigateur a accepté de conserver ces données même si l’espace disque vient à manquer.',
     notPersisted: 'Le navigateur pourrait effacer ces données si l’espace disque vient à manquer. Fais une sauvegarde.',
+    access: {
+      title: 'Si MyZine n’est plus en ligne',
+      intro: 'Ton travail vit dans ton navigateur, pas sur un serveur : il ne disparaît donc pas si ce site cesse de fonctionner. Mais le navigateur ne le laisse lire qu’aux pages de cette adresse web. Voici comment voir tes données toi-même et garder ta propre copie.',
+      items: [
+        { h: 'Fais une copie maintenant', p: 'Le plus simple : utilise de temps en temps « Exporter une sauvegarde » dans la barre du haut. Tu obtiens un fichier avec tous tes zines, images et textes. Pour une copie lisible partout, choisis Markdown sur la page Partager.' },
+        { h: 'Voir les données enregistrées', p: 'Ouvre les outils de développement avec F12 (Mac : Cmd+Option+I). Dans Chrome et Edge : Application → Stockage → IndexedDB → myzine. Dans Firefox : onglet Stockage → Indexed DB. Dans Safari, active d’abord « Afficher les fonctionnalités pour les développeurs web » dans Réglages → Avancées, puis Développement → Afficher l’inspecteur web → Stockage. Tu y trouveras les magasins zines, pages, images et drafts (exercices d’écriture). Les réglages sont dans Local storage, sous des clés qui commencent par « myzine: ».' },
+        { h: 'Tout sauvegarder sans les boutons', p: 'Si la page s’ouvre encore mais que les boutons ne marchent pas, ouvre les outils de développement sur n’importe quelle page de MyZine, va dans l’onglet Console, colle le code ci-dessous et appuie sur Entrée. Il télécharge un fichier myzine-backup.json au format de sauvegarde habituel. Chrome peut te demander de taper d’abord « allow pasting ».', code: true },
+        { h: 'Utilise ta sauvegarde ailleurs', p: 'MyZine est open source (licence MIT). Si ce site disparaît, n’importe qui peut faire tourner une copie à partir du code sur GitHub et y importer ton fichier. Le fichier est du JSON simple : d’autres programmes peuvent aussi lire tes textes.' },
+        { h: 'Fais-le tant que le site fonctionne', p: 'Si cette adresse ne s’ouvre plus du tout, ton navigateur garde les données mais ne les montre à aucun autre site. N’efface pas les données de ce site avant d’avoir un fichier de sauvegarde.' },
+      ],
+      copy: 'Copier le code',
+      copied: 'Copié',
+    },
   },
 
   about: {
