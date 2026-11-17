@@ -5,7 +5,7 @@ import Icon from '../components/Icon.vue'
 import CardBoard from '../components/CardBoard.vue'
 import { isMobile } from '../composables/useMobile'
 import {
-  BOARD_COLORS, blankStory, loadStory, saveStory, deleteStory, uid, chapterTitle, chapterDesc,
+  BOARD_COLORS, SOURCE_KINDS, blankStory, loadStory, saveStory, deleteStory, uid, chapterTitle, chapterDesc, sourceLabel,
 } from '../composables/storyCards'
 
 const story = reactive(blankStory())
@@ -108,6 +108,12 @@ onBeforeUnmount(() => {
       <RouterLink :to="{ name: 'story-print' }" class="btn" :title="tl('writing.story.print')" :aria-label="tl('writing.story.print')"><Icon name="printer" :label="tl('writing.story.print')" /></RouterLink>
     </div>
     <p class="lead prose-w">{{ t('writing.story.intro') }}</p>
+    <details class="tips prose-w">
+      <summary>{{ t('writing.story.tipsTitle') }}</summary>
+      <ul>
+        <li v-for="tip in t('writing.story.tips')" :key="tip">{{ tip }}</li>
+      </ul>
+    </details>
 
     <ol class="stepper">
       <li v-for="(label, i) in t('writing.story.steps')" :key="i" :class="{ active: story.step === i + 1 }">
@@ -119,6 +125,13 @@ onBeforeUnmount(() => {
       <!-- ============ Step 1: chapter cards ============ -->
       <div v-if="story.step === 1" class="panel prose-w">
         <label class="field-label" for="story-title">{{ t('writing.story.storyTitle') }}</label>
+        <fieldset class="kind">
+          <legend class="muted small">{{ t('writing.story.kindLabel') }}</legend>
+          <label v-for="k in SOURCE_KINDS" :key="k" class="kind__opt">
+            <input v-model="story.kind" type="radio" name="story-kind" :value="k" />
+            {{ t(k === 'film' ? 'writing.story.kindFilm' : 'writing.story.kindNovel') }}
+          </label>
+        </fieldset>
         <input id="story-title" v-model="story.title" class="story-title" :placeholder="t('writing.story.storyTitlePh')" />
 
         <h2>{{ t('writing.story.s1Title') }}</h2>
@@ -204,7 +217,7 @@ onBeforeUnmount(() => {
         <p v-if="!activeChapters.length" class="empty">{{ t('writing.story.noChapters') }}</p>
         <template v-else>
           <h2 class="board-title" :style="{ color: BOARD_COLORS.chapter }">
-            ▤ {{ story.title.trim() || t('writing.story.storyTitlePh') }}
+            ▤ {{ sourceLabel(story, t) }}
             <small class="muted">· {{ t('writing.story.cardsCount', { n: noteCount(activeChapters) }) }}</small>
           </h2>
           <!-- Phones: pick one chapter to show and edit -->
@@ -260,6 +273,13 @@ onBeforeUnmount(() => {
 
 .field-label { display: block; font-weight: 600; margin-bottom: 0.3rem; }
 .story-title { width: 100%; font: 700 1.25rem Georgia, serif; margin-bottom: 1.25rem; }
+.kind { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 1rem; border: 0; padding: 0; margin: 0 0 0.5rem; }
+.kind legend { float: left; margin-right: 0.25rem; padding: 0; }
+.kind__opt { display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; font-weight: 600; }
+.kind__opt input { accent-color: #e85d3f; }
+.tips { margin: 0 0 1rem; }
+.tips summary { cursor: pointer; font-weight: 600; }
+.tips ul { margin: 0.4rem 0 0; }
 
 .chapter-list { list-style: none; padding: 0; margin: 0.75rem 0 1rem; display: flex; flex-direction: column; gap: 0.45rem; }
 .chapter-card {

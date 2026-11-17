@@ -2,7 +2,7 @@
 import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
-import { BOARD_COLORS, loadStory, chapterTitle, chapterDesc } from '../composables/storyCards'
+import { BOARD_COLORS, loadStory, chapterTitle, chapterDesc, sourceLabel } from '../composables/storyCards'
 
 const story = ref(null)
 const include = reactive({ chapters: true, characters: true, worlds: true })
@@ -64,7 +64,7 @@ const printPage = () => window.print()
     <div v-if="story" class="sheets">
       <section v-for="(sec, si) in sections" :key="sec.key" class="sheet" :class="{ first: si === 0 }" :style="{ '--c': sec.color }">
         <header class="sheet__head">
-          <span class="story-name">{{ story.title.trim() || t('writing.story.storyTitlePh') }}</span>
+          <span class="story-name">{{ sourceLabel(story, t) }}</span>
           <h2>{{ sec.heading }}</h2>
         </header>
         <div class="grid">

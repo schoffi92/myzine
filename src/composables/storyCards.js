@@ -16,10 +16,15 @@ export const BOARD_COLORS = { chapter: '#e85d3f', character: '#2a6fb0', world: '
 let seq = 0
 export const uid = () => `s${Date.now().toString(36)}${(seq++).toString(36)}`
 
+/** The practice takes apart an existing story: a film or a novel. */
+export const SOURCE_KINDS = ['novel', 'film']
+
 export function blankStory() {
   return {
     step: 1,
-    title: '',
+    kind: 'novel', // film | novel
+    title: '', // title of the film or novel
+
     chapters: BEATS.map((key) => ({ id: uid(), key, title: '', desc: '', enabled: true, notes: [] })),
     characters: [],
     worlds: [],
@@ -32,6 +37,7 @@ function normalize(d) {
   if (!d || !Array.isArray(d.chapters)) return blankStory()
   return {
     step: [1, 2, 3].includes(d.step) ? d.step : 1,
+    kind: SOURCE_KINDS.includes(d.kind) ? d.kind : 'novel',
     title: d.title ?? '',
     chapters: d.chapters.map((c) => ({
       id: c.id ?? uid(),
@@ -58,4 +64,10 @@ export function chapterTitle(ch, t) {
 
 export function chapterDesc(ch, t) {
   return ch.key ? t(`writing.story.beats.${ch.key}.d`) : ch.desc.trim()
+}
+
+/** "Film · Title" (or "Novel · Untitled story") for headings. */
+export function sourceLabel(story, t) {
+  const kind = t(story.kind === 'film' ? 'writing.story.kindFilm' : 'writing.story.kindNovel')
+  return `${kind} · ${story.title?.trim() || t('writing.story.untitledStory')}`
 }

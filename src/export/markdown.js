@@ -130,7 +130,8 @@ function storySection(d) {
     s.worlds?.length
   if (!hasContent) return null
 
-  const out = [`## ${t('writing.story.title')}${s.title?.trim() ? `: ${inline(s.title)}` : ''}`]
+  const kind = t(s.kind === 'film' ? 'writing.story.kindFilm' : 'writing.story.kindNovel')
+  const out = [`## ${t('writing.story.title')}${s.title?.trim() ? `: ${inline(s.title)} (${kind})` : ''}`]
   if (chapters.length) {
     out.push(`### ${t('writing.story.steps')[0]}`)
     chapters.forEach((c, i) => {
