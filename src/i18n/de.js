@@ -100,6 +100,7 @@ export default {
       novels: { title: 'Romane & Geschichten', desc: 'Eine Handlung wachsen lassen, Figuren und Welten bauen, Kapitel planen.' },
     },
     difficulty: { label: 'Schwierigkeit', levels: ['Erste Schritte', 'Fähigkeiten aufbauen', 'Geübte Schreibende', 'Erfahrene Schreibende'] },
+    saved: { save: 'Gedicht speichern', title: 'Deine gespeicherten Gedichte', remove: 'Entfernen', confirmRemove: 'Dieses Gedicht entfernen?', copy: 'Kopieren', copied: 'Kopiert' },
     haiku: {
       title: 'Haiku',
       card: 'Drei kurze Zeilen mit 5, 7 und 5 Silben, die einen Moment in der Natur festhalten.',

@@ -100,6 +100,7 @@ export default {
       novels: { title: 'Powieści i opowiadania', desc: 'Rozwijaj fabułę, twórz postacie i światy, planuj rozdziały.' },
     },
     difficulty: { label: 'Poziom trudności', levels: ['Pierwsze kroki', 'Rozwijanie umiejętności', 'Wprawny autor', 'Doświadczony autor'] },
+    saved: { save: 'Zapisz ten wiersz', title: 'Twoje zapisane wiersze', remove: 'Usuń', confirmRemove: 'Usunąć ten wiersz?', copy: 'Kopiuj', copied: 'Skopiowano' },
     haiku: {
       title: 'Haiku',
       card: 'Trzy krótkie wersy po 5, 7 i 5 sylab, które chwytają jedną chwilę w przyrodzie.',

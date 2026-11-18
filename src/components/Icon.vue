@@ -28,6 +28,7 @@ const PATHS = {
   reset: 'M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5',
   image: 'M3 5h18v14H3zM3 16l5-5 4 4 3-3 6 6M15 9h.01',
   x: 'M6 6l12 12M18 6L6 18',
+  save: 'M5 3h11l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM7 3v5h8V3M7 21v-7h10v7', // floppy disk
 }
 </script>
 

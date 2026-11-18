@@ -2,6 +2,7 @@
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
+import SavedPoems from '../components/SavedPoems.vue'
 import { settings } from '../composables/settings'
 import { loadDraftData, saveDraftData } from '../db/drafts'
 import { countSyllables, HAIKU_PATTERN } from '../writing/syllables'
@@ -10,7 +11,6 @@ const ID = 'haiku' // IndexedDB drafts id
 // lines: the haiku being written · season: drawn prompt [seasonIndex, wordIndex] · kept: finished haiku
 const state = reactive({ lines: ['', '', ''], season: null, kept: [] })
 const loaded = ref(false)
-const copiedId = ref(null)
 
 const counts = computed(() => state.lines.map((l) => countSyllables(l, settings.locale)))
 const hasText = computed(() => state.lines.some((l) => l.trim()))
@@ -38,17 +38,6 @@ function clearLines() {
   state.lines = ['', '', '']
 }
 
-function removeKept(i) {
-  if (confirm(t('writing.haiku.confirmRemove'))) state.kept.splice(i, 1)
-}
-
-async function copyKept(h) {
-  try {
-    await navigator.clipboard.writeText(h.lines.join('\n'))
-    copiedId.value = h.id
-    setTimeout(() => (copiedId.value = null), 1500)
-  } catch { /* clipboard blocked */ }
-}
 
 /* ---- autosave to IndexedDB ---- */
 let saveTimer = null
@@ -140,24 +129,11 @@ onBeforeUnmount(() => {
       <div class="actions">
         <button class="ghost danger" :disabled="!hasText" @click="clearLines" :title="tl('writing.haiku.clearLines')" :aria-label="tl('writing.haiku.clearLines')"><Icon name="trash" :label="tl('writing.haiku.clearLines')" /></button>
         <span class="spacer" />
-        <button class="primary" :disabled="!hasText" @click="keep" :title="tl('writing.haiku.keep')" :aria-label="tl('writing.haiku.keep')"><Icon name="check" :label="tl('writing.haiku.keep')" /></button>
+        <button class="primary" :disabled="!hasText" @click="keep" :title="tl('writing.haiku.keep')" :aria-label="tl('writing.haiku.keep')"><Icon name="save" :label="tl('writing.haiku.keep')" /></button>
       </div>
     </div>
 
-    <template v-if="state.kept.length">
-      <h2>{{ t('writing.haiku.keptTitle') }}</h2>
-      <ul class="kept">
-        <li v-for="(h, i) in state.kept" :key="h.id" class="kept__item">
-          <p class="poem">
-            <template v-for="(l, j) in h.lines" :key="j">{{ l }}<br v-if="j < h.lines.length - 1" /></template>
-          </p>
-          <div class="kept__tools">
-            <button class="ghost" @click="copyKept(h)" :title="copiedId === h.id ? tl('writing.haiku.copied') : tl('writing.haiku.copy')" :aria-label="copiedId === h.id ? tl('writing.haiku.copied') : tl('writing.haiku.copy')"><Icon :name="copiedId === h.id ? 'check' : 'copy'" /></button>
-            <button class="ghost danger" @click="removeKept(i)" :title="tl('writing.haiku.remove')" :aria-label="tl('writing.haiku.remove')"><Icon name="x" /></button>
-          </div>
-        </li>
-      </ul>
-    </template>
+    <SavedPoems :poems="state.kept" :title="t('writing.haiku.keptTitle')" @remove="(i) => state.kept.splice(i, 1)" />
   </section>
 </template>
 
@@ -195,11 +171,4 @@ onBeforeUnmount(() => {
 .count.ok { color: #3c9a5f; }
 .count.over { color: var(--danger); }
 .actions { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; }
-.kept { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
-.kept__item {
-  display: flex; align-items: flex-start; gap: 0.5rem;
-  padding: 0.6rem 1rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface);
-}
-.kept__item .poem { flex: 1; margin: 0; }
-.kept__tools { display: flex; gap: 2px; }
 </style>

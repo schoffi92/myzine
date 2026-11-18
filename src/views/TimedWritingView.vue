@@ -5,8 +5,11 @@ import Icon from '../components/Icon.vue'
 import { loadDraft, saveDraft, deleteDraft } from '../db/drafts'
 import TarotHelper from '../components/TarotHelper.vue'
 import TimerPanel from '../components/TimerPanel.vue'
+import SavedPoems from '../components/SavedPoems.vue'
+import { useSavedPoems } from '../composables/savedPoems'
 
 const DRAFT_ID = 'timed-poem'
+const saved = useSavedPoems('timed-poem-saved') // poems the user chose to keep
 
 const text = ref('')
 const loaded = ref(false)
@@ -30,7 +33,19 @@ async function clearText() {
   await deleteDraft(DRAFT_ID)
 }
 
+/** Keep the poem in the saved list and clear the box for the next one. */
+async function savePoem() {
+  if (!text.value.trim()) return
+  clearTimeout(saveTimer)
+  saveTimer = null
+  if (await saved.add(text.value)) {
+    text.value = ''
+    await deleteDraft(DRAFT_ID)
+  }
+}
+
 onMounted(async () => {
+  saved.load()
   text.value = await loadDraft(DRAFT_ID)
   loaded.value = true
 })
@@ -72,6 +87,9 @@ onBeforeUnmount(() => {
       <span class="muted">{{ t('writing.timed.words', { n: words }) }} · {{ t('writing.timed.savedLocally') }}</span>
       <span class="spacer" />
       <button class="ghost danger" :disabled="!text" @click="clearText" :title="tl('writing.timed.clear')" :aria-label="tl('writing.timed.clear')"><Icon name="trash" :label="tl('writing.timed.clear')" /></button>
+      <button class="primary" :disabled="!text.trim()" @click="savePoem" :title="tl('writing.saved.save')" :aria-label="tl('writing.saved.save')"><Icon name="save" :label="tl('writing.saved.save')" /></button>
     </div>
+
+    <SavedPoems :poems="saved.poems.value" @remove="saved.remove" />
   </section>
 </template>

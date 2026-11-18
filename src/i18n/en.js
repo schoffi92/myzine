@@ -100,6 +100,7 @@ export default {
       novels: { title: 'Novels & stories', desc: 'Grow a plot, build characters and worlds, plan chapters.' },
     },
     difficulty: { label: 'Difficulty', levels: ['Getting started', 'Building skills', 'Skilled writer', 'Experienced writer'] },
+    saved: { save: 'Save this poem', title: 'Your saved poems', remove: 'Remove', confirmRemove: 'Remove this poem?', copy: 'Copy', copied: 'Copied' },
     haiku: {
       title: 'Haiku',
       card: 'Three short lines of 5, 7 and 5 syllables that catch one moment in nature.',

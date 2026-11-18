@@ -100,6 +100,7 @@ export default {
       novels: { title: 'Regények és történetek', desc: 'Cselekmény építése, szereplők és világok, fejezetek tervezése.' },
     },
     difficulty: { label: 'Nehézség', levels: ['Első lépések', 'Készségfejlesztés', 'Gyakorlott író', 'Tapasztalt író'] },
+    saved: { save: 'Vers mentése', title: 'Mentett verseid', remove: 'Eltávolítás', confirmRemove: 'Eltávolítod ezt a verset?', copy: 'Másolás', copied: 'Kimásolva' },
     haiku: {
       title: 'Haiku',
       card: 'Három rövid sor 5, 7 és 5 szótaggal, amely a természet egy pillanatát rögzíti.',

@@ -100,6 +100,7 @@ export default {
       novels: { title: 'Romans & récits', desc: 'Faire grandir une intrigue, créer personnages et mondes, planifier les chapitres.' },
     },
     difficulty: { label: 'Difficulté', levels: ['Premiers pas', 'Gagner en aisance', 'Auteur aguerri', 'Auteur expérimenté'] },
+    saved: { save: 'Enregistrer ce poème', title: 'Tes poèmes enregistrés', remove: 'Retirer', confirmRemove: 'Retirer ce poème ?', copy: 'Copier', copied: 'Copié' },
     haiku: {
       title: 'Haïku',
       card: 'Trois vers courts de 5, 7 et 5 syllabes qui saisissent un instant de la nature.',

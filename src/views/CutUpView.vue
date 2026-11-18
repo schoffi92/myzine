@@ -7,11 +7,14 @@ import { drawCards, CARD_BY_ID } from '../tarot/deck'
 import { cardText } from '../tarot'
 import TarotHelper from '../components/TarotHelper.vue'
 import TimerPanel from '../components/TimerPanel.vue'
+import SavedPoems from '../components/SavedPoems.vue'
+import { useSavedPoems } from '../composables/savedPoems'
 
 // IndexedDB ids (drafts store) for this practice
 const TEXT_ID = 'cutup-text'
 const CARDS_ID = 'cutup-cards'
 const ARRANGE_ID = 'cutup-arrange'
+const saved = useSavedPoems('cutup-saved') // arranged poems the user chose to keep
 
 const step = ref(1)
 
@@ -254,8 +257,19 @@ async function copyPoem() {
   }
 }
 
+/** Keep the arranged poem, then empty the lines: the words go back to the bank for a new poem. */
+async function savePoem() {
+  if (!poemText.value) return
+  if (await saved.add(poemText.value)) {
+    arr.value.lines = [[]]
+    selected.value = null
+    saveArr()
+  }
+}
+
 /* ================= lifecycle ================= */
 onMounted(async () => {
+  saved.load()
   const [savedText, savedArr] = await Promise.all([loadDraft(TEXT_ID), loadDraftData(ARRANGE_ID)])
   text.value = savedText
   await loadCards()
@@ -419,9 +433,14 @@ onBeforeUnmount(() => {
       <!-- Result -->
       <div v-if="poemText" class="panel result">
         <pre class="poem-preview">{{ poemText }}</pre>
-        <button class="primary" @click="copyPoem" :title="copied ? tl('writing.cutup.copied') : tl('writing.cutup.copy')" :aria-label="copied ? tl('writing.cutup.copied') : tl('writing.cutup.copy')"><Icon :name="copied ? 'check' : 'copy'" :label="copied ? tl('writing.cutup.copied') : tl('writing.cutup.copy')" /></button>
+        <div class="result__btns">
+          <button class="ghost" @click="copyPoem" :title="copied ? tl('writing.cutup.copied') : tl('writing.cutup.copy')" :aria-label="copied ? tl('writing.cutup.copied') : tl('writing.cutup.copy')"><Icon :name="copied ? 'check' : 'copy'" :label="copied ? tl('writing.cutup.copied') : tl('writing.cutup.copy')" /></button>
+          <button class="primary" @click="savePoem" :title="tl('writing.saved.save')" :aria-label="tl('writing.saved.save')"><Icon name="save" :label="tl('writing.saved.save')" /></button>
+        </div>
       </div>
     </template>
+
+    <SavedPoems :poems="saved.poems.value" @remove="saved.remove" />
   </section>
 </template>
 
@@ -515,6 +534,7 @@ onBeforeUnmount(() => {
 .tile-tools button { padding: 0.15em 0.45em; font-size: 0.9rem; }
 
 .result { display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+.result__btns { display: flex; gap: 0.5rem; }
 .poem-preview {
   margin: 0;
   white-space: pre-wrap;

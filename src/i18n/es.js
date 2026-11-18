@@ -100,6 +100,7 @@ export default {
       novels: { title: 'Novelas y relatos', desc: 'Haz crecer una trama, crea personajes y mundos, planifica capítulos.' },
     },
     difficulty: { label: 'Dificultad', levels: ['Primeros pasos', 'Desarrollando habilidades', 'Escritor hábil', 'Escritor experimentado'] },
+    saved: { save: 'Guardar este poema', title: 'Tus poemas guardados', remove: 'Quitar', confirmRemove: '¿Quitar este poema?', copy: 'Copiar', copied: 'Copiado' },
     haiku: {
       title: 'Haiku',
       card: 'Tres versos breves de 5, 7 y 5 sílabas que atrapan un instante de la naturaleza.',

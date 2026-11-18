@@ -64,11 +64,19 @@ function tarotList(cards) {
   return `### ${t('share.mdTarot')}\n\n${items.join('\n')}`
 }
 
+/** Poems saved with "Save this poem" (15-minute and cut-up poem), separated by rules. */
+function savedList(d, id) {
+  const poems = (d[id]?.data?.poems || []).filter((p) => p.lines?.some((l) => l.trim()))
+  if (!poems.length) return null
+  return `### ${t('writing.saved.title')}\n\n${poems.map((p) => lines(p.lines.join('\n'))).join('\n\n---\n\n')}`
+}
+
 function timedSection(d) {
   const text = d['timed-poem']?.text?.trim()
   const cards = tarotList(d['timed-poem-cards']?.data?.cards)
-  if (!text && !cards) return null
-  return [`## ${t('writing.timed.title')}`, text && lines(text), cards].filter(Boolean).join('\n\n')
+  const saved = savedList(d, 'timed-poem-saved')
+  if (!text && !cards && !saved) return null
+  return [`## ${t('writing.timed.title')}`, saved, text && lines(text), cards].filter(Boolean).join('\n\n')
 }
 
 function cutupSection(d) {
@@ -81,9 +89,11 @@ function cutupSection(d) {
     const rows = arr.lines.map((l) => l.map((id) => byId[id]).filter(Boolean).join(' ')).filter(Boolean)
     if (rows.length) poem = `### ${t('writing.cutup.linesTitle')}\n\n${lines(rows.join('\n'))}`
   }
-  if (!text && !poem && !cards) return null
+  const saved = savedList(d, 'cutup-saved')
+  if (!text && !poem && !cards && !saved) return null
   return [
     `## ${t('writing.cutup.title')}`,
+    saved,
     poem,
     text && `### ${t('share.mdOriginal')}\n\n${lines(text)}`,
     cards,
