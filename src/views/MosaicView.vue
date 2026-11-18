@@ -126,27 +126,30 @@ watch(
   { deep: true },
 )
 
+/** Put a draft or a saved work on the page (autosave then stores it as the draft). */
+function apply(saved) {
+  Object.assign(state, {
+    step: saved.step ?? 1,
+    center: saved.center ?? '',
+    // older or imported drafts may miss fields the page reads
+    tiles: (Array.isArray(saved.tiles) ? saved.tiles : [])
+      .filter((x) => x && typeof x === 'object')
+      .map((x, i) => ({
+        ...x,
+        id: x.id ?? newId(),
+        who: x.who ?? '',
+        text: x.text ?? '',
+        color: x.color || COLORS[i % COLORS.length],
+        angle: x.angle ?? null,
+      })),
+    sep: SEPARATORS.includes(saved.sep) ? saved.sep : '*',
+  })
+  if (state.step > maxStep.value) state.step = maxStep.value
+}
+
 onMounted(async () => {
   const saved = await loadDraftData(ID)
-  if (saved) {
-    Object.assign(state, {
-      step: saved.step ?? 1,
-      center: saved.center ?? '',
-      // older or imported drafts may miss fields the page reads
-      tiles: (Array.isArray(saved.tiles) ? saved.tiles : [])
-        .filter((x) => x && typeof x === 'object')
-        .map((x, i) => ({
-          ...x,
-          id: x.id ?? newId(),
-          who: x.who ?? '',
-          text: x.text ?? '',
-          color: x.color || COLORS[i % COLORS.length],
-          angle: x.angle ?? null,
-        })),
-      sep: SEPARATORS.includes(saved.sep) ? saved.sep : '*',
-    })
-    if (state.step > maxStep.value) state.step = maxStep.value
-  }
+  if (saved) apply(saved)
   loaded.value = true
 })
 
@@ -303,7 +306,7 @@ onBeforeUnmount(() => {
         </button>
       </div>
 
-      <SavedWorks kind="mosaic" :data="state" :default-title="state.center" :can-save="!!(state.center.trim() || state.tiles.some((x) => x.text.trim()))" />
+      <SavedWorks kind="mosaic" @open="apply" :data="state" :default-title="state.center" :can-save="!!(state.center.trim() || state.tiles.some((x) => x.text.trim()))" />
     </template>
   </section>
 </template>

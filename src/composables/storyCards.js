@@ -33,7 +33,7 @@ export function blankStory() {
 
 const notesOf = (x) => (Array.isArray(x?.notes) ? x.notes.filter((n) => n && n.id) : [])
 
-function normalize(d) {
+export function normalizeStory(d) {
   if (!d || !Array.isArray(d.chapters)) return blankStory()
   return {
     step: [1, 2, 3].includes(d.step) ? d.step : 1,
@@ -52,7 +52,7 @@ function normalize(d) {
   }
 }
 
-export const loadStory = async () => normalize(await loadDraftData(STORY_ID))
+export const loadStory = async () => normalizeStory(await loadDraftData(STORY_ID))
 export const saveStory = (story) => saveDraftData(STORY_ID, story)
 export const deleteStory = () => deleteDraft(STORY_ID)
 

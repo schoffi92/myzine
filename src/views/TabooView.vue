@@ -98,17 +98,20 @@ watch(
   { deep: true },
 )
 
+/** Put a draft or a saved work on the page (autosave then stores it as the draft). */
+function apply(saved) {
+  Object.assign(state, {
+    step: [1, 2, 3].includes(saved.step) ? saved.step : 1,
+    traits: Array.isArray(saved.traits) ? saved.traits.slice(0, MAX_TRAITS) : [],
+    extra: saved.extra ?? '',
+    situation: saved.situation ?? '',
+    text: saved.text ?? '',
+  })
+}
+
 onMounted(async () => {
   const saved = await loadDraftData(ID)
-  if (saved) {
-    Object.assign(state, {
-      step: [1, 2, 3].includes(saved.step) ? saved.step : 1,
-      traits: Array.isArray(saved.traits) ? saved.traits.slice(0, MAX_TRAITS) : [],
-      extra: saved.extra ?? '',
-      situation: saved.situation ?? '',
-      text: saved.text ?? '',
-    })
-  }
+  if (saved) apply(saved)
   loaded.value = true
 })
 
@@ -231,7 +234,7 @@ onBeforeUnmount(() => {
         </button>
       </div>
 
-      <SavedWorks kind="taboo" :data="state" :default-title="state.situation" :can-save="!!(state.text.trim() || state.traits.length)" />
+      <SavedWorks kind="taboo" @open="apply" :data="state" :default-title="state.situation" :can-save="!!(state.text.trim() || state.traits.length)" />
     </template>
   </section>
 </template>

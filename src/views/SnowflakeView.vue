@@ -70,18 +70,21 @@ watch(
   { deep: true },
 )
 
+/** Put a draft or a saved work on the page (autosave then stores it as the draft). */
+function apply(saved) {
+  const b = blank()
+  Object.assign(state, {
+    step: saved.step ?? 1,
+    one: saved.one ?? '',
+    five: b.five.map((_, i) => saved.five?.[i] ?? ''),
+    paras: b.paras.map((_, i) => saved.paras?.[i] ?? ''),
+  })
+  if (state.step > maxStep.value) state.step = maxStep.value
+}
+
 onMounted(async () => {
   const saved = await loadDraftData(ID)
-  if (saved) {
-    const b = blank()
-    Object.assign(state, {
-      step: saved.step ?? 1,
-      one: saved.one ?? '',
-      five: b.five.map((_, i) => saved.five?.[i] ?? ''),
-      paras: b.paras.map((_, i) => saved.paras?.[i] ?? ''),
-    })
-    if (state.step > maxStep.value) state.step = maxStep.value
-  }
+  if (saved) apply(saved)
   loaded.value = true
 })
 
@@ -162,7 +165,7 @@ onBeforeUnmount(() => {
         </button>
       </div>
 
-      <SavedWorks kind="snowflake" :data="state" :default-title="state.one" :can-save="!!(state.one.trim() || state.five.some((x) => x.trim()) || state.paras.some((x) => x.trim()))" />
+      <SavedWorks kind="snowflake" @open="apply" :data="state" :default-title="state.one" :can-save="!!(state.one.trim() || state.five.some((x) => x.trim()) || state.paras.some((x) => x.trim()))" />
     </template>
   </section>
 </template>

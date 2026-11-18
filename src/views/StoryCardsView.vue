@@ -7,7 +7,7 @@ import SavedWorks from '../components/SavedWorks.vue'
 import CardBoard from '../components/CardBoard.vue'
 import { isMobile } from '../composables/useMobile'
 import {
-  BOARD_COLORS, SOURCE_KINDS, blankStory, loadStory, saveStory, deleteStory, uid, chapterTitle, chapterDesc, sourceLabel,
+  BOARD_COLORS, SOURCE_KINDS, blankStory, normalizeStory, loadStory, saveStory, deleteStory, uid, chapterTitle, chapterDesc, sourceLabel,
 } from '../composables/storyCards'
 
 const story = reactive(blankStory())
@@ -264,7 +264,7 @@ onBeforeUnmount(() => {
         <RouterLink v-else :to="{ name: 'story-print' }" class="btn primary" :title="tl('writing.story.print')" :aria-label="tl('writing.story.print')"><Icon name="printer" :label="tl('writing.story.print')" /></RouterLink>
       </div>
 
-      <SavedWorks kind="story-cards" :data="story" :default-title="story.title" :can-save="!!(story.title.trim() || story.chapters.some((c) => c.notes?.length) || story.characters.length || story.worlds.length)" />
+      <SavedWorks kind="story-cards" @open="(d) => Object.assign(story, normalizeStory(d))" :data="story" :default-title="story.title" :can-save="!!(story.title.trim() || story.chapters.some((c) => c.notes?.length) || story.characters.length || story.worlds.length)" />
     </template>
   </section>
 </template>
