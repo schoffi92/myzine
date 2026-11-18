@@ -3,6 +3,7 @@ import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } 
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
 import EarlierVersion from '../components/EarlierVersion.vue'
+import SavedWorks from '../components/SavedWorks.vue'
 import { loadDraftData, saveDraftData, deleteDraft } from '../db/drafts'
 
 const ID = 'mosaic' // IndexedDB drafts id
@@ -290,6 +291,8 @@ onBeforeUnmount(() => {
           <Icon name="arrow-right" :label="tl('writing.mosaic.next')" />
         </button>
       </div>
+
+      <SavedWorks kind="mosaic" :data="state" :default-title="state.center" :can-save="!!(state.center.trim() || state.tiles.some((x) => x.text.trim()))" />
     </template>
   </section>
 </template>

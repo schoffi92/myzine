@@ -4,7 +4,7 @@ import { listZines, listPages } from '../db/zines'
 import { getAllDrafts } from '../db/drafts'
 import { cardText } from '../tarot'
 import { CARD_BY_ID } from '../tarot/deck'
-import { chapterTitle, chapterDesc } from '../composables/storyCards'
+import { chapterTitle, chapterDesc, sourceLabel } from '../composables/storyCards'
 
 /*
  * Readable Markdown export of the user's zines and writing practices,
@@ -100,48 +100,50 @@ function cutupSection(d) {
   ].filter(Boolean).join('\n\n')
 }
 
-function snowflakeSection(d) {
-  const s = d.snowflake?.data
+/*
+ * Novel practices: a body builder per practice (data → Markdown blocks, with
+ * ### as the top heading level, or null when empty). Used for the current
+ * work in the export, for saved works (savedWorkMarkdown) and their print view.
+ */
+
+/** Move Markdown headings by `by` levels (user text never starts with #: it's escaped). */
+const shiftHeadings = (md, by) =>
+  md.replace(/^(#{1,6}) /gm, (_, h) => `${'#'.repeat(Math.min(6, Math.max(1, h.length + by)))} `)
+
+function snowflakeBody(s) {
   if (!s || (!s.one?.trim() && !s.five?.some((x) => x.trim()) && !s.paras?.some((x) => x.trim()))) return null
   const steps = t('writing.snowflake.steps')
   const labels = t('writing.snowflake.s2Labels')
-  const out = [`## ${t('writing.snowflake.title')}`]
+  const out = []
   if (s.one?.trim()) out.push(quote(s.one))
   // bullets, not "1. 2. 5.": Markdown apps would renumber a gappy list
   const five = (s.five || []).map((x, i) => (x.trim() ? `- **${labels[i]}:** ${inline(x)}` : null)).filter(Boolean)
   if (five.length) out.push(`### ${steps[1]}\n\n${five.join('\n')}`)
   const paras = (s.paras || []).map((p, i) => p.trim() || s.five?.[i]?.trim() || '').filter(Boolean)
   if (paras.length) out.push(`### ${t('writing.snowflake.s4Title')}\n\n${paras.map(paragraphs).join('\n\n')}`)
-  return out.join('\n\n')
+  return out
 }
 
-function mosaicSection(d) {
-  const m = d.mosaic?.data
+function mosaicBody(m) {
   const tiles = (m?.tiles || []).filter((x) => x.text?.trim())
   if (!m || (!m.center?.trim() && !tiles.length)) return null
-  const out = [`## ${t('writing.mosaic.title')}`]
+  const out = []
   if (m.center?.trim()) out.push(quote(m.center))
   const parts = tiles.map((x, i) =>
     [`### ${x.who?.trim() ? inline(x.who) : t('writing.mosaic.untitledTile', { n: i + 1 })}`, lines(x.text)].join('\n\n'),
   )
   if (parts.length) out.push(parts.join('\n\n---\n\n'))
-  return out.join('\n\n')
+  return out
 }
 
-function storySection(d) {
-  const s = d['story-cards']?.data
+function storyBody(s) {
   if (!s?.chapters) return null
   const notes = (list) => list.filter((n) => n.text?.trim()).map((n) => `- ${inline(n.text)}`).join('\n')
   const chapters = s.chapters.filter((c) => c.enabled !== false)
-  const hasContent =
-    s.title?.trim() ||
-    chapters.some((c) => c.notes?.length) ||
-    s.characters?.length ||
-    s.worlds?.length
+  const hasContent = s.title?.trim() || chapters.some((c) => c.notes?.length) || s.characters?.length || s.worlds?.length
   if (!hasContent) return null
 
-  const kind = t(s.kind === 'film' ? 'writing.story.kindFilm' : 'writing.story.kindNovel')
-  const out = [`## ${t('writing.story.title')}${s.title?.trim() ? `: ${inline(s.title)} (${kind})` : ''}`]
+  const out = []
   if (chapters.length) {
     out.push(`### ${t('writing.story.steps')[0]}`)
     chapters.forEach((c, i) => {
@@ -163,7 +165,60 @@ function storySection(d) {
       out.push(block.join('\n\n'))
     })
   }
-  return out.join('\n\n')
+  return out
+}
+
+const storyKind = (s) => t(s?.kind === 'film' ? 'writing.story.kindFilm' : 'writing.story.kindNovel')
+
+function tabooBody(s) {
+  if (!s || (!s.text?.trim() && !s.traits?.length)) return null
+  const out = []
+  if (s.situation?.trim()) out.push(`**${t('writing.taboo.situation')}:** ${inline(s.situation)}`)
+  if (s.traits?.length) out.push(`**${t('writing.taboo.traitsWere')}:** ${s.traits.map(inline).join(', ')}`)
+  if (s.text?.trim()) out.push(paragraphs(s.text))
+  return out
+}
+
+/** Draft id → { body, title key } of the novel practices that can save works. */
+export const NOVEL_PRACTICES = {
+  snowflake: { body: snowflakeBody, titleKey: 'writing.snowflake.title' },
+  mosaic: { body: mosaicBody, titleKey: 'writing.mosaic.title' },
+  'story-cards': { body: storyBody, titleKey: 'writing.story.title' },
+  taboo: { body: tabooBody, titleKey: 'writing.taboo.title' },
+}
+
+const dateOf = (at) => new Date(at).toLocaleDateString(settings.locale, { year: 'numeric', month: 'long', day: 'numeric' })
+
+/** One saved work as a standalone Markdown document (copy button, print view). */
+export function savedWorkMarkdown(kind, work) {
+  const p = NOVEL_PRACTICES[kind]
+  const sub = [t(p.titleKey), kind === 'story-cards' ? sourceLabel(work.data, t) : null, dateOf(work.at)].filter(Boolean).join(' · ')
+  const body = p.body(work.data) || []
+  return [`# ${inline(work.title) || t('writing.works.untitled')}`, `*${sub}*`, shiftHeadings(body.join('\n\n'), -1)].filter(Boolean).join('\n\n') + '\n'
+}
+
+/** A practice section of the export: the current work, then its saved works. */
+function novelSection(d, kind, heading) {
+  const p = NOVEL_PRACTICES[kind]
+  const current = p.body(d[kind]?.data)
+  const saved = (d[`${kind}-saved`]?.data?.works || []).map((w) =>
+    [
+      `### ${t('writing.works.savedLabel')}: ${inline(w.title) || t('writing.works.untitled')}`,
+      `*${dateOf(w.at)}*`,
+      shiftHeadings((p.body(w.data) || []).join('\n\n'), 1),
+    ].filter(Boolean).join('\n\n'),
+  )
+  if (!current && !saved.length) return null
+  return [heading, ...(current || []), ...saved].join('\n\n')
+}
+
+const snowflakeSection = (d) => novelSection(d, 'snowflake', `## ${t('writing.snowflake.title')}`)
+const mosaicSection = (d) => novelSection(d, 'mosaic', `## ${t('writing.mosaic.title')}`)
+const tabooSection = (d) => novelSection(d, 'taboo', `## ${t('writing.taboo.title')}`)
+function storySection(d) {
+  const s = d['story-cards']?.data
+  const title = s?.title?.trim() ? `: ${inline(s.title)} (${storyKind(s)})` : ''
+  return novelSection(d, 'story-cards', `## ${t('writing.story.title')}${title}`)
 }
 
 function haikuSection(d) {
@@ -173,16 +228,6 @@ function haikuSection(d) {
   if (!poems.length && !draft) return null
   const all = [...poems.map((x) => x.lines), ...(draft ? [draft] : [])]
   return [`## ${t('writing.haiku.title')}`, all.map((ls) => lines(ls.join('\n'))).join('\n\n---\n\n')].join('\n\n')
-}
-
-function tabooSection(d) {
-  const s = d.taboo?.data
-  if (!s || (!s.text?.trim() && !s.traits?.length)) return null
-  const out = [`## ${t('writing.taboo.title')}`]
-  if (s.situation?.trim()) out.push(`**${t('writing.taboo.situation')}:** ${inline(s.situation)}`)
-  if (s.traits?.length) out.push(`**${t('writing.taboo.traitsWere')}:** ${s.traits.map(inline).join(', ')}`)
-  if (s.text?.trim()) out.push(paragraphs(s.text))
-  return out.join('\n\n')
 }
 
 /* ---------- whole document ---------- */

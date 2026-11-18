@@ -37,6 +37,7 @@ export const PAGES = [
   { path: 'writing/story-cards', name: 'story', meta: { title: 'writing.story.title', description: 'writing.story.card' } },
   { path: 'writing/taboo', name: 'taboo', meta: { title: 'writing.taboo.title', description: 'writing.taboo.card' } },
   { path: 'writing/story-cards/print', name: 'story-print', meta: { title: 'writing.story.printTitle', noindex: true } },
+  { path: 'writing/saved/:kind/:id/print', name: 'saved-print', meta: { title: 'writing.works.printTitle', noindex: true } },
   { path: 'share', name: 'share', meta: { title: 'share.title', description: 'share.tip', noindex: true } },
   { path: 'zines', name: 'zines', meta: { title: 'home.create', description: 'library.intro' } },
   { path: 'storage', name: 'storage', meta: { title: 'storage.title', description: 'storage.intro' } },

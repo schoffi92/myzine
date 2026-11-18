@@ -26,6 +26,7 @@ const views = {
   story: () => import('./views/StoryCardsView.vue'),
   taboo: () => import('./views/TabooView.vue'),
   'story-print': () => import('./views/StoryPrintView.vue'),
+  'saved-print': () => import('./views/SavedPrintView.vue'),
   share: () => import('./views/ShareView.vue'),
   zines: () => import('./views/ZineLibrary.vue'),
   storage: () => import('./views/StorageView.vue'),

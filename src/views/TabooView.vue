@@ -3,6 +3,7 @@ import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } 
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
 import EarlierVersion from '../components/EarlierVersion.vue'
+import SavedWorks from '../components/SavedWorks.vue'
 import { settings } from '../composables/settings'
 import { loadDraftData, saveDraftData, deleteDraft } from '../db/drafts'
 import { MAX_TRAITS, drawTraits, drawSituation, tabooStems, findTaboo } from '../writing/tabooData'
@@ -229,6 +230,8 @@ onBeforeUnmount(() => {
           <Icon name="arrow-right" :label="tl('writing.taboo.next')" />
         </button>
       </div>
+
+      <SavedWorks kind="taboo" :data="state" :default-title="state.situation" :can-save="!!(state.text.trim() || state.traits.length)" />
     </template>
   </section>
 </template>

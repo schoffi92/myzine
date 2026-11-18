@@ -3,6 +3,7 @@ import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } 
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
 import EarlierVersion from '../components/EarlierVersion.vue'
+import SavedWorks from '../components/SavedWorks.vue'
 import { loadDraftData, saveDraftData, deleteDraft } from '../db/drafts'
 
 const ID = 'snowflake' // IndexedDB drafts id
@@ -159,6 +160,8 @@ onBeforeUnmount(() => {
           <Icon name="arrow-right" :label="tl('writing.snowflake.next')" />
         </button>
       </div>
+
+      <SavedWorks kind="snowflake" :data="state" :default-title="state.one" :can-save="!!(state.one.trim() || state.five.some((x) => x.trim()) || state.paras.some((x) => x.trim()))" />
     </template>
   </section>
 </template>

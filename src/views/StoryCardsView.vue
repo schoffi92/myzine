@@ -3,6 +3,7 @@ import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } 
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
 import EarlierVersion from '../components/EarlierVersion.vue'
+import SavedWorks from '../components/SavedWorks.vue'
 import CardBoard from '../components/CardBoard.vue'
 import { isMobile } from '../composables/useMobile'
 import {
@@ -262,6 +263,8 @@ onBeforeUnmount(() => {
         <button v-if="story.step < 3" class="primary" @click="go(story.step + 1)" :title="tl('writing.story.next')" :aria-label="tl('writing.story.next')"><Icon name="arrow-right" :label="tl('writing.story.next')" /></button>
         <RouterLink v-else :to="{ name: 'story-print' }" class="btn primary" :title="tl('writing.story.print')" :aria-label="tl('writing.story.print')"><Icon name="printer" :label="tl('writing.story.print')" /></RouterLink>
       </div>
+
+      <SavedWorks kind="story-cards" :data="story" :default-title="story.title" :can-save="!!(story.title.trim() || story.chapters.some((c) => c.notes?.length) || story.characters.length || story.worlds.length)" />
     </template>
   </section>
 </template>

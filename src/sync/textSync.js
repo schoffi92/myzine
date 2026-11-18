@@ -8,7 +8,7 @@ import { exportSelection, getZine, listPages } from '../db/zines'
  * had a different version, it is saved first:
  *  - the 15-minute poem in the writing box → that practice's saved poems
  *  - Haiku lines in progress               → the kept haiku list
- *  - saved-poem lists                      → combined, nothing to save
+ *  - saved poem / saved work lists         → combined, nothing to save
  *  - everything else (and zine texts)      → an "earlier version" record,
  *    id `prev:<key>`, one per practice/zine, which the page can restore.
  * Images are never sent; local images of a zine are kept.
@@ -45,12 +45,14 @@ const content = (record) => record?.text ?? record?.data ?? null
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 const newId = () => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`
 
-/** Combine two poem lists by id, newest first. */
-function unionPoems(a = [], b = []) {
+/** Combine two lists of saved items by id, newest first. */
+function unionById(a = [], b = [], valid = () => true) {
   const byId = new Map()
-  for (const p of [...a, ...b]) if (p?.id && Array.isArray(p.lines) && !byId.has(p.id)) byId.set(p.id, p)
+  for (const p of [...(a || []), ...(b || [])]) if (p?.id && valid(p) && !byId.has(p.id)) byId.set(p.id, p)
   return [...byId.values()].sort((x, y) => (y.at || 0) - (x.at || 0))
 }
+const unionPoems = (a, b) => unionById(a, b, (p) => Array.isArray(p.lines))
+const unionWorks = (a, b) => unionById(a, b, (w) => w.data && typeof w.data === 'object')
 
 /** The text of a zine that is compared and saved (no images). */
 const zineSnapshot = (zine, pages) => ({
@@ -116,7 +118,10 @@ export async function importTexts(data) {
     report.drafts++
 
     if (d.id.endsWith('-saved')) {
-      next.set(d.id, { id: d.id, data: { poems: unionPoems(d.data?.poems, mine.data?.poems) }, updatedAt: now })
+      const data = {}
+      if (d.data?.poems || mine.data?.poems) data.poems = unionPoems(d.data?.poems, mine.data?.poems)
+      if (d.data?.works || mine.data?.works) data.works = unionWorks(d.data?.works, mine.data?.works)
+      next.set(d.id, { id: d.id, data, updatedAt: now })
     } else if (d.id === 'haiku') {
       const kept = unionPoems(d.data?.kept, mine.data?.kept)
       const myLines = mine.data?.lines || []
