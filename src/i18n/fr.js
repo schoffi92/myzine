@@ -1,6 +1,7 @@
 export default {
   nav: { language: 'Langue', theme: 'Thème', home: 'Accueil', exportTip: 'Exporter une sauvegarde : télécharge tous tes zines et textes dans un fichier', importTip: 'Importer une sauvegarde : restaure tes zines et textes depuis un fichier', clearTip: 'Effacer toutes les données enregistrées dans ce navigateur (une sauvegarde est faite avant)', confirmClearAll: 'Effacer tout ce que MyZine a enregistré dans ce navigateur : tous les zines, images, exercices d’écriture et réglages ? Un fichier de sauvegarde sera d’abord téléchargé pour que tu puisses l’importer plus tard.', confirmBackupSaved: 'Le fichier de sauvegarde a été transmis au navigateur. Vérifiez qu’il a bien été enregistré (par exemple dans Téléchargements) avant de continuer.\n\nSupprimer maintenant tout ce que MyZine a enregistré dans ce navigateur ?', clearFailed: 'Échec de l’effacement : {msg}' },
   theme: { system: 'Système', light: 'Clair', dark: 'Sombre' },
+  copy: { title: 'Copiez ce texte', hint: 'Votre navigateur n’a pas autorisé la copie. Le texte ci-dessous est sélectionné : appuyez sur Ctrl+C (⌘C sur Mac) ou, sur un téléphone, appuyez longuement dessus et choisissez Copier.', close: 'Fermer' },
 
   home: {
     tagline: 'Écris, plie et partage tes propres petits zines.',

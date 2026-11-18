@@ -1,6 +1,7 @@
 export default {
   nav: { language: 'Nyelv', theme: 'Téma', home: 'Kezdőlap', exportTip: 'Biztonsági mentés exportálása: az összes zine és írás letöltése egy fájlba', importTip: 'Biztonsági mentés importálása: zine-ok és írások visszaállítása egy mentésfájlból', clearTip: 'A böngészőben tárolt összes adat törlése (előtte biztonsági mentés készül)', confirmClearAll: 'Törlöd mindazt, amit a MyZine ebben a böngészőben tárolt: az összes zine-t, képet, írásgyakorlatot és beállítást? Előtte letöltődik egy biztonsági mentésfájl, amelyet később újra importálhatsz.', confirmBackupSaved: 'A mentésfájlt átadtuk a böngészőnek. Mielőtt továbblépsz, ellenőrizd, hogy tényleg elmentődött-e (például a Letöltések mappába).\n\nMost törlöd mindazt, amit a MyZine ebben a böngészőben tárolt?', clearFailed: 'A törlés sikertelen: {msg}' },
   theme: { system: 'Rendszer', light: 'Világos', dark: 'Sötét' },
+  copy: { title: 'Másold ki ezt a szöveget', hint: 'A böngésződ nem engedte a másolást. Az alábbi szöveg ki van jelölve: nyomd meg a Ctrl+C-t (Macen ⌘C), telefonon pedig tartsd rajta az ujjad, és válaszd a Másolást.', close: 'Bezárás' },
 
   home: {
     tagline: 'Írj, hajtogass és oszd meg a saját kis zine-jaidat.',

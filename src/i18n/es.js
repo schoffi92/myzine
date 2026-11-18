@@ -1,6 +1,7 @@
 export default {
   nav: { language: 'Idioma', theme: 'Tema', home: 'Inicio', exportTip: 'Exportar copia: descarga todos tus fanzines y textos en un archivo', importTip: 'Importar copia: recupera fanzines y textos desde un archivo de copia', clearTip: 'Borrar todos los datos guardados en este navegador (antes se guarda una copia)', confirmClearAll: '¿Borrar todo lo que MyZine ha guardado en este navegador: todos los fanzines, imágenes, prácticas de escritura y ajustes? Antes se descargará un archivo de copia que podrás volver a importar más tarde.', confirmBackupSaved: 'El archivo de copia de seguridad se entregó al navegador. Comprueba que se haya guardado de verdad (por ejemplo en Descargas) antes de continuar.\n\n¿Borrar ahora todo lo que MyZine guardó en este navegador?', clearFailed: 'Error al borrar: {msg}' },
   theme: { system: 'Sistema', light: 'Claro', dark: 'Oscuro' },
+  copy: { title: 'Copia este texto', hint: 'Tu navegador no permitió copiar. El texto de abajo está seleccionado: pulsa Ctrl+C (⌘C en un Mac) o, en el móvil, mantenlo pulsado y elige Copiar.', close: 'Cerrar' },
 
   home: {
     tagline: 'Escribe, dobla y comparte tus propios fanzines.',

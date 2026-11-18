@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { t, tl } from '../i18n'
+import { copyToClipboard } from '../composables/clipboard'
 import Icon from '../components/Icon.vue'
 import EarlierVersion from '../components/EarlierVersion.vue'
 import SavedWorks from '../components/SavedWorks.vue'
@@ -92,11 +93,9 @@ const storyText = computed(() => {
 })
 
 async function copyStory() {
-  try {
-    await navigator.clipboard.writeText(storyText.value)
-    copied.value = true
-    setTimeout(() => (copied.value = false), 1500)
-  } catch { /* clipboard blocked */ }
+  if (!(await copyToClipboard(storyText.value))) return // blocked: a dialog shows the text instead
+  copied.value = true
+  setTimeout(() => (copied.value = false), 1500)
 }
 
 async function startOver() {

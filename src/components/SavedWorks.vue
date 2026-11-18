@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { t, tl } from '../i18n'
+import { copyToClipboard } from '../composables/clipboard'
 import { settings } from '../composables/settings'
 import Icon from './Icon.vue'
 import { useSavedWorks } from '../composables/savedWorks'
@@ -44,13 +45,9 @@ async function save() {
 }
 
 async function copy(w) {
-  try {
-    await navigator.clipboard.writeText(savedWorkMarkdown(props.kind, w))
-    copiedId.value = w.id
-    setTimeout(() => copiedId.value === w.id && (copiedId.value = null), 2000)
-  } catch {
-    /* clipboard blocked */
-  }
+  if (!(await copyToClipboard(savedWorkMarkdown(props.kind, w)))) return // blocked: a dialog shows the text instead
+  copiedId.value = w.id
+  setTimeout(() => copiedId.value === w.id && (copiedId.value = null), 2000)
 }
 
 /** Same content, ignoring which step the page shows. */

@@ -1,6 +1,7 @@
 export default {
   nav: { language: 'Język', theme: 'Motyw', home: 'Strona główna', exportTip: 'Eksportuj kopię zapasową: pobierz wszystkie ziny i teksty jako plik', importTip: 'Importuj kopię zapasową: przywróć ziny i teksty z pliku kopii', clearTip: 'Wyczyść wszystkie dane zapisane w tej przeglądarce (najpierw zostanie zapisana kopia zapasowa)', confirmClearAll: 'Usunąć wszystko, co MyZine zapisał w tej przeglądarce: wszystkie ziny, obrazy, ćwiczenia pisarskie i ustawienia? Najpierw zostanie pobrany plik kopii zapasowej, który możesz później zaimportować.', confirmBackupSaved: 'Plik kopii zapasowej został przekazany przeglądarce. Zanim przejdziesz dalej, sprawdź, czy naprawdę się zapisał (na przykład w Pobranych).\n\nUsunąć teraz wszystko, co MyZine zapisał w tej przeglądarce?', clearFailed: 'Czyszczenie nie powiodło się: {msg}' },
   theme: { system: 'Systemowy', light: 'Jasny', dark: 'Ciemny' },
+  copy: { title: 'Skopiuj ten tekst', hint: 'Przeglądarka nie pozwoliła na kopiowanie. Tekst poniżej jest zaznaczony: naciśnij Ctrl+C (⌘C na Macu) albo na telefonie przytrzymaj go i wybierz Kopiuj.', close: 'Zamknij' },
 
   home: {
     tagline: 'Pisz, składaj i dziel się własnymi małymi zinami.',

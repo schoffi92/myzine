@@ -6,6 +6,7 @@
  */
 import { ref } from 'vue'
 import { t, tl } from '../i18n'
+import { copyToClipboard } from '../composables/clipboard'
 import Icon from './Icon.vue'
 
 const props = defineProps({
@@ -18,11 +19,9 @@ const copiedId = ref(null)
 const textOf = (p) => p.lines.join('\n')
 
 async function copy(p) {
-  try {
-    await navigator.clipboard.writeText(textOf(p))
-    copiedId.value = p.id
-    setTimeout(() => (copiedId.value = null), 1500)
-  } catch { /* clipboard blocked */ }
+  if (!(await copyToClipboard(textOf(p)))) return // blocked: a dialog shows the text instead
+  copiedId.value = p.id
+  setTimeout(() => (copiedId.value = null), 1500)
 }
 
 function remove(i) {

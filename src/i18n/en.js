@@ -1,6 +1,7 @@
 export default {
   nav: { language: 'Language', theme: 'Theme', home: 'Home', exportTip: 'Export backup: download all your zines and writing as a file', importTip: 'Import backup: restore zines and writing from a backup file', clearTip: 'Clear all data stored in this browser (a backup is saved first)', confirmClearAll: 'Delete everything MyZine has stored in this browser: all zines, images, writing practices and settings? A backup file will be downloaded first, so you can import it again later.', confirmBackupSaved: 'The backup file was handed to your browser. Check that it was really saved (for example in Downloads) before you go on.\n\nDelete everything MyZine stored in this browser now?', clearFailed: 'Clearing failed: {msg}' },
   theme: { system: 'System', light: 'Light', dark: 'Dark' },
+  copy: { title: 'Copy this text', hint: 'Your browser didn’t allow copying. The text below is selected: press Ctrl+C (⌘C on a Mac), or on a phone long-press it and choose Copy.', close: 'Close' },
 
   home: {
     tagline: 'Write, fold and share your own little zines.',

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { t, tl } from '../i18n'
+import { copyToClipboard } from '../composables/clipboard'
 import Icon from '../components/Icon.vue'
 import { storageEstimate } from '../db/idb'
 
@@ -47,13 +48,9 @@ const backupSnippet = `(async () => {
 
 const copied = ref(false)
 async function copySnippet() {
-  try {
-    await navigator.clipboard.writeText(backupSnippet)
-    copied.value = true
-    setTimeout(() => (copied.value = false), 2000)
-  } catch {
-    /* clipboard blocked: the code can still be selected by hand */
-  }
+  if (!(await copyToClipboard(backupSnippet))) return // blocked: a dialog shows the text instead
+  copied.value = true
+  setTimeout(() => (copied.value = false), 2000)
 }
 
 onMounted(async () => {

@@ -6,6 +6,7 @@ import { t, languages } from './i18n'
 import { status, mmss, ringing, stopAlarm, owner } from './composables/poemTimer'
 import { downloadBackup, pickAndImportBackup, backupAndClearAll } from './composables/backup'
 import FlagIcon from './components/FlagIcon.vue'
+import CopyFallback from './components/CopyFallback.vue'
 
 import { isMobile } from './composables/useMobile'
 
@@ -83,4 +84,7 @@ watchEffect(() => {
     <RouterLink :to="{ name: owner }" class="btn" @click="stopAlarm">{{ t('writing.timed.goTo') }}</RouterLink>
     <button class="primary" @click="stopAlarm">🔕 {{ t('writing.timed.stopAlarm') }}</button>
   </div>
+
+  <!-- "copy" buttons fall back to this when the browser blocks the clipboard -->
+  <CopyFallback />
 </template>

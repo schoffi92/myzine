@@ -1,6 +1,7 @@
 export default {
   nav: { language: 'Sprache', theme: 'Design', home: 'Startseite', exportTip: 'Sicherung exportieren: alle Zines und Texte als Datei herunterladen', importTip: 'Sicherung importieren: Zines und Texte aus einer Sicherungsdatei wiederherstellen', clearTip: 'Alle in diesem Browser gespeicherten Daten löschen (vorher wird eine Sicherung gespeichert)', confirmClearAll: 'Alles löschen, was MyZine in diesem Browser gespeichert hat: alle Zines, Bilder, Schreibübungen und Einstellungen? Vorher wird eine Sicherungsdatei heruntergeladen, die du später wieder importieren kannst.', confirmBackupSaved: 'Die Sicherungsdatei wurde an deinen Browser übergeben. Prüfe, ob sie wirklich gespeichert wurde (zum Beispiel unter Downloads), bevor du weitermachst.\n\nJetzt alles löschen, was MyZine in diesem Browser gespeichert hat?', clearFailed: 'Löschen fehlgeschlagen: {msg}' },
   theme: { system: 'System', light: 'Hell', dark: 'Dunkel' },
+  copy: { title: 'Diesen Text kopieren', hint: 'Dein Browser hat das Kopieren nicht erlaubt. Der Text unten ist markiert: Drücke Strg+C (⌘C auf dem Mac) oder halte ihn auf dem Handy gedrückt und wähle Kopieren.', close: 'Schließen' },
 
   home: {
     tagline: 'Schreibe, falte und teile deine eigenen kleinen Zines.',

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { t, tl } from '../i18n'
+import { copyToClipboard } from '../composables/clipboard'
 import Icon from '../components/Icon.vue'
 import EarlierVersion from '../components/EarlierVersion.vue'
 import { loadDraft, saveDraft, loadDraftData, saveDraftData } from '../db/drafts'
@@ -249,13 +250,9 @@ function dropOnBank() {
 }
 
 async function copyPoem() {
-  try {
-    await navigator.clipboard.writeText(poemText.value)
-    copied.value = true
-    setTimeout(() => (copied.value = false), 1500)
-  } catch {
-    /* clipboard blocked; nothing else to do */
-  }
+  if (!(await copyToClipboard(poemText.value))) return // blocked: a dialog shows the text instead
+  copied.value = true
+  setTimeout(() => (copied.value = false), 1500)
 }
 
 /** Keep the arranged poem, then empty the lines: the words go back to the bank for a new poem. */
