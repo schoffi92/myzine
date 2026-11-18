@@ -2,6 +2,7 @@
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
+import EarlierVersion from '../components/EarlierVersion.vue'
 import CardBoard from '../components/CardBoard.vue'
 import { isMobile } from '../composables/useMobile'
 import {
@@ -108,6 +109,7 @@ onBeforeUnmount(() => {
       <RouterLink :to="{ name: 'story-print' }" class="btn" :title="tl('writing.story.print')" :aria-label="tl('writing.story.print')"><Icon name="printer" :label="tl('writing.story.print')" /></RouterLink>
     </div>
     <p class="lead prose-w">{{ t('writing.story.intro') }}</p>
+    <EarlierVersion :keys="['story-cards']" />
     <details class="tips prose-w">
       <summary>{{ t('writing.story.tipsTitle') }}</summary>
       <ul>

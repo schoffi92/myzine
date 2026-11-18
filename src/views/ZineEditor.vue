@@ -5,6 +5,7 @@ import ZinePage from '../components/ZinePage.vue'
 import { settings } from '../composables/settings'
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
+import EarlierVersion from '../components/EarlierVersion.vue'
 import { getZine, updateZine, listPages, updatePage, swapPages, saveImage, deleteImage } from '../db/zines'
 
 const props = defineProps({ id: { type: String, required: true } })
@@ -132,6 +133,7 @@ onBeforeRouteLeave(() => flush())
       <RouterLink class="btn primary" :to="{ name: 'read', params: { id } }" :title="tl('editor.read')" :aria-label="tl('editor.read')"><Icon name="book" :label="tl('editor.read')" /></RouterLink>
     </div>
     <textarea v-model="zine.description" class="desc-input" rows="1" :placeholder="t('editor.description')" @input="saveZine" />
+    <EarlierVersion :keys="[`zine:${id}`]" :before-restore="flush" />
 
     <div class="editor__body">
       <aside class="pages">

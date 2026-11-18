@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
+import EarlierVersion from '../components/EarlierVersion.vue'
 import { loadDraft, saveDraft, deleteDraft } from '../db/drafts'
 import TarotHelper from '../components/TarotHelper.vue'
 import TimerPanel from '../components/TimerPanel.vue'
@@ -64,6 +65,7 @@ onBeforeUnmount(() => {
     <RouterLink :to="{ name: 'writing' }" class="back" :title="tl('writing.title')" :aria-label="tl('writing.title')"><Icon name="arrow-left" :label="tl('writing.title')" /></RouterLink>
     <h1>{{ t('writing.timed.title') }}</h1>
     <p class="lead">{{ t('writing.timed.intro') }}</p>
+    <EarlierVersion :keys="['timed-poem-cards']" />
 
     <details class="rules">
       <summary>{{ t('writing.timed.rulesTitle') }}</summary>

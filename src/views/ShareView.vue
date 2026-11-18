@@ -1,18 +1,24 @@
 <script setup>
-import { ref, reactive, computed, watch, onMounted, shallowRef } from 'vue'
+import { ref, reactive, computed, watch, onMounted, shallowRef, defineAsyncComponent } from 'vue'
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
 import { listZines } from '../db/zines'
 import { countDrafts } from '../db/drafts'
 import { buildShareFiles, buildMarkdownFiles, canShareFiles, shareFile, downloadFile, pickAndImportBackup } from '../composables/backup'
+import { buildTextPayload, importTexts, placeOf } from '../sync/textSync'
+
+// loaded only when used: they bring the QR libraries
+const QrSender = defineAsyncComponent(() => import('../components/QrSender.vue'))
+const QrScanner = defineAsyncComponent(() => import('../components/QrScanner.vue'))
+const MANY_CODES = 40 // above this, suggest a file instead
 
 const zines = ref([])
 const draftCount = ref(0)
 const loaded = ref(false)
-// format: 'backup' (JSON, importable) | 'markdown' (readable, not importable)
+// format: 'backup' (JSON, importable) | 'markdown' (readable, not importable) | 'qr' (texts as QR codes)
 const sel = reactive({ format: 'backup', zineIds: [], includeImages: true, includeDrafts: true })
 
-const prepared = shallowRef(null) // { share: File, download: File, size }
+const prepared = shallowRef(null) // { share: File, download: File, size } or, for QR, { frames }
 const preparing = ref(false)
 const error = ref('')
 const shareSupported = canShareFiles()
@@ -49,7 +55,12 @@ function rebuild() {
         includeImages: sel.includeImages,
         includeDrafts: sel.includeDrafts && draftCount.value > 0,
       }
-      const files = sel.format === 'markdown' ? await buildMarkdownFiles(selection) : await buildShareFiles(selection)
+      const files =
+        sel.format === 'qr'
+          ? { frames: await (await import('../sync/qrPayload')).toFrames(await buildTextPayload(selection)) }
+          : sel.format === 'markdown'
+            ? await buildMarkdownFiles(selection)
+            : await buildShareFiles(selection)
       if (mine === buildToken) prepared.value = files
     } catch (e) {
       if (mine === buildToken) error.value = e.message
@@ -78,10 +89,45 @@ function onDownload() {
   if (prepared.value) downloadFile(prepared.value.download)
 }
 
-onMounted(async () => {
+/* ---- receiving QR codes ---- */
+const scanning = ref(false)
+const report = ref(null) // result of importTexts
+const importError = ref('')
+
+async function onScanned(data) {
+  scanning.value = false
+  importError.value = ''
+  const z = Array.isArray(data?.zines) ? data.zines.length : 0
+  const d = Array.isArray(data?.drafts) ? data.drafts.length : 0
+  if (!confirm(t('qr.confirm', { z, d }))) return
+  try {
+    report.value = await importTexts(data)
+    await refreshCounts()
+  } catch (e) {
+    importError.value = t('library.importFailed', { msg: e.message })
+  }
+}
+
+function startScan() {
+  report.value = null
+  importError.value = ''
+  scanning.value = true
+}
+
+const savedName = (s) => {
+  const place = placeOf(s.key, s.title)
+  return { to: place.to, name: place.title || t(place.titleKey) || t('library.untitled') }
+}
+
+async function refreshCounts() {
   const [z, d] = await Promise.all([listZines(), countDrafts()])
   zines.value = z
   draftCount.value = d
+  return { z, d }
+}
+
+onMounted(async () => {
+  const { z, d } = await refreshCounts()
   sel.zineIds = z.map((x) => x.id)
   sel.includeDrafts = d > 0
   loaded.value = true
@@ -108,6 +154,13 @@ onMounted(async () => {
               <span>
                 {{ t('share.formatBackup') }}
                 <small class="muted">{{ t('share.formatBackupHint') }}</small>
+              </span>
+            </label>
+            <label class="toggle format" :class="{ on: sel.format === 'qr' }">
+              <input v-model="sel.format" type="radio" value="qr" name="format" />
+              <span>
+                {{ t('share.formatQr') }}
+                <small class="muted">{{ t('share.formatQrHint') }}</small>
               </span>
             </label>
             <label class="toggle format" :class="{ on: sel.format === 'markdown' }">
@@ -139,8 +192,8 @@ onMounted(async () => {
               </label>
             </li>
           </ul>
-          <label v-if="zines.length" class="toggle" :class="{ disabled: sel.format === 'markdown' }">
-            <input v-model="sel.includeImages" type="checkbox" :disabled="sel.format === 'markdown'" />
+          <label v-if="zines.length" class="toggle" :class="{ disabled: sel.format !== 'backup' }">
+            <input v-model="sel.includeImages" type="checkbox" :disabled="sel.format !== 'backup'" />
             <span>
               {{ t('share.images') }}
               <small class="muted">{{ t('share.imagesHint') }}</small>
@@ -161,6 +214,7 @@ onMounted(async () => {
         <p class="size" aria-live="polite">
           <template v-if="nothingSelected">{{ t('share.nothing') }}</template>
           <template v-else-if="preparing">{{ t('share.preparing') }}</template>
+          <template v-else-if="prepared?.frames">{{ t('qr.count', { n: prepared.frames.length }) }}</template>
           <template v-else-if="prepared">{{ t('share.size', { size: formatSize(prepared.size) }) }}</template>
         </p>
       </div>
@@ -168,6 +222,13 @@ onMounted(async () => {
       <!-- 2. Send -->
       <div class="panel">
         <h2>2 · {{ t('share.sendTitle') }}</h2>
+        <template v-if="sel.format === 'qr'">
+          <p class="small">{{ t('qr.sendHint') }}</p>
+          <p v-if="prepared?.frames?.length > MANY_CODES" class="warn small">{{ t('qr.many', { n: prepared.frames.length }) }}</p>
+          <QrSender v-if="prepared?.frames" :frames="prepared.frames" />
+          <p v-if="error" class="error small">{{ error }}</p>
+        </template>
+        <template v-else>
         <div class="send-btns">
           <button v-if="shareSupported" class="primary big" :disabled="!prepared" @click="onShare">
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" /></svg>
@@ -184,6 +245,7 @@ onMounted(async () => {
         <ul class="ways">
           <li v-for="(w, i) in t('share.ways')" :key="i">{{ w }}</li>
         </ul>
+        </template>
       </div>
 
       <!-- 3. Receive -->
@@ -193,7 +255,27 @@ onMounted(async () => {
           <li v-for="(s, i) in t('share.steps')" :key="i">{{ s }}</li>
         </ol>
         <p class="muted small">{{ t('share.mergeNote') }}</p>
-        <button @click="pickAndImportBackup">⤒ {{ t('share.importBtn') }}</button>
+        <div class="send-btns">
+          <button @click="pickAndImportBackup">⤒ {{ t('share.importBtn') }}</button>
+          <button v-if="!scanning" @click="startScan" :title="tl('qr.scanBtn')" :aria-label="tl('qr.scanBtn')"><Icon name="camera" :label="tl('qr.scanBtn')" /></button>
+        </div>
+        <p class="muted small">{{ t('qr.scanHint') }}</p>
+        <QrScanner v-if="scanning" @done="onScanned" @cancel="scanning = false" />
+        <p v-if="importError" class="error small">{{ importError }}</p>
+
+        <div v-if="report" class="report" role="status">
+          <p><strong>✓ {{ t('qr.done', { z: report.zines, d: report.drafts }) }}</strong></p>
+          <p v-if="report.same" class="muted small">{{ t('qr.same', { n: report.same }) }}</p>
+          <template v-if="report.saved.length">
+            <p>{{ t('qr.savedTitle') }}</p>
+            <ul>
+              <li v-for="s in report.saved" :key="s.key + s.where">
+                <RouterLink :to="savedName(s).to">{{ savedName(s).name }}</RouterLink>
+                → {{ t(s.where === 'poems' ? 'qr.savedPoems' : s.where === 'kept' ? 'qr.savedKept' : 'qr.savedEarlier') }}
+              </li>
+            </ul>
+          </template>
+        </div>
       </div>
     </template>
   </section>
@@ -232,6 +314,10 @@ onMounted(async () => {
 .send-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
 .big { font-size: 1.05rem; padding: 0.6em 1.1em; }
 .ico { width: 1.1em; height: 1.1em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.warn { color: var(--danger); }
+.report { margin-top: 1rem; padding: 0.7rem 1rem; border: 1px solid color-mix(in srgb, #3c9a5f 45%, var(--border)); border-radius: var(--radius); background: color-mix(in srgb, #3c9a5f 8%, var(--surface)); }
+.report p { margin: 0 0 0.4rem; }
+.report ul { margin: 0; padding-left: 1.3rem; }
 .ways, .steps { margin: 0 0 0.75rem; padding-left: 1.3rem; }
 .ways li + li, .steps li + li { margin-top: 0.25rem; }
 </style>

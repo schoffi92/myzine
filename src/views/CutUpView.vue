@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
+import EarlierVersion from '../components/EarlierVersion.vue'
 import { loadDraft, saveDraft, loadDraftData, saveDraftData } from '../db/drafts'
 import { drawCards, CARD_BY_ID } from '../tarot/deck'
 import { cardText } from '../tarot'
@@ -298,6 +299,7 @@ onBeforeUnmount(() => {
     <RouterLink :to="{ name: 'writing' }" class="back" :title="tl('writing.title')" :aria-label="tl('writing.title')"><Icon name="arrow-left" :label="tl('writing.title')" /></RouterLink>
     <h1>{{ t('writing.cutup.title') }}</h1>
     <p class="lead">{{ t('writing.cutup.intro') }}</p>
+    <EarlierVersion :keys="['cutup-text', 'cutup-arrange', 'cutup-cards']" />
 
     <ol class="stepper">
       <li :class="{ active: step === 1 }">

@@ -2,6 +2,7 @@
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
+import EarlierVersion from '../components/EarlierVersion.vue'
 import { loadDraftData, saveDraftData, deleteDraft } from '../db/drafts'
 
 const ID = 'mosaic' // IndexedDB drafts id
@@ -151,6 +152,7 @@ onBeforeUnmount(() => {
     <RouterLink :to="{ name: 'writing' }" class="back" :title="tl('writing.title')" :aria-label="tl('writing.title')"><Icon name="arrow-left" :label="tl('writing.title')" /></RouterLink>
     <h1>{{ t('writing.mosaic.title') }}</h1>
     <p class="lead">{{ t('writing.mosaic.intro') }}</p>
+    <EarlierVersion :keys="['mosaic']" />
 
     <ol class="stepper">
       <li v-for="(label, i) in t('writing.mosaic.steps')" :key="i" :class="{ active: state.step === i + 1 }">

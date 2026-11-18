@@ -2,6 +2,7 @@
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { t, tl } from '../i18n'
 import Icon from '../components/Icon.vue'
+import EarlierVersion from '../components/EarlierVersion.vue'
 import { settings } from '../composables/settings'
 import { loadDraftData, saveDraftData, deleteDraft } from '../db/drafts'
 import { MAX_TRAITS, drawTraits, drawSituation, tabooStems, findTaboo } from '../writing/tabooData'
@@ -123,6 +124,7 @@ onBeforeUnmount(() => {
     <RouterLink :to="{ name: 'writing' }" class="back" :title="tl('writing.title')" :aria-label="tl('writing.title')"><Icon name="arrow-left" :label="tl('writing.title')" /></RouterLink>
     <h1>⊘ {{ t('writing.taboo.title') }}</h1>
     <p class="lead">{{ t('writing.taboo.intro') }}</p>
+    <EarlierVersion :keys="['taboo']" />
 
     <ol class="stepper">
       <li v-for="(label, i) in t('writing.taboo.steps')" :key="i" :class="{ active: state.step === i + 1 }">

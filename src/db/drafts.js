@@ -1,7 +1,7 @@
 import { get, getAll, put, del } from './idb'
 
-/** Number of saved writing-practice items. */
-export const countDrafts = async () => (await getAll('drafts')).length
+/** Number of saved writing-practice items (not counting earlier versions kept by a QR sync). */
+export const countDrafts = async () => (await getAll('drafts')).filter((r) => !r.id.startsWith('prev:')).length
 
 /** All saved writing-practice records ({ id, text | data, updatedAt }). */
 export const getAllDrafts = () => getAll('drafts')

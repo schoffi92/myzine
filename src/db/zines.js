@@ -59,8 +59,9 @@ export async function touchZine(zineId) {
 /** Deletes a zine plus all its pages and images in one transaction. */
 export async function deleteZine(id) {
   const pages = await listPages(id)
-  await transaction(['zines', 'pages', 'images'], 'readwrite', (s) => {
+  await transaction(['zines', 'pages', 'images', 'drafts'], 'readwrite', (s) => {
     s.zines.delete(id)
+    s.drafts.delete(`prev:zine:${id}`) // its earlier version from a QR sync
     for (const p of pages) {
       s.pages.delete(p.id)
       if (p.imageId) s.images.delete(p.imageId)
