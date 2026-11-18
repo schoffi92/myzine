@@ -1,5 +1,5 @@
 export default {
-  nav: { language: 'Language', theme: 'Theme', home: 'Home', exportTip: 'Export backup: download all your zines and writing as a file', importTip: 'Import backup: restore zines and writing from a backup file', clearTip: 'Clear all data stored in this browser (a backup is saved first)', confirmClearAll: 'Delete everything MyZine has stored in this browser: all zines, images, writing practices and settings? A backup file will be downloaded first, so you can import it again later.', clearFailed: 'Clearing failed: {msg}' },
+  nav: { language: 'Language', theme: 'Theme', home: 'Home', exportTip: 'Export backup: download all your zines and writing as a file', importTip: 'Import backup: restore zines and writing from a backup file', clearTip: 'Clear all data stored in this browser (a backup is saved first)', confirmClearAll: 'Delete everything MyZine has stored in this browser: all zines, images, writing practices and settings? A backup file will be downloaded first, so you can import it again later.', confirmBackupSaved: 'The backup file was handed to your browser. Check that it was really saved (for example in Downloads) before you go on.\n\nDelete everything MyZine stored in this browser now?', clearFailed: 'Clearing failed: {msg}' },
   theme: { system: 'System', light: 'Light', dark: 'Dark' },
 
   home: {
@@ -75,6 +75,7 @@ export default {
   },
 
   print: {
+    back: 'Back to the editor',
     button: 'Print',
     title: 'Print layout',
     print: 'Print',
@@ -338,6 +339,8 @@ export default {
       empty: 'Nothing written yet.',
     },
     mosaic: {
+      tileColor: 'Change the colour of {name}',
+      clearAngle: 'Remove the suggested angle',
       title: 'Mosaic story',
       card: 'Tell one story through many small fragments from different voices, times and places.',
       intro: 'A mosaic story is made of short, separate pieces, like tiles. Each one shows the same story from a different angle: another person, another moment, another form. Placed side by side, the tiles make a picture none of them could show alone.',
@@ -507,7 +510,7 @@ export default {
       'Save the file you received on that device (for example in Downloads or Files).',
       'Tap the import button ⤒ in the top bar, or the button below, and choose the file.',
     ],
-    mergeNote: 'Importing adds to what is already there and never deletes anything. Items with the same ID are replaced by the version in the file.',
+    mergeNote: 'Importing adds new zines and writing practices. A zine or practice that is already here is replaced by the version in the file, and pages that are not in the file are removed from it. If the file was made without images, the pictures already here are kept.',
     importBtn: 'Import a backup file',
     importedBoth: 'Imported {z} zine(s) and {d} writing practice item(s).',
     formatTitle: 'Format',

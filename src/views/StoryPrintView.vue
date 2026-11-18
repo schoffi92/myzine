@@ -50,7 +50,7 @@ const printPage = () => window.print()
 <template>
   <section class="story-print">
     <div class="toolbar no-print">
-      <RouterLink :to="{ name: 'story' }" class="btn ghost">←</RouterLink>
+      <RouterLink :to="{ name: 'story' }" class="btn ghost" :title="tl('writing.story.title')" :aria-label="tl('writing.story.title')">←</RouterLink>
       <h1>{{ t('writing.story.printTitle') }}</h1>
       <span class="spacer" />
       <span class="muted">{{ t('writing.story.include') }}:</span>

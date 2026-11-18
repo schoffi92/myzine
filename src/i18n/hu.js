@@ -1,5 +1,5 @@
 export default {
-  nav: { language: 'Nyelv', theme: 'Téma', home: 'Kezdőlap', exportTip: 'Biztonsági mentés exportálása: az összes zine és írás letöltése egy fájlba', importTip: 'Biztonsági mentés importálása: zine-ok és írások visszaállítása egy mentésfájlból', clearTip: 'A böngészőben tárolt összes adat törlése (előtte biztonsági mentés készül)', confirmClearAll: 'Törlöd mindazt, amit a MyZine ebben a böngészőben tárolt: az összes zine-t, képet, írásgyakorlatot és beállítást? Előtte letöltődik egy biztonsági mentésfájl, amelyet később újra importálhatsz.', clearFailed: 'A törlés sikertelen: {msg}' },
+  nav: { language: 'Nyelv', theme: 'Téma', home: 'Kezdőlap', exportTip: 'Biztonsági mentés exportálása: az összes zine és írás letöltése egy fájlba', importTip: 'Biztonsági mentés importálása: zine-ok és írások visszaállítása egy mentésfájlból', clearTip: 'A böngészőben tárolt összes adat törlése (előtte biztonsági mentés készül)', confirmClearAll: 'Törlöd mindazt, amit a MyZine ebben a böngészőben tárolt: az összes zine-t, képet, írásgyakorlatot és beállítást? Előtte letöltődik egy biztonsági mentésfájl, amelyet később újra importálhatsz.', confirmBackupSaved: 'A mentésfájlt átadtuk a böngészőnek. Mielőtt továbblépsz, ellenőrizd, hogy tényleg elmentődött-e (például a Letöltések mappába).\n\nMost törlöd mindazt, amit a MyZine ebben a böngészőben tárolt?', clearFailed: 'A törlés sikertelen: {msg}' },
   theme: { system: 'Rendszer', light: 'Világos', dark: 'Sötét' },
 
   home: {
@@ -75,6 +75,7 @@ export default {
   },
 
   print: {
+    back: 'Vissza a szerkesztőhöz',
     button: 'Nyomtatás',
     title: 'Nyomtatási elrendezés',
     print: 'Nyomtatás',
@@ -338,6 +339,8 @@ export default {
       empty: 'Még nem írtál semmit.',
     },
     mosaic: {
+      tileColor: '{name} színének módosítása',
+      clearAngle: 'A javasolt nézőpont eltávolítása',
       title: 'Mozaiktörténet',
       card: 'Mesélj el egy történetet sok kis töredékben, különböző hangokon, időkben és helyeken.',
       intro: 'A mozaiktörténet rövid, különálló darabokból áll, mint a mozaikkockák. Mindegyik ugyanazt a történetet mutatja más szemszögből: egy másik ember, egy másik pillanat, egy másik forma. Egymás mellé téve a kockák olyan képet adnak, amelyet egyik sem tudna egyedül megmutatni.',
@@ -507,7 +510,7 @@ export default {
       'Mentsd el a kapott fájlt azon az eszközön (például a Letöltések vagy a Fájlok mappába).',
       'Koppints a felső sáv ⤒ importálás gombjára vagy az alábbi gombra, és válaszd ki a fájlt.',
     ],
-    mergeNote: 'Az importálás hozzáad a meglévőkhöz, és soha nem töröl semmit. Az azonos azonosítójú elemeket a fájlban lévő változat váltja fel.',
+    mergeNote: 'Importáláskor az új zine-ek és írásgyakorlatok hozzáadódnak. A már meglévő zine-t vagy gyakorlatot a fájlban lévő változat váltja fel, és a fájlban nem szereplő oldalak törlődnek belőle. Ha a fájl képek nélkül készült, az itt lévő képek megmaradnak.',
     importBtn: 'Biztonsági mentés importálása',
     importedBoth: '{z} zine és {d} írásgyakorlat-elem importálva.',
     formatTitle: 'Formátum',

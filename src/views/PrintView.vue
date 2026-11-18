@@ -72,7 +72,7 @@ const print = () => window.print()
 <template>
   <section class="print-view">
     <div class="print-toolbar no-print">
-      <RouterLink :to="{ name: 'edit', params: { id } }" class="btn ghost">←</RouterLink>
+      <RouterLink :to="{ name: 'edit', params: { id } }" class="btn ghost" :title="t('print.back')" :aria-label="t('print.back')">←</RouterLink>
       <h1>{{ t('print.title') }}<template v-if="zine">: {{ zine.title }}</template></h1>
       <span class="spacer" />
       <label class="check">

@@ -9,12 +9,15 @@ import { loadDraftData, saveDraftData } from '../db/drafts'
  */
 export function useSavedPoems(storeId) {
   const poems = ref([])
+  let ready = Promise.resolve()
 
   const persist = () => saveDraftData(storeId, { poems: poems.value })
 
-  async function load() {
-    const saved = await loadDraftData(storeId)
-    poems.value = Array.isArray(saved?.poems) ? saved.poems.filter((p) => Array.isArray(p?.lines)) : []
+  function load() {
+    ready = loadDraftData(storeId).then((saved) => {
+      poems.value = Array.isArray(saved?.poems) ? saved.poems.filter((p) => Array.isArray(p?.lines)) : []
+    })
+    return ready
   }
 
   /** Save `text` (or an array of lines) as a new poem. Blank lines inside are kept (stanzas). */
@@ -23,12 +26,14 @@ export function useSavedPoems(storeId) {
     while (lines.length && !lines[0].trim()) lines.shift()
     while (lines.length && !lines[lines.length - 1].trim()) lines.pop()
     if (!lines.length) return false
+    await ready // never save over a list that hasn't loaded yet
     poems.value.unshift({ id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`, lines, at: Date.now() })
     await persist()
     return true
   }
 
   async function remove(i) {
+    await ready
     poems.value.splice(i, 1)
     await persist()
   }

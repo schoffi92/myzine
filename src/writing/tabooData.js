@@ -172,8 +172,10 @@ export function findTaboo(text, stems) {
   const found = new Map()
   for (const token of text.match(WORD_RE) || []) {
     const lower = norm(token)
+    // the whole token and its parts: l'arrogant → arrogant, not-shy → shy
+    const parts = [lower, ...lower.split(/['’-]/).filter((x) => x && x !== lower)]
     for (const [stem, word] of stems) {
-      if (lower.startsWith(stem)) {
+      if (parts.some((x) => x.startsWith(stem))) {
         if (!found.has(word)) found.set(word, [])
         found.get(word).push(token)
         break

@@ -116,7 +116,11 @@ export async function backupAndClearAll() {
     await wait(150)
 
     await downloadBackup()
-    await wait(800) // let the download start before the page reloads
+    await wait(800) // let the download start
+
+    // The browser may still be asking where to save, or may have blocked the
+    // download: only clear once the user says the file is really saved.
+    if (!confirm(t('nav.confirmBackupSaved'))) return
 
     resetTimer()
     await clearAllStores()

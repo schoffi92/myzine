@@ -35,17 +35,20 @@ function schedule(key, fn, delay = 500) {
   pending.set(key, { fn, timer: setTimeout(() => run(key), delay) })
 }
 
+/** Run a pending save now. Resolves true if it was saved (or nothing was pending). */
 async function run(key) {
   const entry = pending.get(key)
-  if (!entry) return
+  if (!entry) return true
   clearTimeout(entry.timer)
   pending.delete(key)
   try {
     await entry.fn()
     if (!pending.size) status.value = 'saved'
+    return true
   } catch (e) {
     console.error(e)
     status.value = 'error'
+    return false
   }
 }
 
@@ -77,11 +80,19 @@ async function onImage(e) {
   if (!file || !p) return
   if (!file.type.startsWith('image/')) return alert(t('editor.notImage'))
   const old = p.imageId
-  p.imageId = await saveImage(file)
+  const oldLayout = p.layout
+  const added = await saveImage(file)
+  p.imageId = added
   if (p.layout === 'text-only') p.layout = 'image-top'
   savePage(p)
-  await run(`page:${p.id}`)
-  if (old) await deleteImage(old)
+  if (await run(`page:${p.id}`)) {
+    if (old) await deleteImage(old)
+  } else {
+    // the page still points at the old picture: keep it, drop the new one
+    p.imageId = old
+    p.layout = oldLayout
+    await deleteImage(added)
+  }
 }
 
 async function removeImage() {
@@ -90,8 +101,8 @@ async function removeImage() {
   const old = p.imageId
   p.imageId = null
   savePage(p)
-  await run(`page:${p.id}`)
-  await deleteImage(old)
+  if (await run(`page:${p.id}`)) await deleteImage(old)
+  else p.imageId = old // not saved: the page still shows its picture
 }
 
 /* ---- Lifecycle ---- */
@@ -120,7 +131,7 @@ onBeforeRouteLeave(() => flush())
 
   <section v-else-if="zine" class="editor">
     <div class="editor__head">
-      <RouterLink :to="{ name: 'zines' }" class="ghost btn">←</RouterLink>
+      <RouterLink :to="{ name: 'zines' }" class="ghost btn" :title="tl('editor.back')" :aria-label="tl('editor.back')">←</RouterLink>
       <input v-model="zine.title" class="title-input" maxlength="80" @input="saveZine" />
       <input v-model="zine.color" type="color" :title="t('editor.accent')" @input="saveZine" />
       <span class="status" :class="status">
@@ -142,7 +153,12 @@ onBeforeRouteLeave(() => flush())
             v-for="(p, i) in pages"
             :key="p.id"
             :class="{ active: p.id === selectedId }"
+            tabindex="0"
+            role="button"
+            :aria-current="p.id === selectedId ? 'page' : undefined"
             @click="flush(); selectedId = p.id"
+            @keydown.enter.prevent="flush(); selectedId = p.id"
+            @keydown.space.prevent="flush(); selectedId = p.id"
           >
             <span class="num">{{ i + 1 }}</span>
             <span class="name">
@@ -176,14 +192,14 @@ onBeforeRouteLeave(() => flush())
         </div>
         <textarea v-model="page.body" rows="12" :placeholder="t('editor.body')" @input="savePage()" />
         <div class="row">
-          <label class="btn" :title="tl(page.imageId ? 'editor.replaceImage' : 'editor.addImage')" :aria-label="tl(page.imageId ? 'editor.replaceImage' : 'editor.addImage')">
+          <label class="btn file-btn" :title="tl(page.imageId ? 'editor.replaceImage' : 'editor.addImage')" :aria-label="tl(page.imageId ? 'editor.replaceImage' : 'editor.addImage')">
             <Icon name="image" :label="tl(page.imageId ? 'editor.replaceImage' : 'editor.addImage')" />
-            <input type="file" accept="image/*" hidden @change="onImage" />
+            <input type="file" accept="image/*" class="file-input" @change="onImage" />
           </label>
           <button v-if="page.imageId" class="ghost" @click="removeImage" :title="tl('editor.removeImage')" :aria-label="tl('editor.removeImage')"><Icon name="x" :label="tl('editor.removeImage')" /></button>
           <span class="spacer" />
-          <button class="ghost" :disabled="pageIndex <= 0" :title="t('editor.moveUp')" @click="move(-1)">↑</button>
-          <button class="ghost" :disabled="pageIndex >= pages.length - 1" :title="t('editor.moveDown')" @click="move(1)">↓</button>
+          <button class="ghost" :disabled="pageIndex <= 0" :title="t('editor.moveUp')" :aria-label="t('editor.moveUp')" @click="move(-1)">↑</button>
+          <button class="ghost" :disabled="pageIndex >= pages.length - 1" :title="t('editor.moveDown')" :aria-label="t('editor.moveDown')" @click="move(1)">↓</button>
         </div>
       </div>
       <div v-else class="page-form muted">{{ t('editor.noPages') }}</div>

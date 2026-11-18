@@ -13,15 +13,19 @@ import { chapterTitle, chapterDesc, sourceLabel } from '../composables/storyCard
 
 /* ---------- small Markdown helpers ---------- */
 
-/** Escape characters that would turn plain user text into Markdown syntax at the start of a line. */
+/** Escape what would turn plain user text into Markdown syntax. */
 const escLine = (line) =>
   line
-    .replace(/^(\s*)([#>+\-*])(\s)/, '$1\\$2$3') // "# x", "- x", "> x" → literal
+    .replace(/\\/g, '\\\\') // a typed backslash stays a backslash
+    .replace(/\*/g, '\\*') // "5 * 3 * 2" is not emphasis
+    .replace(/^(\s*)(#{1,6})(\s|$)/, '$1\\$2$3') // "# x", "## x" → literal
+    .replace(/^(\s*)([>+-])(\s)/, '$1\\$2$3') // "- x", "> x" → literal
     .replace(/^(\s*)(\d+)([.)])(\s)/, '$1$2\\$3$4') // "1. x" → "1\. x" (not a list)
+    .replace(/^(\s*)([-=_])(\2{2,}\s*)$/, '$1\\$2$3') // "---", "===" → not a rule or heading underline
 const esc = (text) => (text || '').split('\n').map(escLine).join('\n')
-/** Keep single line breaks (poems): two trailing spaces force a break in Markdown. */
+/** Keep single line breaks (poems, dialogue): two trailing spaces force a break in Markdown. */
 const lines = (text) => esc(text.trim()).split('\n').map((l) => (l.trim() ? `${l}  ` : '')).join('\n').replace(/ +$/, '')
-const paragraphs = (text) => esc(text.trim())
+const paragraphs = lines
 const quote = (text) => esc(text.trim()).split('\n').map((l) => `> ${l}`).join('\n')
 const inline = (text) => esc(text).replace(/\s*\n\s*/g, ' ').trim()
 

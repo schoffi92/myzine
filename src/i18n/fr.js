@@ -1,5 +1,5 @@
 export default {
-  nav: { language: 'Langue', theme: 'Thème', home: 'Accueil', exportTip: 'Exporter une sauvegarde : télécharge tous tes zines et textes dans un fichier', importTip: 'Importer une sauvegarde : restaure tes zines et textes depuis un fichier', clearTip: 'Effacer toutes les données enregistrées dans ce navigateur (une sauvegarde est faite avant)', confirmClearAll: 'Effacer tout ce que MyZine a enregistré dans ce navigateur : tous les zines, images, exercices d’écriture et réglages ? Un fichier de sauvegarde sera d’abord téléchargé pour que tu puisses l’importer plus tard.', clearFailed: 'Échec de l’effacement : {msg}' },
+  nav: { language: 'Langue', theme: 'Thème', home: 'Accueil', exportTip: 'Exporter une sauvegarde : télécharge tous tes zines et textes dans un fichier', importTip: 'Importer une sauvegarde : restaure tes zines et textes depuis un fichier', clearTip: 'Effacer toutes les données enregistrées dans ce navigateur (une sauvegarde est faite avant)', confirmClearAll: 'Effacer tout ce que MyZine a enregistré dans ce navigateur : tous les zines, images, exercices d’écriture et réglages ? Un fichier de sauvegarde sera d’abord téléchargé pour que tu puisses l’importer plus tard.', confirmBackupSaved: 'Le fichier de sauvegarde a été transmis au navigateur. Vérifiez qu’il a bien été enregistré (par exemple dans Téléchargements) avant de continuer.\n\nSupprimer maintenant tout ce que MyZine a enregistré dans ce navigateur ?', clearFailed: 'Échec de l’effacement : {msg}' },
   theme: { system: 'Système', light: 'Clair', dark: 'Sombre' },
 
   home: {
@@ -75,6 +75,7 @@ export default {
   },
 
   print: {
+    back: 'Retour à l’éditeur',
     button: 'Imprimer',
     title: 'Mise en page pour l’impression',
     print: 'Imprimer',
@@ -338,6 +339,8 @@ export default {
       empty: 'Rien d’écrit pour l’instant.',
     },
     mosaic: {
+      tileColor: 'Changer la couleur de {name}',
+      clearAngle: 'Retirer l’angle suggéré',
       title: 'Récit mosaïque',
       card: 'Raconte une histoire à travers de nombreux petits fragments, avec des voix, des moments et des lieux différents.',
       intro: 'Un récit mosaïque est fait de pièces courtes et séparées, comme des tesselles. Chacune montre la même histoire sous un autre angle : une autre personne, un autre moment, une autre forme. Mises côte à côte, les tesselles forment une image qu’aucune ne pourrait montrer seule.',
@@ -507,7 +510,7 @@ export default {
       'Enregistre le fichier reçu sur cet appareil (par exemple dans Téléchargements ou Fichiers).',
       'Touche le bouton d’import ⤒ dans la barre du haut, ou celui ci-dessous, et choisis le fichier.',
     ],
-    mergeNote: 'L’import ajoute à ce qui existe déjà et ne supprime jamais rien. Les éléments avec le même identifiant sont remplacés par la version du fichier.',
+    mergeNote: 'L’import ajoute les nouveaux zines et exercices d’écriture. Un zine ou un exercice déjà présent est remplacé par la version du fichier, et les pages absentes du fichier en sont retirées. Si le fichier a été créé sans images, les images déjà présentes sont conservées.',
     importBtn: 'Importer une sauvegarde',
     importedBoth: '{z} zine(s) et {d} élément(s) d’exercices importés.',
     formatTitle: 'Format',

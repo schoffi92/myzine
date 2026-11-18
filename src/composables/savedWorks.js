@@ -16,13 +16,18 @@ export async function loadSavedWorks(kind) {
 
 export function useSavedWorks(kind) {
   const works = ref([])
+  let ready = Promise.resolve()
   const persist = () => saveDraftData(savedWorksId(kind), { works: works.value })
 
-  async function load() {
-    works.value = await loadSavedWorks(kind)
+  function load() {
+    ready = loadSavedWorks(kind).then((list) => {
+      works.value = list
+    })
+    return ready
   }
 
   async function add(title, data) {
+    await ready // never save over a list that hasn't loaded yet
     works.value.unshift({
       id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
       title: title.trim(),
@@ -33,6 +38,7 @@ export function useSavedWorks(kind) {
   }
 
   async function remove(id) {
+    await ready
     works.value = works.value.filter((w) => w.id !== id)
     await persist()
   }

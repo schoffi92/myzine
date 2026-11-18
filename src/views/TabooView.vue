@@ -174,7 +174,7 @@ onBeforeUnmount(() => {
           <p><small>{{ t('writing.taboo.situation') }}</small>{{ state.situation }}</p>
           <p>
             <small>{{ t('writing.taboo.tabooTitle') }}</small>
-            <span v-for="w in [...state.traits, ...extraWords]" :key="w" class="taboo-word">{{ w }}</span>
+            <span v-for="(w, i) in [...state.traits, ...extraWords]" :key="`${i}:${w}`" class="taboo-word">{{ w }}</span>
           </p>
         </div>
 

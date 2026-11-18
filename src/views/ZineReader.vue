@@ -23,7 +23,9 @@ const font = (d) => {
 }
 
 function onKey(e) {
-  if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return
+  // let form fields, menus and buttons handle their own keys (Space on a
+  // focused "Next" button would otherwise turn two pages)
+  if (['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON', 'A'].includes(e.target.tagName) || e.target.isContentEditable) return
   if (e.key === 'ArrowRight' || e.key === ' ') go(1)
   else if (e.key === 'ArrowLeft') go(-1)
 }
@@ -50,11 +52,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 
   <section v-else-if="zine" class="reader" :style="{ '--accent': zine.color }">
     <div class="reader__bar">
-      <RouterLink :to="{ name: 'zines' }" class="btn ghost">←</RouterLink>
+      <RouterLink :to="{ name: 'zines' }" class="btn ghost" :title="tl('editor.back')" :aria-label="tl('editor.back')">←</RouterLink>
       <h1>{{ zine.title }}</h1>
       <span class="spacer" />
-      <button class="ghost" :title="t('reader.smaller')" @click="font(-2)">A−</button>
-      <button class="ghost" :title="t('reader.larger')" @click="font(2)">A+</button>
+      <button class="ghost" :title="t('reader.smaller')" :aria-label="t('reader.smaller')" @click="font(-2)">A−</button>
+      <button class="ghost" :title="t('reader.larger')" :aria-label="t('reader.larger')" @click="font(2)">A+</button>
       <RouterLink class="btn ghost" :to="{ name: 'print', params: { id } }" :title="t('print.button')" :aria-label="t('print.button')">
         <svg class="btn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2M6 14h12v7H6z" /></svg>
         <span class="hide-mobile">{{ t('print.button') }}</span>

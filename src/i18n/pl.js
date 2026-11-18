@@ -1,5 +1,5 @@
 export default {
-  nav: { language: 'Język', theme: 'Motyw', home: 'Strona główna', exportTip: 'Eksportuj kopię zapasową: pobierz wszystkie ziny i teksty jako plik', importTip: 'Importuj kopię zapasową: przywróć ziny i teksty z pliku kopii', clearTip: 'Wyczyść wszystkie dane zapisane w tej przeglądarce (najpierw zostanie zapisana kopia zapasowa)', confirmClearAll: 'Usunąć wszystko, co MyZine zapisał w tej przeglądarce: wszystkie ziny, obrazy, ćwiczenia pisarskie i ustawienia? Najpierw zostanie pobrany plik kopii zapasowej, który możesz później zaimportować.', clearFailed: 'Czyszczenie nie powiodło się: {msg}' },
+  nav: { language: 'Język', theme: 'Motyw', home: 'Strona główna', exportTip: 'Eksportuj kopię zapasową: pobierz wszystkie ziny i teksty jako plik', importTip: 'Importuj kopię zapasową: przywróć ziny i teksty z pliku kopii', clearTip: 'Wyczyść wszystkie dane zapisane w tej przeglądarce (najpierw zostanie zapisana kopia zapasowa)', confirmClearAll: 'Usunąć wszystko, co MyZine zapisał w tej przeglądarce: wszystkie ziny, obrazy, ćwiczenia pisarskie i ustawienia? Najpierw zostanie pobrany plik kopii zapasowej, który możesz później zaimportować.', confirmBackupSaved: 'Plik kopii zapasowej został przekazany przeglądarce. Zanim przejdziesz dalej, sprawdź, czy naprawdę się zapisał (na przykład w Pobranych).\n\nUsunąć teraz wszystko, co MyZine zapisał w tej przeglądarce?', clearFailed: 'Czyszczenie nie powiodło się: {msg}' },
   theme: { system: 'Systemowy', light: 'Jasny', dark: 'Ciemny' },
 
   home: {
@@ -75,6 +75,7 @@ export default {
   },
 
   print: {
+    back: 'Wróć do edytora',
     button: 'Drukuj',
     title: 'Układ do druku',
     print: 'Drukuj',
@@ -338,6 +339,8 @@ export default {
       empty: 'Nic jeszcze nie napisano.',
     },
     mosaic: {
+      tileColor: 'Zmień kolor: {name}',
+      clearAngle: 'Usuń proponowane ujęcie',
       title: 'Opowieść mozaikowa',
       card: 'Opowiedz jedną historię w wielu małych fragmentach, różnymi głosami, w różnych czasach i miejscach.',
       intro: 'Opowieść mozaikowa składa się z krótkich, osobnych kawałków, jak kamyki mozaiki. Każdy pokazuje tę samą historię z innej strony: inna osoba, inna chwila, inna forma. Ułożone obok siebie tworzą obraz, którego żaden nie pokazałby sam.',
@@ -507,7 +510,7 @@ export default {
       'Zapisz otrzymany plik na tym urządzeniu (na przykład w Pobranych lub Plikach).',
       'Dotknij przycisku importu ⤒ na górnym pasku lub przycisku poniżej i wybierz plik.',
     ],
-    mergeNote: 'Import dodaje do tego, co już jest, i nigdy niczego nie usuwa. Elementy o tym samym identyfikatorze zostają zastąpione wersją z pliku.',
+    mergeNote: 'Import dodaje nowe ziny i ćwiczenia pisarskie. Zin lub ćwiczenie, które już tu jest, zostaje zastąpione wersją z pliku, a strony, których nie ma w pliku, są z niego usuwane. Jeśli plik utworzono bez obrazów, obrazy, które już tu są, zostają zachowane.',
     importBtn: 'Importuj kopię zapasową',
     importedBoth: 'Zaimportowano ziny: {z}, elementy ćwiczeń: {d}.',
     formatTitle: 'Format',

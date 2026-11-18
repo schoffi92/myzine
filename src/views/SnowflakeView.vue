@@ -80,6 +80,7 @@ onMounted(async () => {
       five: b.five.map((_, i) => saved.five?.[i] ?? ''),
       paras: b.paras.map((_, i) => saved.paras?.[i] ?? ''),
     })
+    if (state.step > maxStep.value) state.step = maxStep.value
   }
   loaded.value = true
 })

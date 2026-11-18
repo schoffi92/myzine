@@ -51,7 +51,10 @@ if (!DRY || ROLLBACK) {
   if (!HOST || !REMOTE) fail('set DEPLOY_HOST and DEPLOY_PATH in .env (see .env.example).')
 }
 if (REMOTE && !REMOTE.startsWith('/')) fail('DEPLOY_PATH must be an absolute path on the server.')
-if (REMOTE && /'/.test(REMOTE)) fail('DEPLOY_PATH must not contain quotes.')
+// both end up in shell commands (ssh, scp, the remote script): plain characters only
+if (REMOTE && !/^[A-Za-z0-9/._~-]+$/.test(REMOTE)) fail('DEPLOY_PATH may only contain letters, digits and / . _ ~ -')
+if (HOST && !/^[A-Za-z0-9._@-]+$/.test(HOST)) fail('DEPLOY_HOST may only contain letters, digits and . _ @ -')
+if (HOST?.startsWith('-')) fail('DEPLOY_HOST must not start with "-".')
 
 /* ---------- helpers ---------- */
 /** Run a command; resolve with stdout (when captured), reject on a non-zero exit. */
@@ -74,7 +77,7 @@ const sshArgs = PORT ? ['-p', PORT] : []
 const scpArgs = PORT ? ['-P', PORT] : []
 /** Run a shell script on the server (sent on stdin, so no quoting trouble). */
 const remote = (script, opts = {}) => run('ssh', [...sshArgs, HOST, 'sh -s'], { input: `set -e\n${script}\n`, ...opts })
-const q = (s) => `'${s}'` // DEPLOY_PATH is checked to contain no quotes
+const q = (s) => `'${s}'` // DEPLOY_PATH is checked to contain plain characters only
 
 /* ---------- rollback ---------- */
 if (ROLLBACK) {
@@ -162,10 +165,14 @@ cd ${q(REMOTE)}
 if [ -e current ] && [ ! -L current ]; then
   echo "[deploy] ${REMOTE}/current exists but is not a symlink; move it away first"; exit 1
 fi
-mkdir releases/${release}
-tar -xzf releases/${release}.tar.gz -C releases/${release} --no-same-owner
-rm releases/${release}.tar.gz
-chmod -R a+rX releases/${release}
+# unpack into a hidden folder and rename it only when complete, so a failed
+# unpack never leaves a half release that rollback or pruning could pick
+tmp=releases/.tmp-${release}
+trap 'rm -rf "$tmp" releases/${release}.tar.gz' EXIT
+rm -rf "$tmp" && mkdir "$tmp"
+tar -xzf releases/${release}.tar.gz -C "$tmp" --no-same-owner
+chmod -R a+rX "$tmp"
+mv -T "$tmp" releases/${release}
 ln -sfn releases/${release} current.tmp && mv -Tf current.tmp current
 # keep the newest ${KEEP} releases (never the one that is live)
 live=$(readlink current)

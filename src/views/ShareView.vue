@@ -101,8 +101,14 @@ async function onScanned(data) {
   const d = Array.isArray(data?.drafts) ? data.drafts.length : 0
   if (!confirm(t('qr.confirm', { z, d }))) return
   try {
+    const known = new Set(zines.value.map((x) => x.id))
+    const hadDrafts = draftCount.value > 0
     report.value = await importTexts(data)
     await refreshCounts()
+    // what's prepared to send now includes what just arrived
+    sel.zineIds = [...sel.zineIds, ...zines.value.filter((x) => !known.has(x.id)).map((x) => x.id)]
+    if (!hadDrafts && draftCount.value > 0) sel.includeDrafts = true
+    rebuild()
   } catch (e) {
     importError.value = t('library.importFailed', { msg: e.message })
   }

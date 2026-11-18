@@ -168,7 +168,8 @@ export async function exportSelection({ zineIds = null, includeImages = true, in
   }
 
   // v2 adds `drafts` (writing-practice texts). v1 backups still import fine.
-  return { app: 'myzine', version: 2, exportedAt: new Date().toISOString(), zines, pages, images, drafts }
+  // includesImages: false tells importAll to keep the pictures already on the device.
+  return { app: 'myzine', version: 2, exportedAt: new Date().toISOString(), includesImages: includeImages, zines, pages, images, drafts }
 }
 
 export const exportAll = () => exportSelection()
@@ -182,17 +183,24 @@ export async function importAll(data) {
   )
   // An imported zine replaces the local copy of that zine: pages that are no
   // longer in the backup (deleted on the other device) are removed too.
-  const incoming = data.pages || []
+  // A backup made without images keeps the pictures already on this device
+  // (older files have no flag: no images and no image links means the same).
+  const withoutImages =
+    data.includesImages === false ||
+    (data.includesImages === undefined && !data.images?.length && !(data.pages || []).some((p) => p.imageId))
+  const local = (await Promise.all(data.zines.map((z) => listPages(z.id)))).flat()
+  const localById = new Map(local.map((p) => [p.id, p]))
+  const incoming = (data.pages || []).map((p) =>
+    withoutImages ? { ...p, imageId: localById.get(p.id)?.imageId ?? null } : p,
+  )
   const keepPages = new Set(incoming.map((p) => p.id))
   const keepImages = new Set(incoming.map((p) => p.imageId).filter(Boolean))
-  const stale = (await Promise.all(data.zines.map((z) => listPages(z.id))))
-    .flat()
-    .filter((p) => !keepPages.has(p.id))
+  const stale = local.filter((p) => !keepPages.has(p.id))
+  // images that no page uses any more (a page now has another picture or none)
+  const orphans = local.filter((p) => p.imageId && !keepImages.has(p.imageId)).map((p) => p.imageId)
   await transaction(['zines', 'pages', 'images', 'drafts'], 'readwrite', (s) => {
-    for (const p of stale) {
-      s.pages.delete(p.id)
-      if (p.imageId && !keepImages.has(p.imageId)) s.images.delete(p.imageId)
-    }
+    for (const p of stale) s.pages.delete(p.id)
+    for (const id of orphans) s.images.delete(id)
     for (const z of data.zines) s.zines.put(z)
     for (const p of incoming) s.pages.put(p)
     for (const i of images) s.images.put(i)

@@ -132,7 +132,17 @@ onMounted(async () => {
     Object.assign(state, {
       step: saved.step ?? 1,
       center: saved.center ?? '',
-      tiles: Array.isArray(saved.tiles) ? saved.tiles : [],
+      // older or imported drafts may miss fields the page reads
+      tiles: (Array.isArray(saved.tiles) ? saved.tiles : [])
+        .filter((x) => x && typeof x === 'object')
+        .map((x, i) => ({
+          ...x,
+          id: x.id ?? newId(),
+          who: x.who ?? '',
+          text: x.text ?? '',
+          color: x.color || COLORS[i % COLORS.length],
+          angle: x.angle ?? null,
+        })),
       sep: SEPARATORS.includes(saved.sep) ? saved.sep : '*',
     })
     if (state.step > maxStep.value) state.step = maxStep.value
@@ -192,7 +202,8 @@ onBeforeUnmount(() => {
             <button
               class="swatch"
               :style="{ background: tile.color }"
-              :aria-label="`${t('writing.mosaic.untitledTile', { n: i + 1 })} · color`"
+              :title="t('writing.mosaic.tileColor', { name: t('writing.mosaic.untitledTile', { n: i + 1 }) })"
+              :aria-label="t('writing.mosaic.tileColor', { name: t('writing.mosaic.untitledTile', { n: i + 1 }) })"
               @click="cycleColor(tile)"
             />
             <strong>{{ t('writing.mosaic.untitledTile', { n: i + 1 }) }}</strong>
@@ -210,7 +221,7 @@ onBeforeUnmount(() => {
             <span><small>{{ t('writing.mosaic.voiceLabel') }}</small>{{ t('writing.mosaic.voices')[tile.angle.v] }}</span>
             <span><small>{{ t('writing.mosaic.timeLabel') }}</small>{{ t('writing.mosaic.times')[tile.angle.t] }}</span>
             <span><small>{{ t('writing.mosaic.formLabel') }}</small>{{ t('writing.mosaic.forms')[tile.angle.f] }}</span>
-            <button class="ghost small" aria-label="✕" @click="tile.angle = null">✕</button>
+            <button class="ghost small" :title="t('writing.mosaic.clearAngle')" :aria-label="t('writing.mosaic.clearAngle')" @click="tile.angle = null">✕</button>
           </div>
 
           <input v-model="tile.who" class="who" :placeholder="t('writing.mosaic.who') + ' · ' + t('writing.mosaic.whoPlaceholder')" />

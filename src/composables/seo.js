@@ -6,6 +6,8 @@ import { LOCALES, DEFAULT_LOCALE, localizedPath, stripLocale, normalizeSiteUrl }
 
 // Public site URL from config (VITE_SITE_URL in .env); falls back to wherever the app runs.
 const SITE = normalizeSiteUrl(import.meta.env.VITE_SITE_URL) || location.origin
+/** Open Graph wants language_TERRITORY. */
+const OG_LOCALES = { en: 'en_US', de: 'de_DE', es: 'es_ES', hu: 'hu_HU', fr: 'fr_FR', pl: 'pl_PL' }
 
 /*
  * Per-page <title>, description, canonical URL, hreflang alternates, robots
@@ -66,7 +68,7 @@ function apply(route) {
   setMeta('property', 'og:description', description)
   setMeta('property', 'og:url', url)
   setMeta('property', 'og:image', `${SITE}/apple-touch-icon.png`)
-  setMeta('property', 'og:locale', settings.locale)
+  setMeta('property', 'og:locale', OG_LOCALES[settings.locale] || 'en_US')
 }
 
 export function installSeo() {

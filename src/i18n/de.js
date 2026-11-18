@@ -1,5 +1,5 @@
 export default {
-  nav: { language: 'Sprache', theme: 'Design', home: 'Startseite', exportTip: 'Sicherung exportieren: alle Zines und Texte als Datei herunterladen', importTip: 'Sicherung importieren: Zines und Texte aus einer Sicherungsdatei wiederherstellen', clearTip: 'Alle in diesem Browser gespeicherten Daten löschen (vorher wird eine Sicherung gespeichert)', confirmClearAll: 'Alles löschen, was MyZine in diesem Browser gespeichert hat: alle Zines, Bilder, Schreibübungen und Einstellungen? Vorher wird eine Sicherungsdatei heruntergeladen, die du später wieder importieren kannst.', clearFailed: 'Löschen fehlgeschlagen: {msg}' },
+  nav: { language: 'Sprache', theme: 'Design', home: 'Startseite', exportTip: 'Sicherung exportieren: alle Zines und Texte als Datei herunterladen', importTip: 'Sicherung importieren: Zines und Texte aus einer Sicherungsdatei wiederherstellen', clearTip: 'Alle in diesem Browser gespeicherten Daten löschen (vorher wird eine Sicherung gespeichert)', confirmClearAll: 'Alles löschen, was MyZine in diesem Browser gespeichert hat: alle Zines, Bilder, Schreibübungen und Einstellungen? Vorher wird eine Sicherungsdatei heruntergeladen, die du später wieder importieren kannst.', confirmBackupSaved: 'Die Sicherungsdatei wurde an deinen Browser übergeben. Prüfe, ob sie wirklich gespeichert wurde (zum Beispiel unter Downloads), bevor du weitermachst.\n\nJetzt alles löschen, was MyZine in diesem Browser gespeichert hat?', clearFailed: 'Löschen fehlgeschlagen: {msg}' },
   theme: { system: 'System', light: 'Hell', dark: 'Dunkel' },
 
   home: {
@@ -75,6 +75,7 @@ export default {
   },
 
   print: {
+    back: 'Zurück zum Editor',
     button: 'Drucken',
     title: 'Drucklayout',
     print: 'Drucken',
@@ -338,6 +339,8 @@ export default {
       empty: 'Noch nichts geschrieben.',
     },
     mosaic: {
+      tileColor: 'Farbe von {name} ändern',
+      clearAngle: 'Vorgeschlagenen Blickwinkel entfernen',
       title: 'Mosaikgeschichte',
       card: 'Erzähl eine Geschichte in vielen kleinen Fragmenten aus verschiedenen Stimmen, Zeiten und Orten.',
       intro: 'Eine Mosaikgeschichte besteht aus kurzen, einzelnen Teilen, wie Mosaiksteinchen. Jedes zeigt dieselbe Geschichte aus einem anderen Blickwinkel: eine andere Person, ein anderer Moment, eine andere Form. Nebeneinandergelegt ergeben die Steinchen ein Bild, das keines allein zeigen könnte.',
@@ -507,7 +510,7 @@ export default {
       'Speichere die empfangene Datei auf diesem Gerät (zum Beispiel unter Downloads oder Dateien).',
       'Tippe oben auf den Import-Knopf ⤒ oder auf den Knopf unten und wähle die Datei aus.',
     ],
-    mergeNote: 'Beim Importieren wird nur ergänzt, nie etwas gelöscht. Einträge mit derselben ID werden durch die Version aus der Datei ersetzt.',
+    mergeNote: 'Beim Import kommen neue Zines und Schreibübungen dazu. Ein Zine oder eine Übung, die schon da ist, wird durch die Version aus der Datei ersetzt, und Seiten, die nicht in der Datei sind, werden daraus entfernt. Wurde die Datei ohne Bilder erstellt, bleiben die vorhandenen Bilder erhalten.',
     importBtn: 'Sicherung importieren',
     importedBoth: '{z} Zine(s) und {d} Schreibübungs-Einträge importiert.',
     formatTitle: 'Format',

@@ -37,9 +37,18 @@ export function placeOf(key, title) {
 
 /* ---------- helpers ---------- */
 
-/** Does the value hold any written text? (empty forms don't count) */
-const hasText = (v) =>
-  typeof v === 'string' ? !!v.trim() : Array.isArray(v) ? v.some(hasText) : v && typeof v === 'object' ? Object.values(v).some(hasText) : false
+/** Settings and ids, not writing: a form that only has these is still empty. */
+const NOT_TEXT = new Set(['id', 'key', 'step', 'sep', 'kind', 'color', 'layout', 'order', 'enabled', 'at', 'season', 'angle', 'savedAt', 'updatedAt'])
+
+/** Does the value hold anything the user wrote (or pulled: tarot cards)? Empty forms don't count. */
+function hasText(v, key) {
+  if (key && NOT_TEXT.has(key)) return false
+  if (key === 'cards') return Array.isArray(v) && v.length > 0
+  if (typeof v === 'string') return !!v.trim()
+  if (Array.isArray(v)) return v.some((x) => hasText(x))
+  if (v && typeof v === 'object') return Object.entries(v).some(([k, x]) => hasText(x, k))
+  return false
+}
 
 const content = (record) => record?.text ?? record?.data ?? null
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b)

@@ -10,7 +10,7 @@ const escHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>
 function inline(text) {
   const keep = []
   // backslash escapes → placeholders, so "\*" stays a literal star
-  let s = text.replace(/\\([\\`*_{}[\]()#+\-.!>])/g, (_, ch) => `\u0000${keep.push(ch) - 1}\u0000`)
+  let s = text.replace(/\\([\\`*_{}[\]()#+\-.!>=~|])/g, (_, ch) => `\u0000${keep.push(ch) - 1}\u0000`)
   s = escHtml(s)
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')

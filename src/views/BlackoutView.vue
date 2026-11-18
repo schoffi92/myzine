@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { t, tl } from '../i18n'
+import { t, tl, tRaw } from '../i18n'
 import Icon from '../components/Icon.vue'
 
 const revealed = ref(false)
@@ -8,9 +8,10 @@ const revealed = ref(false)
 /*
  * The example text marks kept words with {braces}. Everything else is
  * "inked", word by word, so the black bars look like marker strokes.
+ * tRaw, not t: t() would treat {word} as a placeholder and blank it.
  */
 const segments = computed(() =>
-  t('writing.blackout.example')
+  tRaw('writing.blackout.example')
     .split(/(\{[^}]+\})/)
     .filter(Boolean)
     .flatMap((part) =>

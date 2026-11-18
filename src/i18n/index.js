@@ -20,9 +20,12 @@ const messages = { en, de, es, hu, fr, pl }
 
 const lookup = (obj, path) => path.split('.').reduce((o, k) => o?.[k], obj)
 
+/** The message for `key` as written, without replacing {placeholders}. Falls back to English. */
+export const tRaw = (key) => lookup(messages[settings.locale], key) ?? lookup(en, key) ?? key
+
 /** Translate `key` (e.g. 'home.about'), replacing {name} placeholders. Falls back to English. */
 export function t(key, params = {}) {
-  const msg = lookup(messages[settings.locale], key) ?? lookup(en, key) ?? key
+  const msg = tRaw(key)
   return typeof msg === 'string' ? msg.replace(/\{(\w+)\}/g, (_, k) => params[k] ?? '') : msg
 }
 

@@ -156,6 +156,7 @@ const browser = await puppeteer.launch({
     '--no-default-browser-check',
     '--disable-extensions',
     '--disable-background-networking',
+    '--lang=en-US', // the app picks its language from the browser: never the build machine's
   ],
 })
 log(`using ${path.basename(executablePath)} (timeout ${TIMEOUT} ms)`)
@@ -189,6 +190,11 @@ async function renderSteps(url, state) {
     state.stage = 'new tab'
     const page = await context.newPage()
     page.setDefaultTimeout(TIMEOUT)
+    // belt and braces for --lang: some Chrome builds still report the system language
+    await page.evaluateOnNewDocument(() => {
+      Object.defineProperty(navigator, 'languages', { get: () => ['en-US', 'en'] })
+      Object.defineProperty(navigator, 'language', { get: () => 'en-US' })
+    })
     page.on('pageerror', (e) => problems.push(`page error: ${e.message}`))
     page.on('console', (m) => m.type() === 'error' && problems.push(`console: ${m.text()}`))
     page.on('requestfinished', (r) => pending.delete(r.url()))

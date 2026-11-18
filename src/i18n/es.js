@@ -1,5 +1,5 @@
 export default {
-  nav: { language: 'Idioma', theme: 'Tema', home: 'Inicio', exportTip: 'Exportar copia: descarga todos tus fanzines y textos en un archivo', importTip: 'Importar copia: recupera fanzines y textos desde un archivo de copia', clearTip: 'Borrar todos los datos guardados en este navegador (antes se guarda una copia)', confirmClearAll: '¿Borrar todo lo que MyZine ha guardado en este navegador: todos los fanzines, imágenes, prácticas de escritura y ajustes? Antes se descargará un archivo de copia que podrás volver a importar más tarde.', clearFailed: 'Error al borrar: {msg}' },
+  nav: { language: 'Idioma', theme: 'Tema', home: 'Inicio', exportTip: 'Exportar copia: descarga todos tus fanzines y textos en un archivo', importTip: 'Importar copia: recupera fanzines y textos desde un archivo de copia', clearTip: 'Borrar todos los datos guardados en este navegador (antes se guarda una copia)', confirmClearAll: '¿Borrar todo lo que MyZine ha guardado en este navegador: todos los fanzines, imágenes, prácticas de escritura y ajustes? Antes se descargará un archivo de copia que podrás volver a importar más tarde.', confirmBackupSaved: 'El archivo de copia de seguridad se entregó al navegador. Comprueba que se haya guardado de verdad (por ejemplo en Descargas) antes de continuar.\n\n¿Borrar ahora todo lo que MyZine guardó en este navegador?', clearFailed: 'Error al borrar: {msg}' },
   theme: { system: 'Sistema', light: 'Claro', dark: 'Oscuro' },
 
   home: {
@@ -75,6 +75,7 @@ export default {
   },
 
   print: {
+    back: 'Volver al editor',
     button: 'Imprimir',
     title: 'Diseño de impresión',
     print: 'Imprimir',
@@ -338,6 +339,8 @@ export default {
       empty: 'Todavía no has escrito nada.',
     },
     mosaic: {
+      tileColor: 'Cambiar el color de {name}',
+      clearAngle: 'Quitar el enfoque sugerido',
       title: 'Relato mosaico',
       card: 'Cuenta una historia a través de muchos fragmentos pequeños de distintas voces, momentos y lugares.',
       intro: 'Un relato mosaico está hecho de piezas cortas y separadas, como teselas. Cada una muestra la misma historia desde otro ángulo: otra persona, otro momento, otra forma. Juntas, las teselas forman una imagen que ninguna podría mostrar sola.',
@@ -507,7 +510,7 @@ export default {
       'Guarda el archivo recibido en ese dispositivo (por ejemplo, en Descargas o Archivos).',
       'Toca el botón de importar ⤒ de la barra superior, o el de abajo, y elige el archivo.',
     ],
-    mergeNote: 'Importar añade a lo que ya hay y nunca borra nada. Los elementos con el mismo ID se sustituyen por la versión del archivo.',
+    mergeNote: 'Al importar se añaden fanzines y prácticas de escritura nuevos. Un fanzine o una práctica que ya está aquí se sustituye por la versión del archivo, y se quitan las páginas que no están en el archivo. Si el archivo se hizo sin imágenes, se conservan las imágenes que ya hay aquí.',
     importBtn: 'Importar una copia',
     importedBoth: 'Se importaron {z} fanzine(s) y {d} elemento(s) de prácticas de escritura.',
     formatTitle: 'Formato',
