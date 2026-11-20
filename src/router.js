@@ -28,6 +28,7 @@ const views = {
   interview: () => import('./views/InterviewView.vue'),
   situation: () => import('./views/SituationView.vue'),
   meter: () => import('./views/MeterView.vue'),
+  rhyme: () => import('./views/RhymeView.vue'),
   'story-print': () => import('./views/StoryPrintView.vue'),
   'saved-print': () => import('./views/SavedPrintView.vue'),
   share: () => import('./views/ShareView.vue'),

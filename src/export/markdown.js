@@ -8,6 +8,7 @@ import { chapterTitle, chapterDesc, sourceLabel } from '../composables/storyCard
 import { interviewQuestion } from '../composables/interview'
 import { situationText } from '../composables/situation'
 import { meterTopic, otherRhythm } from '../composables/meter'
+import { rhymeTopic, stanzasText, activeSchemes } from '../composables/rhyme'
 
 /*
  * Readable Markdown export of the user's zines and writing practices,
@@ -216,6 +217,16 @@ function meterBody(s) {
   return out
 }
 
+function rhymeBody(s) {
+  const schemes = activeSchemes(s).filter((r) => stanzasText(s[r]))
+  if (!schemes.length) return null
+  const out = []
+  const topic = rhymeTopic(s, t)
+  if (topic) out.push(`**${t('writing.meter.topicLabel')}:** ${inline(topic)}`)
+  for (const r of schemes) out.push(`### ${t(`writing.rhyme.${r}`)}`, lines(stanzasText(s[r])))
+  return out
+}
+
 /** Draft id → { body, title key } of the practices that can save works. */
 export const NOVEL_PRACTICES = {
   snowflake: { body: snowflakeBody, titleKey: 'writing.snowflake.title' },
@@ -225,6 +236,7 @@ export const NOVEL_PRACTICES = {
   interview: { body: interviewBody, titleKey: 'writing.interview.title' },
   situation: { body: situationBody, titleKey: 'writing.situation.title' },
   meter: { body: meterBody, titleKey: 'writing.meter.title' },
+  rhyme: { body: rhymeBody, titleKey: 'writing.rhyme.title' },
 }
 
 const dateOf = (at) => new Date(at).toLocaleDateString(settings.locale, { year: 'numeric', month: 'long', day: 'numeric' })
@@ -267,6 +279,7 @@ const tabooSection = (d) => novelSection(d, 'taboo', `## ${t('writing.taboo.titl
 const interviewSection = (d) => novelSection(d, 'interview', `## ${t('writing.interview.title')}`)
 const situationSection = (d) => novelSection(d, 'situation', `## ${t('writing.situation.title')}`)
 const meterSection = (d) => novelSection(d, 'meter', `## ${t('writing.meter.title')}`)
+const rhymeSection = (d) => novelSection(d, 'rhyme', `## ${t('writing.rhyme.title')}`)
 function storySection(d) {
   const s = d['story-cards']?.data
   const title = s?.title?.trim() ? `: ${inline(s.title)} (${storyKind(s)})` : ''
@@ -295,7 +308,7 @@ export async function buildMarkdown({ zineIds = [], includeDrafts = true } = {})
 
   if (includeDrafts) {
     const d = Object.fromEntries((await getAllDrafts()).map((r) => [r.id, r]))
-    const practices = [timedSection(d), haikuSection(d), cutupSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d)].filter(Boolean)
+    const practices = [timedSection(d), haikuSection(d), cutupSection(d), rhymeSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d)].filter(Boolean)
     if (practices.length) parts.push(`# ${tl('writing.title')}\n\n${practices.join('\n\n')}`)
   }
   return parts.join('\n\n') + '\n'

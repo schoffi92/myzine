@@ -15,6 +15,7 @@ const sections = [
       { to: { name: 'timed' }, icon: '⏱', key: 'writing.timed', level: 1 },
       { to: { name: 'haiku' }, icon: '❀', key: 'writing.haiku', level: 1 },
       { to: { name: 'cutup' }, icon: '✂', key: 'writing.cutup', level: 2 },
+      { to: { name: 'rhyme' }, icon: '♫', key: 'writing.rhyme', level: 2 },
       { to: { name: 'meter' }, icon: '♩', key: 'writing.meter', level: 3 },
     ],
   },
