@@ -15,7 +15,7 @@ import { savedWorkMarkdown } from '../export/markdown'
  * yet, it's added to the list first, so opening never loses anything.
  */
 const props = defineProps({
-  kind: { type: String, required: true }, // practice draft id: snowflake | mosaic | story-cards | taboo | interview
+  kind: { type: String, required: true }, // practice draft id: snowflake | mosaic | story-cards | taboo | interview | situation
   data: { type: Object, required: true },
   defaultTitle: { type: String, default: '' },
   canSave: { type: Boolean, default: true },

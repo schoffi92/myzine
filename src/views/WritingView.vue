@@ -22,6 +22,7 @@ const sections = [
     practices: [
       { to: { name: 'interview' }, icon: '❝', key: 'writing.interview', level: 1 },
       { to: { name: 'taboo' }, icon: '⊘', key: 'writing.taboo', level: 2 },
+      { to: { name: 'situation' }, icon: '⚠', key: 'writing.situation', level: 2 },
       { to: { name: 'snowflake' }, icon: '❄', key: 'writing.snowflake', level: 3 },
       { to: { name: 'story' }, icon: '🂡', key: 'writing.story', level: 3 },
       { to: { name: 'mosaic' }, icon: '▦', key: 'writing.mosaic', level: 4 },
