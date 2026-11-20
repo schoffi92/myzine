@@ -45,15 +45,25 @@ export async function pack(obj) {
   return 'j' + toB64url(bytes)
 }
 
+/**
+ * Errors carry a `code`: 'checksum' (a part was misread: scan again),
+ * 'nodecompress' (this browser can't unpack compressed codes), 'unreadable'.
+ */
+const qrError = (message, code) => Object.assign(new Error(message), { code })
+
 export async function unpack(text) {
   let bytes = fromB64url(text.slice(1))
   if (text[0] === 'z') {
-    if (!canCompress()) throw new Error('This browser can’t unpack compressed data.')
+    if (!canCompress()) throw qrError('This browser can’t unpack compressed data.', 'nodecompress')
     bytes = await through(bytes, new DecompressionStream('deflate'))
   } else if (text[0] !== 'j') {
-    throw new Error('Unknown data format.')
+    throw qrError('Unknown data format.', 'unreadable')
   }
-  return JSON.parse(new TextDecoder().decode(bytes))
+  try {
+    return JSON.parse(new TextDecoder().decode(bytes))
+  } catch {
+    throw qrError('The data is not readable.', 'unreadable')
+  }
 }
 
 async function checksum(text) {
@@ -108,8 +118,12 @@ export function createCollector() {
     async finish() {
       if (!this.complete) throw new Error('Not all parts are scanned yet.')
       const text = Array.from({ length: current.total }, (_, i) => current.parts.get(i + 1)).join('')
-      if ((await checksum(text)) !== current.sum) throw new Error('Checksum mismatch.')
-      return unpack(text)
+      if ((await checksum(text)) !== current.sum) throw qrError('Checksum mismatch.', 'checksum')
+      try {
+        return await unpack(text)
+      } catch (e) {
+        throw e.code ? e : qrError(e.message, 'unreadable') // e.g. a broken compressed stream
+      }
     },
   }
 }

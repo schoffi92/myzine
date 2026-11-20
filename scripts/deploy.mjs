@@ -174,12 +174,14 @@ tar -xzf releases/${release}.tar.gz -C "$tmp" --no-same-owner
 chmod -R a+rX "$tmp"
 mv -T "$tmp" releases/${release}
 ln -sfn releases/${release} current.tmp && mv -Tf current.tmp current
-# keep the newest ${KEEP} releases (never the one that is live)
 live=$(readlink current)
+echo "[deploy] live: $live"
+# keep the newest ${KEEP} releases (never the one that is live). The site has
+# already switched, so a folder that can't be removed is only a warning.
 ls -1d releases/*/ | sed 's#/$##' | sort | head -n -${KEEP} | while read -r old; do
-  [ "$old" = "$live" ] || rm -rf "$old"
+  [ "$old" = "$live" ] || rm -rf "$old" || echo "[deploy] warning: could not remove $old"
 done
-echo "[deploy] live: $live ($(ls -1d releases/*/ | wc -l) releases kept)"
+echo "[deploy] $(ls -1d releases/*/ | wc -l) releases kept"
 `)
 } catch (e) {
   fail(`upload/switch failed (${e.message}); the live site was not changed unless "live:" was printed.`)

@@ -59,3 +59,11 @@ export const router = createRouter({
   ],
   scrollBehavior: (to, from, saved) => saved || { top: 0 },
 })
+
+// One address per page: /about/ → /about (else it would name itself as a
+// separate canonical page). The home page of a language keeps no slash too.
+router.beforeEach((to) => {
+  if (to.path.length > 1 && to.path.endsWith('/')) {
+    return { path: to.path.replace(/\/+$/, '') || '/', query: to.query, hash: to.hash, replace: true }
+  }
+})

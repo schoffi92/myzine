@@ -91,8 +91,9 @@ export function pickAndImportBackup() {
     const file = input.files?.[0]
     if (!file) return
     try {
-      const { zines, drafts } = await importAll(JSON.parse(await file.text()))
-      alert(t('share.importedBoth', { z: zines, d: drafts }))
+      const { zines, drafts, saved } = await importAll(JSON.parse(await file.text()))
+      // tell the user where their own different versions went
+      alert([t('share.importedBoth', { z: zines, d: drafts }), saved ? t('share.importKept', { n: saved }) : ''].filter(Boolean).join('\n\n'))
       location.reload()
     } catch (err) {
       alert(t('library.importFailed', { msg: err.message }))

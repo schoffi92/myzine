@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { t, tl } from '../i18n'
+import { flushOnHide } from '../composables/flushOnHide'
 import { copyToClipboard } from '../composables/clipboard'
 import Icon from '../components/Icon.vue'
 import EarlierVersion from '../components/EarlierVersion.vue'
@@ -98,14 +99,18 @@ watch(
 )
 
 /** Put a draft or a saved work on the page (autosave then stores it as the draft). */
+/** Text from a draft or an imported file: anything that isn't a string counts as empty. */
+const str = (v) => (typeof v === 'string' ? v : '')
+
 function apply(saved) {
   Object.assign(state, {
-    step: [1, 2, 3].includes(saved.step) ? saved.step : 1,
-    traits: Array.isArray(saved.traits) ? saved.traits.slice(0, MAX_TRAITS) : [],
-    extra: saved.extra ?? '',
-    situation: saved.situation ?? '',
-    text: saved.text ?? '',
+    step: [1, 2, 3].includes(saved?.step) ? saved.step : 1,
+    traits: (Array.isArray(saved?.traits) ? saved.traits : []).filter((w) => typeof w === 'string' && w.trim()).slice(0, MAX_TRAITS),
+    extra: str(saved?.extra),
+    situation: str(saved?.situation),
+    text: str(saved?.text),
   })
+  if (state.step > maxStep.value) state.step = maxStep.value
 }
 
 onMounted(async () => {
@@ -114,11 +119,19 @@ onMounted(async () => {
   loaded.value = true
 })
 
-onBeforeUnmount(() => {
+/** Save a pending edit now: when leaving the page, and when the tab is hidden or closed. */
+function flushSave() {
   if (saveTimer) {
     clearTimeout(saveTimer)
+    saveTimer = null
     saveDraftData(ID, state)
   }
+}
+const stopFlushOnHide = flushOnHide(flushSave)
+
+onBeforeUnmount(() => {
+  stopFlushOnHide()
+  flushSave()
 })
 </script>
 

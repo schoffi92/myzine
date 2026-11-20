@@ -66,11 +66,17 @@ async function onCode(text) {
     const data = await collector.finish()
     stopCamera()
     emit('done', data)
-  } catch {
-    // a part was misread: start collecting again, the codes keep looping
-    error.value = t('qr.badData')
-    collector.reset()
-    Object.assign(state, { got: 0, total: 0, have: new Set() })
+  } catch (e) {
+    if (e?.code === 'checksum') {
+      // a part was misread: start collecting again, the codes keep looping
+      error.value = t('qr.badData')
+      collector.reset()
+      Object.assign(state, { got: 0, total: 0, have: new Set() })
+    } else {
+      // every part arrived but can't be read here: scanning again won't help
+      stopCamera()
+      error.value = t(e?.code === 'nodecompress' ? 'qr.noDecompress' : 'qr.cantRead')
+    }
   } finally {
     state.checking = false
   }

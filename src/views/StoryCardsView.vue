@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { t, tl } from '../i18n'
+import { flushOnHide } from '../composables/flushOnHide'
 import Icon from '../components/Icon.vue'
 import EarlierVersion from '../components/EarlierVersion.vue'
 import SavedWorks from '../components/SavedWorks.vue'
@@ -94,11 +95,19 @@ onMounted(async () => {
   loaded.value = true
 })
 
-onBeforeUnmount(() => {
+/** Save a pending edit now: when leaving the page, and when the tab is hidden or closed. */
+function flushSave() {
   if (saveTimer) {
     clearTimeout(saveTimer)
+    saveTimer = null
     saveStory(story)
   }
+}
+const stopFlushOnHide = flushOnHide(flushSave)
+
+onBeforeUnmount(() => {
+  stopFlushOnHide()
+  flushSave()
 })
 </script>
 

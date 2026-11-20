@@ -6,6 +6,8 @@
  */
 export const INTERVIEW_QUESTIONS = ['name', 'age', 'home', 'food', 'city', 'drink', 'bothers']
 
-export const interviewQuestion = (q, t) => (q.key ? t(`writing.interview.questions.${q.key}`) : q.q || '')
+/** The question text: built-in by key, the writer's own, or "Your question" while it's empty. */
+export const interviewQuestion = (q, t) =>
+  INTERVIEW_QUESTIONS.includes(q?.key) ? t(`writing.interview.questions.${q.key}`) : (typeof q?.q === 'string' && q.q.trim()) || t('writing.interview.ownLabel')
 
 export const newQuestionId = () => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`

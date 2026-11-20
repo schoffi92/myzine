@@ -22,9 +22,12 @@ const escLine = (line) =>
     .replace(/\\/g, '\\\\') // a typed backslash stays a backslash
     .replace(/\*/g, '\\*') // "5 * 3 * 2" is not emphasis
     .replace(/^(\s*)(#{1,6})(\s|$)/, '$1\\$2$3') // "# x", "## x" → literal
-    .replace(/^(\s*)([>+-])(\s)/, '$1\\$2$3') // "- x", "> x" → literal
+    .replace(/^(\s*)([>+-])(\s|$)/, '$1\\$2$3') // "- x", "> x", a lone "-" → literal
     .replace(/^(\s*)(\d+)([.)])(\s)/, '$1$2\\$3$4') // "1. x" → "1\. x" (not a list)
-    .replace(/^(\s*)([-=_])(\2{2,}\s*)$/, '$1\\$2$3') // "---", "===" → not a rule or heading underline
+    .replace(/^(\s*)([-=_])(\2*\s*)$/, '$1\\$2$3') // "---", "==", "=" → not a rule or heading underline
+    .replace(/^(\s*)(`{3,}|~{3,})/, '$1\\$2') // "```" → not a code block
+    // leading spaces (indented poem lines) would make a code block: keep them as no-break spaces
+    .replace(/^[ \t]+/, (ws) => '\u00a0'.repeat(ws.replace(/\t/g, '    ').length))
 const esc = (text) => (text || '').split('\n').map(escLine).join('\n')
 /** Keep single line breaks (poems, dialogue): two trailing spaces force a break in Markdown. */
 const lines = (text) => esc(text.trim()).split('\n').map((l) => (l.trim() ? `${l}  ` : '')).join('\n').replace(/ +$/, '')
@@ -154,7 +157,7 @@ function storyBody(s) {
   if (chapters.length) {
     out.push(`### ${t('writing.story.steps')[0]}`)
     chapters.forEach((c, i) => {
-      const block = [`#### ${i + 1}. ${chapterTitle(c, t)}`]
+      const block = [`#### ${i + 1}. ${inline(chapterTitle(c, t))}`]
       const desc = chapterDesc(c, t)
       if (desc) block.push(`*${inline(desc)}*`)
       const n = notes(c.notes || [])
@@ -226,23 +229,32 @@ export const NOVEL_PRACTICES = {
 
 const dateOf = (at) => new Date(at).toLocaleDateString(settings.locale, { year: 'numeric', month: 'long', day: 'numeric' })
 
+/** A practice body, or null when the data is too malformed to read (old or foreign files). */
+function bodyOf(p, data) {
+  try {
+    return p.body(data)
+  } catch {
+    return null
+  }
+}
+
 /** One saved work as a standalone Markdown document (copy button, print view). */
 export function savedWorkMarkdown(kind, work) {
   const p = NOVEL_PRACTICES[kind]
-  const sub = [t(p.titleKey), kind === 'story-cards' ? sourceLabel(work.data, t) : null, dateOf(work.at)].filter(Boolean).join(' · ')
-  const body = p.body(work.data) || []
+  const sub = [t(p.titleKey), kind === 'story-cards' ? inline(sourceLabel(work.data, t)) : null, dateOf(work.at)].filter(Boolean).join(' · ')
+  const body = bodyOf(p, work.data) || []
   return [`# ${inline(work.title) || t('writing.works.untitled')}`, `*${sub}*`, shiftHeadings(body.join('\n\n'), -1)].filter(Boolean).join('\n\n') + '\n'
 }
 
 /** A practice section of the export: the current work, then its saved works. */
 function novelSection(d, kind, heading) {
   const p = NOVEL_PRACTICES[kind]
-  const current = p.body(d[kind]?.data)
+  const current = bodyOf(p, d[kind]?.data)
   const saved = (d[`${kind}-saved`]?.data?.works || []).map((w) =>
     [
       `### ${t('writing.works.savedLabel')}: ${inline(w.title) || t('writing.works.untitled')}`,
       `*${dateOf(w.at)}*`,
-      shiftHeadings((p.body(w.data) || []).join('\n\n'), 1),
+      shiftHeadings((bodyOf(p, w.data) || []).join('\n\n'), 1),
     ].filter(Boolean).join('\n\n'),
   )
   if (!current && !saved.length) return null

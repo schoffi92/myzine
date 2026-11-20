@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { t, tl } from '../i18n'
+import { flushOnHide } from '../composables/flushOnHide'
 import Icon from '../components/Icon.vue'
 import EarlierVersion from '../components/EarlierVersion.vue'
 import { loadDraft, saveDraft, deleteDraft } from '../db/drafts'
@@ -52,11 +53,19 @@ onMounted(async () => {
 })
 
 // The timer keeps running app-wide when leaving; only flush unsaved text.
-onBeforeUnmount(() => {
+/** Save a pending edit now: when leaving the page, and when the tab is hidden or closed. */
+function flushSave() {
   if (saveTimer) {
     clearTimeout(saveTimer)
+    saveTimer = null
     saveDraft(DRAFT_ID, text.value)
   }
+}
+const stopFlushOnHide = flushOnHide(flushSave)
+
+onBeforeUnmount(() => {
+  stopFlushOnHide()
+  flushSave()
 })
 </script>
 

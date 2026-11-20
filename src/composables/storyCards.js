@@ -31,24 +31,27 @@ export function blankStory() {
   }
 }
 
-const notesOf = (x) => (Array.isArray(x?.notes) ? x.notes.filter((n) => n && n.id) : [])
+/** Text from a draft or an imported file: anything that isn't a string counts as empty. */
+const str = (v) => (typeof v === 'string' ? v : '')
+const notesOf = (x) => (Array.isArray(x?.notes) ? x.notes.filter((n) => n && n.id).map((n) => ({ ...n, text: str(n.text) })) : [])
+const listOf = (v) => (Array.isArray(v) ? v.filter((x) => x && typeof x === 'object') : [])
 
 export function normalizeStory(d) {
   if (!d || !Array.isArray(d.chapters)) return blankStory()
   return {
     step: [1, 2, 3].includes(d.step) ? d.step : 1,
     kind: SOURCE_KINDS.includes(d.kind) ? d.kind : 'novel',
-    title: d.title ?? '',
-    chapters: d.chapters.map((c) => ({
+    title: str(d.title),
+    chapters: listOf(d.chapters).map((c) => ({
       id: c.id ?? uid(),
       key: BEATS.includes(c.key) ? c.key : null,
-      title: c.title ?? '',
-      desc: c.desc ?? '',
+      title: str(c.title),
+      desc: str(c.desc),
       enabled: c.enabled !== false,
       notes: notesOf(c),
     })),
-    characters: (d.characters ?? []).map((c) => ({ id: c.id ?? uid(), name: c.name ?? '', notes: notesOf(c) })),
-    worlds: (d.worlds ?? []).map((c) => ({ id: c.id ?? uid(), name: c.name ?? '', notes: notesOf(c) })),
+    characters: listOf(d.characters).map((c) => ({ id: c.id ?? uid(), name: str(c.name), notes: notesOf(c) })),
+    worlds: listOf(d.worlds).map((c) => ({ id: c.id ?? uid(), name: str(c.name), notes: notesOf(c) })),
   }
 }
 

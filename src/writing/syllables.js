@@ -55,8 +55,18 @@ const COUNTERS = { en, de, hu, pl, es, fr }
 const startsWithVowel = (w) => /^h?[aeiouáéíóú]/i.test(w)
 const endsWithVowel = (w) => /[aeiouáéíóú]$/i.test(w)
 
-/** The words of a line as the counters see them (French elision like l’eau stays one word). */
-export const lineWords = (line, locale) => (line.match(WORD_RE) || []).map((w) => w.replace(/^[a-z]{1,2}['’]/i, (m) => (locale === 'fr' ? m : '')))
+/**
+ * The words of a line: { text } as written ("I'm") and { word } as the counters
+ * see it (French elision like l’eau stays one word; elsewhere a short prefix
+ * before an apostrophe is dropped). A lone apostrophe is not a word.
+ */
+export const lineTokens = (line, locale) =>
+  (line.match(WORD_RE) || [])
+    .filter((w) => /[\p{L}\p{M}]/u.test(w))
+    .map((text) => ({ text, word: text.replace(/^[a-z]{1,2}['’]/i, (m) => (locale === 'fr' ? m : '')) }))
+
+/** The words of a line as the counters see them. */
+export const lineWords = (line, locale) => lineTokens(line, locale).map((x) => x.word)
 
 /** Estimated syllables of one word (from lineWords) in `locale`. */
 export const wordSyllables = (word, locale) => (COUNTERS[locale] || en)(word.replace(/['’]/g, ''))

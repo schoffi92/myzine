@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { t, tl } from '../i18n'
+import { flushOnHide } from '../composables/flushOnHide'
 import { copyToClipboard } from '../composables/clipboard'
 import Icon from '../components/Icon.vue'
 import EarlierVersion from '../components/EarlierVersion.vue'
@@ -126,22 +127,25 @@ watch(
 )
 
 /** Put a draft or a saved work on the page (autosave then stores it as the draft). */
+/** Text from a draft or an imported file: anything that isn't a string counts as empty. */
+const str = (v) => (typeof v === 'string' ? v : '')
+
 function apply(saved) {
   Object.assign(state, {
-    step: saved.step ?? 1,
-    center: saved.center ?? '',
+    step: [1, 2, 3, 4].includes(saved?.step) ? saved.step : 1,
+    center: str(saved?.center),
     // older or imported drafts may miss fields the page reads
-    tiles: (Array.isArray(saved.tiles) ? saved.tiles : [])
+    tiles: (Array.isArray(saved?.tiles) ? saved.tiles : [])
       .filter((x) => x && typeof x === 'object')
       .map((x, i) => ({
         ...x,
         id: x.id ?? newId(),
-        who: x.who ?? '',
-        text: x.text ?? '',
-        color: x.color || COLORS[i % COLORS.length],
-        angle: x.angle ?? null,
+        who: str(x.who),
+        text: str(x.text),
+        color: typeof x.color === 'string' && x.color ? x.color : COLORS[i % COLORS.length],
+        angle: typeof x.angle === 'number' && Number.isFinite(x.angle) ? x.angle : null,
       })),
-    sep: SEPARATORS.includes(saved.sep) ? saved.sep : '*',
+    sep: SEPARATORS.includes(saved?.sep) ? saved.sep : '*',
   })
   if (state.step > maxStep.value) state.step = maxStep.value
 }
@@ -152,11 +156,19 @@ onMounted(async () => {
   loaded.value = true
 })
 
-onBeforeUnmount(() => {
+/** Save a pending edit now: when leaving the page, and when the tab is hidden or closed. */
+function flushSave() {
   if (saveTimer) {
     clearTimeout(saveTimer)
+    saveTimer = null
     saveDraftData(ID, state)
   }
+}
+const stopFlushOnHide = flushOnHide(flushSave)
+
+onBeforeUnmount(() => {
+  stopFlushOnHide()
+  flushSave()
 })
 </script>
 

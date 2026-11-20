@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { t, tl } from '../i18n'
+import { flushOnHide } from '../composables/flushOnHide'
 import { copyToClipboard } from '../composables/clipboard'
 import Icon from '../components/Icon.vue'
 import EarlierVersion from '../components/EarlierVersion.vue'
@@ -80,12 +81,21 @@ watch(
   { deep: true },
 )
 
-/** Put a draft or a saved work on the page (autosave then stores it as the draft). */
+const str = (v) => (typeof v === 'string' ? v : '')
+
+/**
+ * Put a draft or a saved work on the page (autosave then stores it as the draft).
+ * An own question is kept while it has a question or an answer: clearing the
+ * question to retype it must not lose the answer.
+ */
 function apply(saved) {
   const list = Array.isArray(saved?.questions) ? saved.questions : []
   state.questions = list
-    .filter((q) => q && typeof q === 'object' && (INTERVIEW_QUESTIONS.includes(q.key) || (typeof q.q === 'string' && q.q.trim())))
-    .map((q) => (INTERVIEW_QUESTIONS.includes(q.key) ? { id: q.id || newQuestionId(), key: q.key, a: q.a ?? '' } : { id: q.id || newQuestionId(), q: q.q, a: q.a ?? '' }))
+    .filter((q) => q && typeof q === 'object' && (INTERVIEW_QUESTIONS.includes(q.key) || str(q.q).trim() || str(q.a).trim()))
+    .map((q) => {
+      const id = typeof q.id === 'string' && q.id ? q.id : newQuestionId()
+      return INTERVIEW_QUESTIONS.includes(q.key) ? { id, key: q.key, a: str(q.a) } : { id, q: str(q.q), a: str(q.a) }
+    })
 }
 
 onMounted(async () => {
@@ -94,11 +104,19 @@ onMounted(async () => {
   loaded.value = true
 })
 
-onBeforeUnmount(() => {
+/** Save a pending edit now: when leaving the page, and when the tab is hidden or closed. */
+function flushSave() {
   if (saveTimer) {
     clearTimeout(saveTimer)
+    saveTimer = null
     saveDraftData(ID, state)
   }
+}
+const stopFlushOnHide = flushOnHide(flushSave)
+
+onBeforeUnmount(() => {
+  stopFlushOnHide()
+  flushSave()
 })
 </script>
 

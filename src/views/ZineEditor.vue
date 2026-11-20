@@ -81,8 +81,10 @@ async function onImage(e) {
   if (!file.type.startsWith('image/')) return alert(t('editor.notImage'))
   const old = p.imageId
   const oldLayout = p.layout
+  const oldElsewhere = p.imageElsewhere
   const added = await saveImage(file)
   p.imageId = added
+  p.imageElsewhere = false // chosen here: this picture replaces one on another device
   if (p.layout === 'text-only') p.layout = 'image-top'
   savePage(p)
   if (await run(`page:${p.id}`)) {
@@ -91,6 +93,7 @@ async function onImage(e) {
     // the page still points at the old picture: keep it, drop the new one
     p.imageId = old
     p.layout = oldLayout
+    p.imageElsewhere = oldElsewhere
     await deleteImage(added)
   }
 }
@@ -100,6 +103,7 @@ async function removeImage() {
   if (!p?.imageId) return
   const old = p.imageId
   p.imageId = null
+  p.imageElsewhere = false // removed on purpose: other devices drop it too on import
   savePage(p)
   if (await run(`page:${p.id}`)) await deleteImage(old)
   else p.imageId = old // not saved: the page still shows its picture
@@ -132,7 +136,7 @@ onBeforeRouteLeave(() => flush())
   <section v-else-if="zine" class="editor">
     <div class="editor__head">
       <RouterLink :to="{ name: 'zines' }" class="ghost btn" :title="tl('editor.back')" :aria-label="tl('editor.back')">←</RouterLink>
-      <input v-model="zine.title" class="title-input" maxlength="80" @input="saveZine" />
+      <input v-model="zine.title" class="title-input" maxlength="80" :aria-label="t('editor.zineTitle')" @input="saveZine" />
       <input v-model="zine.color" type="color" :title="t('editor.accent')" @input="saveZine" />
       <span class="status" :class="status">
         {{ status === 'saving' ? t('editor.saving') : status === 'error' ? t('editor.saveFailed') : t('editor.saved') }}
@@ -184,7 +188,7 @@ onBeforeRouteLeave(() => flush())
         <p class="slot-heading">{{ slotLabel(pageIndex) }}</p>
         <div class="row">
           <input v-model="page.title" :placeholder="t('editor.pageTitle')" @input="savePage()" />
-          <select v-model="page.layout" @change="savePage()">
+          <select v-model="page.layout" :aria-label="t('editor.layout')" @change="savePage()">
             <option value="image-top">{{ t('editor.layoutTop') }}</option>
             <option value="image-left">{{ t('editor.layoutLeft') }}</option>
             <option value="text-only">{{ t('editor.layoutText') }}</option>

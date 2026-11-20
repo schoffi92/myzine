@@ -1,4 +1,4 @@
-import { lineWords, wordSyllables, joinsPrevious } from './syllables'
+import { lineTokens, wordSyllables, joinsPrevious } from './syllables'
 
 /*
  * Rhythm checking for the Iamb and trochee practice.
@@ -9,7 +9,7 @@ import { lineWords, wordSyllables, joinsPrevious } from './syllables'
  * Stress languages: the writer marks stress by tapping. Where the language has
  * a rule the syllables start pre-marked: Polish (second to last), Spanish
  * (written accent, else the ending rule), German (first syllable, except
- * unstressed prefixes and -ieren). English and French start unmarked.
+ * unstressed prefixes like be-/ge-/ver- and -ieren). English and French start unmarked.
  * One-syllable words count as either until the writer marks them.
  * Hungarian: quantity instead of stress. A syllable is long when its vowel is
  * long or two consonants follow it (also across a word boundary; cs, sz, gy…
@@ -17,14 +17,16 @@ import { lineWords, wordSyllables, joinsPrevious } from './syllables'
  * long syllable may stand where a short one is expected (spondee).
  *
  * Writer's corrections are kept per line in `marks` ({ "<word>#<n>:<i>": 'S'|'u'|'x' })
- * and `counts` ({ "<word>#<n>": syllables }), keyed by the word and its
- * occurrence, so they survive edits elsewhere in the line.
+ * and `counts` ({ "<word>#<n>": syllables, 0–9 }), keyed by the word and its
+ * occurrence, so they survive edits elsewhere in the line (see liveKeys).
  */
 
 export const RHYTHMS = ['iamb', 'trochee']
 export const FEET_OPTIONS = [3, 4, 5]
 export const MIN_LINES = 2
 export const MAX_LINES = 8
+/** Most syllables the writer can give one word. */
+export const MAX_COUNT = 9
 const PATTERN = { iamb: ['u', 'S'], trochee: ['S', 'u'] }
 
 /** Hungarian uses long/short syllables instead of stress. */
@@ -32,7 +34,21 @@ export const usesLength = (locale) => locale === 'hu'
 
 /* ---------- stress guesses ---------- */
 
-const DE_PREFIX = /^(?:be|ge|er|ver|zer|ent|emp|miss)/
+const DE_PREFIXES = ['miss', 'ver', 'zer', 'ent', 'emp', 'be', 'ge', 'er']
+/** What follows a stem's first syllable in a word like geben, besser, gestern: only a weak ending. */
+const DE_WEAK_REST = /^[^aeiouyäöü]*(?:e|en|er|el|em|es|ern|eln|end|ens|ers)$/
+
+/**
+ * Is the start of a German word an unstressed prefix (ver-loren, ge-NUG, be-VOR)?
+ * Not when a vowel follows (bei-den) or only a weak ending is left (ge-ben,
+ * bes-ser, ges-tern, Be-cher, Er-de): then it's part of the stem.
+ */
+function deUnstressedPrefix(w) {
+  const pre = DE_PREFIXES.find((p) => w.startsWith(p))
+  if (!pre) return false
+  const rest = w.slice(pre.length)
+  return !!rest && !/^[aeiouyäöü]/.test(rest) && !DE_WEAK_REST.test(rest)
+}
 
 /** Syllable that carries a written accent in a Spanish word, or -1. */
 function esAccentIndex(word) {
@@ -62,7 +78,7 @@ function guessStress(word, n, locale) {
   }
   if (locale === 'de') {
     if (/ieren$/.test(w)) return n - 2
-    if (DE_PREFIX.test(w) && (n >= 3 || w.length > 5)) return 1
+    if (deUnstressedPrefix(w)) return 1
     return 0
   }
   return -1 // en, fr: spelling doesn't show stress
@@ -86,6 +102,7 @@ function huLengths(words) {
         i++
       } else if (/\p{L}/u.test(ch)) {
         tokens.push({ v: false })
+        if (ch === 'x') tokens.push({ v: false }) // x sounds ks: two consonants
         i += (HU_DIGRAPH.exec(s.slice(i)) || [ch])[0].length
       } else i++
     }
@@ -112,16 +129,18 @@ const isMark = (m) => m === 'S' || m === 'u' || m === 'x'
  */
 export function analyzeLine(text, locale, marks = {}, counts = {}) {
   const hu = usesLength(locale)
-  const words = lineWords(text || '', locale)
+  const tokens = lineTokens(text || '', locale)
+  const words = tokens.map((x) => x.word)
   const lengths = hu ? huLengths(words) : null
   const seen = {}
   const out = []
   words.forEach((w, wi) => {
-    const lw = w.toLowerCase()
+    const lw = tokens[wi].text.toLowerCase()
     seen[lw] = (seen[lw] ?? -1) + 1
     const key = `${lw}#${seen[lw]}`
     const auto = wordSyllables(w, locale)
-    const n = !hu && Number.isInteger(counts[key]) && counts[key] >= 0 ? counts[key] : auto
+    const c = counts[key]
+    const n = !hu && Number.isInteger(c) && c >= 0 && c <= MAX_COUNT ? c : auto
     let autoVals
     if (hu) autoVals = lengths[wi]
     else {
@@ -134,7 +153,7 @@ export function analyzeLine(text, locale, marks = {}, counts = {}) {
     })
     const prev = out.at(-1)
     const joins = !!(slots.length && prev?.slots.length && joinsPrevious(words[wi - 1], w, locale))
-    out.push({ text: w, key, n, auto, joins, slots })
+    out.push({ text: tokens[wi].text, key, n, auto, joins, slots })
   })
   if (hu) {
     // the last syllable of a line can be long or short
@@ -150,6 +169,15 @@ export function analyzeLine(text, locale, marks = {}, counts = {}) {
 }
 
 /** Merged syllables (synalepha): stressed if either is, else unstressed if either is. */
+/**
+ * The keys a line's marks and counts can use right now; other stored keys
+ * belong to words that were edited away and are dropped (see MeterView).
+ */
+export function liveKeys(text, locale, counts = {}) {
+  const words = analyzeLine(text, locale, {}, counts)
+  return { marks: new Set(words.flatMap((w) => w.slots.map((s) => s.key))), counts: new Set(words.map((w) => w.key)) }
+}
+
 const mergeValues = (a, b) => (a === 'S' || b === 'S' ? 'S' : a === 'u' || b === 'u' ? 'u' : 'x')
 
 /** The line as one value per syllable (merged syllables combined). */

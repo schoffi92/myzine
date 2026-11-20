@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { t, tl } from '../i18n'
+import { flushOnHide } from '../composables/flushOnHide'
 import { settings } from '../composables/settings'
 import { copyToClipboard } from '../composables/clipboard'
 import Icon from '../components/Icon.vue'
@@ -9,7 +10,7 @@ import SavedWorks from '../components/SavedWorks.vue'
 import RhythmRow from '../components/RhythmRow.vue'
 import RhythmMark from '../components/RhythmMark.vue'
 import { loadDraftData, saveDraftData, deleteDraft } from '../db/drafts'
-import { RHYTHMS, FEET_OPTIONS, MIN_LINES, MAX_LINES, usesLength, patternFeet } from '../writing/meter'
+import { RHYTHMS, FEET_OPTIONS, MIN_LINES, MAX_LINES, usesLength, patternFeet, liveKeys } from '../writing/meter'
 import { METER_TOPICS, otherRhythm, meterTopic } from '../composables/meter'
 
 /*
@@ -69,6 +70,8 @@ function removeLine() {
   if (RHYTHMS.some((r) => state[r][i]?.text.trim()) && !confirm(t('writing.meter.confirmRemoveLine'))) return
   state.lineCount--
   for (const r of RHYTHMS) state[r].splice(i, 1)
+  // that line may have been the only text of a stanza: don't stay on a step that needs it
+  if (state.step > maxStep.value) state.step = maxStep.value
 }
 
 function setMark(line, key, value) {
@@ -78,7 +81,21 @@ function setMark(line, key, value) {
 function setCount(line, key, value) {
   if (value === null) delete line.counts[key]
   else line.counts[key] = value
+  prune(line)
 }
+
+/** Drop marks and counts of words that were edited away, so they can't reappear on a new word later. */
+function prune(line) {
+  const live = liveKeys(line.text, locale.value, line.counts)
+  for (const k of Object.keys(line.counts)) if (!live.counts.has(k)) delete line.counts[k]
+  for (const k of Object.keys(line.marks)) if (!live.marks.has(k)) delete line.marks[k]
+}
+watch(
+  () => RHYTHMS.flatMap((r) => state[r].map((l) => l.text)),
+  () => {
+    if (loaded.value) for (const r of RHYTHMS) state[r].forEach(prune)
+  },
+)
 
 const stanzaText = (r) => state[r].map((l) => l.text.trim()).filter(Boolean).join('\n')
 const plainText = computed(() =>
@@ -148,11 +165,19 @@ onMounted(async () => {
   loaded.value = true
 })
 
-onBeforeUnmount(() => {
+/** Save a pending edit now: when leaving the page, and when the tab is hidden or closed. */
+function flushSave() {
   if (saveTimer) {
     clearTimeout(saveTimer)
+    saveTimer = null
     saveDraftData(ID, state)
   }
+}
+const stopFlushOnHide = flushOnHide(flushSave)
+
+onBeforeUnmount(() => {
+  stopFlushOnHide()
+  flushSave()
 })
 </script>
 
@@ -244,7 +269,7 @@ onBeforeUnmount(() => {
           <div class="row wrap tools">
             <button type="button" class="ghost" :disabled="state.lineCount >= MAX_LINES" @click="addLine" :title="tl('writing.meter.addLine')" :aria-label="tl('writing.meter.addLine')"><Icon name="plus" :label="tl('writing.meter.addLine')" /></button>
             <button type="button" class="ghost" :disabled="state.lineCount <= MIN_LINES" @click="removeLine">− <span class="btn-label">{{ t('writing.meter.removeLine') }}</span></button>
-            <button v-if="!hu" type="button" class="ghost" :aria-pressed="editCounts" @click="editCounts = !editCounts">{{ editCounts ? t('writing.meter.fixCountsDone') : t('writing.meter.fixCounts') }}</button>
+            <button v-if="!hu" type="button" class="ghost" @click="editCounts = !editCounts">{{ editCounts ? t('writing.meter.fixCountsDone') : t('writing.meter.fixCounts') }}</button>
           </div>
         </template>
       </div>

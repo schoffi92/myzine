@@ -6,13 +6,15 @@ import { settings } from '../composables/settings'
 import Icon from './Icon.vue'
 import { useSavedWorks } from '../composables/savedWorks'
 import { savedWorkMarkdown } from '../export/markdown'
+import { hasText } from '../sync/merge'
 
 /*
  * "Save this work" for the novel practices, plus the list of saved works
  * (title, date; open, print, copy as Markdown, delete). Saving takes a snapshot
  * of `data`; the work on the page stays as it is. Open emits `open` with a copy
- * of a saved work for the page to load; if the work on the page isn't saved
- * yet, it's added to the list first, so opening never loses anything.
+ * of a saved work for the page to load; if the work on the page holds any
+ * writing that isn't saved yet, it's added to the list first, so opening never
+ * loses anything (even when the page wouldn't offer Save yet).
  */
 const props = defineProps({
   kind: { type: String, required: true }, // practice draft id: snowflake | mosaic | story-cards | taboo | interview | situation | meter
@@ -60,7 +62,7 @@ async function open(w) {
   await load()
   const current = JSON.parse(JSON.stringify(props.data))
   let kept = ''
-  if (props.canSave && !works.value.some((x) => sameWork(x.data, current))) {
+  if (hasText(current) && !works.value.some((x) => sameWork(x.data, current))) {
     kept = titleNow()
     await add(kept, current)
     title.value = ''
@@ -73,6 +75,9 @@ async function open(w) {
 function del(w) {
   if (confirm(t('writing.works.confirmRemove', { title: w.title }))) remove(w.id)
 }
+
+/** "Open: Marta Kowal": the action and the work's title. */
+const labelFor = (key, w) => `${tl(key)}: ${w.title || t('writing.works.untitled')}`
 
 const when = (at) => new Date(at).toLocaleString(settings.locale, { dateStyle: 'medium', timeStyle: 'short' })
 
@@ -103,24 +108,25 @@ onMounted(load)
       <h3>{{ t('writing.works.listTitle') }}</h3>
       <ul class="works__list">
         <li v-for="w in works" :key="w.id">
+          <!-- each button names its work, so screen readers can tell the rows apart -->
           <span class="works__name">
             <strong>{{ w.title || t('writing.works.untitled') }}</strong>
             <small class="muted">{{ when(w.at) }}</small>
           </span>
-          <button class="ghost" @click="open(w)" :title="tl('writing.works.open')" :aria-label="tl('writing.works.open')"><Icon name="pencil" :label="tl('writing.works.open')" /></button>
+          <button class="ghost" @click="open(w)" :title="tl('writing.works.open')" :aria-label="labelFor('writing.works.open', w)"><Icon name="pencil" :label="tl('writing.works.open')" /></button>
           <RouterLink
             class="btn ghost"
             :to="{ name: 'saved-print', params: { kind, id: w.id } }"
             :title="tl('writing.works.print')"
-            :aria-label="tl('writing.works.print')"
+            :aria-label="labelFor('writing.works.print', w)"
           ><Icon name="printer" :label="tl('writing.works.print')" /></RouterLink>
           <button
             class="ghost"
             @click="copy(w)"
             :title="copiedId === w.id ? tl('writing.works.copied') : tl('writing.works.copy')"
-            :aria-label="copiedId === w.id ? tl('writing.works.copied') : tl('writing.works.copy')"
+            :aria-label="labelFor(copiedId === w.id ? 'writing.works.copied' : 'writing.works.copy', w)"
           ><Icon :name="copiedId === w.id ? 'check' : 'copy'" :label="copiedId === w.id ? tl('writing.works.copied') : tl('writing.works.copy')" /></button>
-          <button class="ghost danger" @click="del(w)" :title="tl('writing.works.remove')" :aria-label="tl('writing.works.remove')"><Icon name="trash" :label="tl('writing.works.remove')" /></button>
+          <button class="ghost danger" @click="del(w)" :title="tl('writing.works.remove')" :aria-label="labelFor('writing.works.remove', w)"><Icon name="trash" :label="tl('writing.works.remove')" /></button>
         </li>
       </ul>
     </template>
