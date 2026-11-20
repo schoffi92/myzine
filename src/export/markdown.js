@@ -7,6 +7,7 @@ import { CARD_BY_ID } from '../tarot/deck'
 import { chapterTitle, chapterDesc, sourceLabel } from '../composables/storyCards'
 import { interviewQuestion } from '../composables/interview'
 import { situationText } from '../composables/situation'
+import { meterTopic, otherRhythm } from '../composables/meter'
 
 /*
  * Readable Markdown export of the user's zines and writing practices,
@@ -201,7 +202,18 @@ function situationBody(s) {
   return out
 }
 
-/** Draft id → { body, title key } of the novel practices that can save works. */
+function meterBody(s) {
+  const stanza = (r) => (Array.isArray(s?.[r]) ? s[r] : []).map((l) => l?.text?.trim()).filter(Boolean).join('\n')
+  if (!stanza('iamb') && !stanza('trochee')) return null
+  const first = s.first === 'trochee' ? 'trochee' : 'iamb'
+  const out = []
+  const topic = meterTopic(s, t)
+  if (topic) out.push(`**${t('writing.meter.topicLabel')}:** ${inline(topic)}`)
+  for (const r of [first, otherRhythm(first)]) if (stanza(r)) out.push(`### ${t(`writing.meter.${r}`)}`, lines(stanza(r)))
+  return out
+}
+
+/** Draft id → { body, title key } of the practices that can save works. */
 export const NOVEL_PRACTICES = {
   snowflake: { body: snowflakeBody, titleKey: 'writing.snowflake.title' },
   mosaic: { body: mosaicBody, titleKey: 'writing.mosaic.title' },
@@ -209,6 +221,7 @@ export const NOVEL_PRACTICES = {
   taboo: { body: tabooBody, titleKey: 'writing.taboo.title' },
   interview: { body: interviewBody, titleKey: 'writing.interview.title' },
   situation: { body: situationBody, titleKey: 'writing.situation.title' },
+  meter: { body: meterBody, titleKey: 'writing.meter.title' },
 }
 
 const dateOf = (at) => new Date(at).toLocaleDateString(settings.locale, { year: 'numeric', month: 'long', day: 'numeric' })
@@ -241,6 +254,7 @@ const mosaicSection = (d) => novelSection(d, 'mosaic', `## ${t('writing.mosaic.t
 const tabooSection = (d) => novelSection(d, 'taboo', `## ${t('writing.taboo.title')}`)
 const interviewSection = (d) => novelSection(d, 'interview', `## ${t('writing.interview.title')}`)
 const situationSection = (d) => novelSection(d, 'situation', `## ${t('writing.situation.title')}`)
+const meterSection = (d) => novelSection(d, 'meter', `## ${t('writing.meter.title')}`)
 function storySection(d) {
   const s = d['story-cards']?.data
   const title = s?.title?.trim() ? `: ${inline(s.title)} (${storyKind(s)})` : ''
@@ -269,7 +283,7 @@ export async function buildMarkdown({ zineIds = [], includeDrafts = true } = {})
 
   if (includeDrafts) {
     const d = Object.fromEntries((await getAllDrafts()).map((r) => [r.id, r]))
-    const practices = [timedSection(d), haikuSection(d), cutupSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d)].filter(Boolean)
+    const practices = [timedSection(d), haikuSection(d), cutupSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d)].filter(Boolean)
     if (practices.length) parts.push(`# ${tl('writing.title')}\n\n${practices.join('\n\n')}`)
   }
   return parts.join('\n\n') + '\n'

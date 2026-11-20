@@ -32,6 +32,7 @@ export const PAGES = [
   { path: 'writing/15-minute-poem', name: 'timed', meta: { title: 'writing.timed.title', description: 'writing.timed.card' } },
   { path: 'writing/haiku', name: 'haiku', meta: { title: 'writing.haiku.title', description: 'writing.haiku.card' } },
   { path: 'writing/cut-up-poem', name: 'cutup', meta: { title: 'writing.cutup.title', description: 'writing.cutup.card' } },
+  { path: 'writing/iamb-trochee', name: 'meter', meta: { title: 'writing.meter.title', description: 'writing.meter.card' } },
   { path: 'writing/snowflake', name: 'snowflake', meta: { title: 'writing.snowflake.title', description: 'writing.snowflake.card' } },
   { path: 'writing/mosaic-story', name: 'mosaic', meta: { title: 'writing.mosaic.title', description: 'writing.mosaic.card' } },
   { path: 'writing/story-cards', name: 'story', meta: { title: 'writing.story.title', description: 'writing.story.card' } },

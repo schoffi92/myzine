@@ -55,16 +55,22 @@ const COUNTERS = { en, de, hu, pl, es, fr }
 const startsWithVowel = (w) => /^h?[aeiouáéíóú]/i.test(w)
 const endsWithVowel = (w) => /[aeiouáéíóú]$/i.test(w)
 
+/** The words of a line as the counters see them (French elision like l’eau stays one word). */
+export const lineWords = (line, locale) => (line.match(WORD_RE) || []).map((w) => w.replace(/^[a-z]{1,2}['’]/i, (m) => (locale === 'fr' ? m : '')))
+
+/** Estimated syllables of one word (from lineWords) in `locale`. */
+export const wordSyllables = (word, locale) => (COUNTERS[locale] || en)(word.replace(/['’]/g, ''))
+
+/** Spanish synalepha: a vowel at the end of a word joins the next word's first vowel. */
+export const joinsPrevious = (prev, word, locale) => locale === 'es' && !!prev && endsWithVowel(prev) && startsWithVowel(word)
+
 /** Estimated syllables of one line of text in `locale`. */
 export function countSyllables(line, locale) {
-  const count = COUNTERS[locale] || en
-  // French elision (l’eau, qu’il) is one word for counting
-  const words = (line.match(WORD_RE) || []).map((w) => w.replace(/^[a-z]{1,2}['’]/i, (m) => (locale === 'fr' ? m : '')))
+  const words = lineWords(line, locale)
   let n = 0
   words.forEach((w, i) => {
-    n += count(w.replace(/['’]/g, ''))
-    // Spanish synalepha: a vowel at the end of a word joins the next word's first vowel
-    if (locale === 'es' && i > 0 && endsWithVowel(words[i - 1]) && startsWithVowel(w)) n -= 1
+    n += wordSyllables(w, locale)
+    if (joinsPrevious(words[i - 1], w, locale)) n -= 1
   })
   return Math.max(0, n)
 }
