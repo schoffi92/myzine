@@ -169,7 +169,7 @@ export default {
       card: 'Ülj le a szereplőddel, és kérdezd őt saját magáról.',
       intro: 'Képzeld el, hogy a szereplőd veled szemben ül. Tegyél fel neki kérdéseket, és írd le a válaszait az ő hangján: „Én…”. Ne gondolkodj sokáig: gyakran az első válasz a legőszintébb.',
       hintsTitle: 'Hogyan válaszolj',
-      hints: ['A szereplőként válaszolj, ne íróként: egyes szám első személyben, az ő szavaival és beszédmódjával.', 'A rövid válasz is jó. A hosszú, elkalandozó is.', 'A szereplőd kitérhet a kérdés elől, hazudhat vagy bosszús lehet. Ez is elárul valamit.', 'Tegyél fel saját kérdéseket, ha valami meglep.'],
+      hints: ['A szereplőként válaszolj, ne íróként: egyes szám első személyben, az ő szavaival és beszédmódjával.', 'A rövid válasz is jó. A hosszú, elkalandozó is.', 'A szereplőd kitérhet a kérdés elől, hazudhat vagy bosszús lehet. Ez is elárul valamit.', 'Leírhatod a hozzáállását is: mit csinál, miközben válaszol, vagy épp nem válaszol. Például: (vállat von, az ajtó felé néz) „Negyvenegy.”', 'Figyeld meg, mit csinál, amíg még kérdezed. A szemedbe néz, vagy kerüli a tekinteted?', 'Tegyél fel saját kérdéseket, ha valami meglep.'],
       character: 'A szereplőd',
       ownLabel: 'A kérdésed',
       remove: 'Kérdés törlése',

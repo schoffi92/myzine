@@ -169,7 +169,7 @@ export default {
       card: 'Sit down with your character and ask them about themselves.',
       intro: 'Imagine your character sitting across from you. Ask them questions and write down their answers in their own voice: “I…”. Don’t think too long: the first answer that comes is often the most honest one.',
       hintsTitle: 'How to answer',
-      hints: ['Answer as the character, not as the writer: in the first person, with their words and their way of speaking.', 'A short answer is fine. So is a long one that wanders off.', 'Your character may dodge a question, lie or get annoyed. That tells you something too.', 'Add your own questions when something surprises you.'],
+      hints: ['Answer as the character, not as the writer: in the first person, with their words and their way of speaking.', 'A short answer is fine. So is a long one that wanders off.', 'Your character may dodge a question, lie or get annoyed. That tells you something too.', 'You can also describe their attitude: what they do while answering, or while not answering. For example: (shrugs, looks at the door) “Forty-one.”', 'Notice what they do while you are still asking. Do they look you in the eye, or avoid eye contact?', 'Add your own questions when something surprises you.'],
       character: 'Your character',
       ownLabel: 'Your question',
       remove: 'Remove question',

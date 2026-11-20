@@ -169,7 +169,7 @@ export default {
       card: 'Setz dich mit deiner Figur zusammen und frag sie nach ihr selbst.',
       intro: 'Stell dir vor, deine Figur sitzt dir gegenüber. Stell ihr Fragen und schreib ihre Antworten in ihrer eigenen Stimme auf: „Ich …“. Denk nicht zu lange nach: Die erste Antwort ist oft die ehrlichste.',
       hintsTitle: 'So antwortest du',
-      hints: ['Antworte als die Figur, nicht als Autor*in: in der Ich-Form, mit ihren Worten und ihrer Art zu sprechen.', 'Eine kurze Antwort ist in Ordnung. Eine lange, die abschweift, auch.', 'Deine Figur darf ausweichen, lügen oder genervt sein. Auch das verrät etwas.', 'Füg eigene Fragen hinzu, wenn dich etwas überrascht.'],
+      hints: ['Antworte als die Figur, nicht als Autor*in: in der Ich-Form, mit ihren Worten und ihrer Art zu sprechen.', 'Eine kurze Antwort ist in Ordnung. Eine lange, die abschweift, auch.', 'Deine Figur darf ausweichen, lügen oder genervt sein. Auch das verrät etwas.', 'Du kannst auch ihre Haltung beschreiben: was die Figur tut, während sie antwortet oder nicht antwortet. Zum Beispiel: (zuckt mit den Schultern, schaut zur Tür) „Einundvierzig.“', 'Achte darauf, was sie tut, während du noch fragst. Schaut sie dir in die Augen oder weicht sie deinem Blick aus?', 'Füg eigene Fragen hinzu, wenn dich etwas überrascht.'],
       character: 'Deine Figur',
       ownLabel: 'Deine Frage',
       remove: 'Frage entfernen',

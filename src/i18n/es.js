@@ -169,7 +169,7 @@ export default {
       card: 'Siéntate con tu personaje y pregúntale por su vida.',
       intro: 'Imagina a tu personaje sentado frente a ti. Hazle preguntas y escribe sus respuestas con su propia voz: «Yo…». No lo pienses demasiado: la primera respuesta que llega suele ser la más sincera.',
       hintsTitle: 'Cómo responder',
-      hints: ['Responde como el personaje, no como quien escribe: en primera persona, con sus palabras y su forma de hablar.', 'Una respuesta corta está bien. Una larga que se va por las ramas, también.', 'Tu personaje puede esquivar una pregunta, mentir o enfadarse. Eso también dice algo.', 'Añade tus propias preguntas cuando algo te sorprenda.'],
+      hints: ['Responde como el personaje, no como quien escribe: en primera persona, con sus palabras y su forma de hablar.', 'Una respuesta corta está bien. Una larga que se va por las ramas, también.', 'Tu personaje puede esquivar una pregunta, mentir o enfadarse. Eso también dice algo.', 'También puedes describir su actitud: qué hace mientras responde, o mientras no responde. Por ejemplo: (se encoge de hombros, mira hacia la puerta) «Cuarenta y uno».', 'Fíjate en qué hace mientras todavía le estás preguntando. ¿Te mira a los ojos o evita tu mirada?', 'Añade tus propias preguntas cuando algo te sorprenda.'],
       character: 'Tu personaje',
       ownLabel: 'Tu pregunta',
       remove: 'Quitar pregunta',

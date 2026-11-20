@@ -169,7 +169,7 @@ export default {
       card: 'Usiądź naprzeciw swojej postaci i zapytaj ją o nią samą.',
       intro: 'Wyobraź sobie, że twoja postać siedzi naprzeciwko ciebie. Zadawaj jej pytania i zapisuj odpowiedzi jej własnym głosem: „Ja…”. Nie zastanawiaj się za długo: pierwsza odpowiedź jest często najszczersza.',
       hintsTitle: 'Jak odpowiadać',
-      hints: ['Odpowiadaj jako postać, a nie jako osoba pisząca: w pierwszej osobie, jej słowami i jej sposobem mówienia.', 'Krótka odpowiedź jest w porządku. Długa i zbaczająca z tematu też.', 'Postać może unikać pytania, kłamać albo się zirytować. To też coś mówi.', 'Dodawaj własne pytania, gdy coś cię zaskoczy.'],
+      hints: ['Odpowiadaj jako postać, a nie jako osoba pisząca: w pierwszej osobie, jej słowami i jej sposobem mówienia.', 'Krótka odpowiedź jest w porządku. Długa i zbaczająca z tematu też.', 'Postać może unikać pytania, kłamać albo się zirytować. To też coś mówi.', 'Możesz też opisać postawę postaci: co robi, gdy odpowiada albo gdy nie odpowiada. Na przykład: (wzrusza ramionami, patrzy na drzwi) „Czterdzieści jeden.”', 'Zwróć uwagę, co robi, gdy jeszcze zadajesz pytanie. Patrzy ci w oczy czy unika twojego wzroku?', 'Dodawaj własne pytania, gdy coś cię zaskoczy.'],
       character: 'Twoja postać',
       ownLabel: 'Twoje pytanie',
       remove: 'Usuń pytanie',

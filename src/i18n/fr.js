@@ -169,7 +169,7 @@ export default {
       card: 'Asseyez-vous face à votre personnage et interrogez-le sur lui-même.',
       intro: 'Imaginez votre personnage assis en face de vous. Posez-lui des questions et notez ses réponses avec sa propre voix : « Je… ». Ne réfléchissez pas trop : la première réponse qui vient est souvent la plus sincère.',
       hintsTitle: 'Comment répondre',
-      hints: ['Répondez en tant que personnage, pas en tant qu’auteur : à la première personne, avec ses mots et sa façon de parler.', 'Une réponse courte, c’est bien. Une longue qui part dans tous les sens aussi.', 'Votre personnage peut esquiver une question, mentir ou s’agacer. Cela en dit long aussi.', 'Ajoutez vos propres questions quand quelque chose vous surprend.'],
+      hints: ['Répondez en tant que personnage, pas en tant qu’auteur : à la première personne, avec ses mots et sa façon de parler.', 'Une réponse courte, c’est bien. Une longue qui part dans tous les sens aussi.', 'Votre personnage peut esquiver une question, mentir ou s’agacer. Cela en dit long aussi.', 'Vous pouvez aussi décrire son attitude : ce que le personnage fait en répondant, ou en ne répondant pas. Par exemple : (hausse les épaules, regarde la porte) « Quarante et un. »', 'Observez ce qu’il fait pendant que vous posez encore la question. Vous regarde-t-il dans les yeux ou évite-t-il votre regard ?', 'Ajoutez vos propres questions quand quelque chose vous surprend.'],
       character: 'Votre personnage',
       ownLabel: 'Votre question',
       remove: 'Retirer la question',
