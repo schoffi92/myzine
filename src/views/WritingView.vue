@@ -20,6 +20,7 @@ const sections = [
   {
     key: 'novels',
     practices: [
+      { to: { name: 'interview' }, icon: '❝', key: 'writing.interview', level: 1 },
       { to: { name: 'taboo' }, icon: '⊘', key: 'writing.taboo', level: 2 },
       { to: { name: 'snowflake' }, icon: '❄', key: 'writing.snowflake', level: 3 },
       { to: { name: 'story' }, icon: '🂡', key: 'writing.story', level: 3 },

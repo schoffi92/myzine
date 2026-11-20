@@ -26,6 +26,7 @@ const PRACTICE_PAGES = [
   [/^mosaic$/, 'mosaic', 'writing.mosaic.title'],
   [/^story-cards$/, 'story', 'writing.story.title'],
   [/^taboo$/, 'taboo', 'writing.taboo.title'],
+  [/^interview$/, 'interview', 'writing.interview.title'],
 ]
 
 /** Where a saved earlier version can be found: { to, titleKey } or { to, title } for zines. */

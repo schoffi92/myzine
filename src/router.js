@@ -25,6 +25,7 @@ const views = {
   mosaic: () => import('./views/MosaicView.vue'),
   story: () => import('./views/StoryCardsView.vue'),
   taboo: () => import('./views/TabooView.vue'),
+  interview: () => import('./views/InterviewView.vue'),
   'story-print': () => import('./views/StoryPrintView.vue'),
   'saved-print': () => import('./views/SavedPrintView.vue'),
   share: () => import('./views/ShareView.vue'),

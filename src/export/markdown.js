@@ -5,6 +5,7 @@ import { getAllDrafts } from '../db/drafts'
 import { cardText } from '../tarot'
 import { CARD_BY_ID } from '../tarot/deck'
 import { chapterTitle, chapterDesc, sourceLabel } from '../composables/storyCards'
+import { interviewQuestion } from '../composables/interview'
 
 /*
  * Readable Markdown export of the user's zines and writing practices,
@@ -183,12 +184,19 @@ function tabooBody(s) {
   return out
 }
 
+function interviewBody(s) {
+  const qs = (Array.isArray(s?.questions) ? s.questions : []).filter((q) => q?.a?.trim())
+  if (!qs.length) return null
+  return qs.map((q) => `**${inline(interviewQuestion(q, t))}**\n\n${paragraphs(q.a)}`)
+}
+
 /** Draft id → { body, title key } of the novel practices that can save works. */
 export const NOVEL_PRACTICES = {
   snowflake: { body: snowflakeBody, titleKey: 'writing.snowflake.title' },
   mosaic: { body: mosaicBody, titleKey: 'writing.mosaic.title' },
   'story-cards': { body: storyBody, titleKey: 'writing.story.title' },
   taboo: { body: tabooBody, titleKey: 'writing.taboo.title' },
+  interview: { body: interviewBody, titleKey: 'writing.interview.title' },
 }
 
 const dateOf = (at) => new Date(at).toLocaleDateString(settings.locale, { year: 'numeric', month: 'long', day: 'numeric' })
@@ -219,6 +227,7 @@ function novelSection(d, kind, heading) {
 const snowflakeSection = (d) => novelSection(d, 'snowflake', `## ${t('writing.snowflake.title')}`)
 const mosaicSection = (d) => novelSection(d, 'mosaic', `## ${t('writing.mosaic.title')}`)
 const tabooSection = (d) => novelSection(d, 'taboo', `## ${t('writing.taboo.title')}`)
+const interviewSection = (d) => novelSection(d, 'interview', `## ${t('writing.interview.title')}`)
 function storySection(d) {
   const s = d['story-cards']?.data
   const title = s?.title?.trim() ? `: ${inline(s.title)} (${storyKind(s)})` : ''
@@ -247,7 +256,7 @@ export async function buildMarkdown({ zineIds = [], includeDrafts = true } = {})
 
   if (includeDrafts) {
     const d = Object.fromEntries((await getAllDrafts()).map((r) => [r.id, r]))
-    const practices = [timedSection(d), haikuSection(d), cutupSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d)].filter(Boolean)
+    const practices = [timedSection(d), haikuSection(d), cutupSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), interviewSection(d)].filter(Boolean)
     if (practices.length) parts.push(`# ${tl('writing.title')}\n\n${practices.join('\n\n')}`)
   }
   return parts.join('\n\n') + '\n'
