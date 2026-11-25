@@ -17,6 +17,8 @@ const sections = [
       { to: { name: 'cutup' }, icon: '✂', key: 'writing.cutup', level: 2 },
       { to: { name: 'rhyme' }, icon: '♫', key: 'writing.rhyme', level: 2 },
       { to: { name: 'meter' }, icon: '♩', key: 'writing.meter', level: 3 },
+      { to: { name: 'sonnet' }, icon: '✒', key: 'writing.sonnet', level: 4 },
+      { to: { name: 'sestina' }, icon: '❋', key: 'writing.sestina', level: 4 },
     ],
   },
   {
@@ -35,6 +37,7 @@ const sections = [
     practices: [
       { to: { name: 'silent' }, icon: '🎥', key: 'writing.silent', level: 1 },
       { to: { name: 'script' }, icon: '🎬', key: 'writing.script', level: 2 },
+      { to: { name: 'barks' }, icon: '💬', key: 'writing.barks', level: 2 },
       { to: { name: 'game' }, icon: '🎮', key: 'writing.game', level: 3 },
       { to: { name: 'drama' }, icon: '🎭', key: 'writing.drama', level: 4 },
     ],

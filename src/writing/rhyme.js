@@ -24,11 +24,17 @@ export const LINES_PER_STANZA = 4
 const LINE_LETTERS = { aabb: [0, 0, 1, 1], abab: [0, 1, 0, 1], abba: [0, 1, 1, 0] }
 const STANZA_PAIRS = { aabb: [[0, 1], [2, 3]], abab: [[0, 2], [1, 3]], abba: [[0, 3], [1, 2]] }
 
+/** The Shakespearean sonnet (Sonnet practice): ABAB CDCD EFEF GG, 14 lines. */
+const SONNET_LETTERS = [0, 1, 0, 1, 2, 3, 2, 3, 4, 5, 4, 5, 6, 6]
+const SONNET_PAIRS = [[0, 2], [1, 3], [4, 6], [5, 7], [8, 10], [9, 11], [12, 13]]
+
 /** Rhyme letter of line i (0-based): A A B B, then C C D D in the second stanza… */
-export const letterOf = (scheme, i) => String.fromCharCode(65 + Math.floor(i / LINES_PER_STANZA) * 2 + LINE_LETTERS[scheme][i % LINES_PER_STANZA])
+export const letterOf = (scheme, i) =>
+  String.fromCharCode(65 + (scheme === 'sonnet' ? SONNET_LETTERS[i] ?? 0 : Math.floor(i / LINES_PER_STANZA) * 2 + LINE_LETTERS[scheme][i % LINES_PER_STANZA]))
 
 /** Pairs of line indexes that must rhyme: [[a, b], …] for every stanza. */
 export function pairsOf(scheme, lineCount) {
+  if (scheme === 'sonnet') return SONNET_PAIRS.filter(([, b]) => b < lineCount)
   const out = []
   for (let s = 0; s * LINES_PER_STANZA < lineCount; s++) {
     for (const [a, b] of STANZA_PAIRS[scheme]) out.push([s * LINES_PER_STANZA + a, s * LINES_PER_STANZA + b])

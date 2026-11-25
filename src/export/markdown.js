@@ -13,6 +13,9 @@ import { promptText, scriptPlainText, hasScript } from '../composables/script'
 import { promptText as gamePrompt } from '../composables/gameScript'
 import { promptText as dramaPrompt, hasScene, scenePlainText } from '../composables/drama'
 import { promptText as silentPrompt, hasSilent, toBlocks as silentBlocks } from '../composables/silent'
+import { promptText as sonnetPrompt, hasSonnet, plainText as sonnetText } from '../composables/sonnet'
+import { hasSestina, plainText as sestinaText } from '../composables/sestina'
+import { promptText as barksPrompt, hasBarks, plainText as barksText } from '../composables/barks'
 
 /*
  * Readable Markdown export of the user's zines and writing practices,
@@ -298,6 +301,41 @@ function silentBody(s) {
   return out
 }
 
+/** Shakespearean sonnet: the plan, then the poem. */
+function sonnetBody(s) {
+  if (!hasSonnet(s)) return null
+  const out = []
+  if (s.title?.trim()) out.push(`**${t('writing.sonnet.titleLabel')}:** ${inline(s.title)}`)
+  const subject = sonnetPrompt(s, t)
+  if (subject) out.push(`**${t('writing.sonnet.promptLabel')}:** ${inline(subject)}`)
+  out.push(lines(sonnetText(s)))
+  return out
+}
+
+/** Sestina: the six end-words, then the poem. */
+function sestinaBody(s) {
+  if (!hasSestina(s) || !Array.isArray(s.words)) return null
+  const out = []
+  if (s.title?.trim()) out.push(`**${t('writing.sestina.titleLabel')}:** ${inline(s.title)}`)
+  const words = s.words.map((w) => w.trim()).filter(Boolean)
+  if (words.length) out.push(`**${t('writing.sestina.wordsTitle')}:** ${inline(words.join(', '))}`)
+  const poem = sestinaText(s)
+  if (poem) out.push(poem.split('\n\n').map(lines).join('\n\n'))
+  return out
+}
+
+/** Barks: the character, then the lines per trigger. */
+function barksBody(s) {
+  if (!hasBarks(s) || !s.barks) return null
+  const out = []
+  const head = [s.name?.trim(), barksPrompt(s, t)].filter(Boolean).join(', ')
+  if (head) out.push(`**${t('writing.barks.characterTitle')}:** ${inline(head)}`)
+  if (s.voice?.trim()) out.push(`**${t('writing.barks.voiceLabel')}:** ${inline(s.voice)}`)
+  const text = barksText(s, t)
+  if (text) out.push(esc(text))
+  return out
+}
+
 /** Draft id → { body, title key } of the practices that can save works. */
 export const NOVEL_PRACTICES = {
   snowflake: { body: snowflakeBody, titleKey: 'writing.snowflake.title' },
@@ -312,6 +350,9 @@ export const NOVEL_PRACTICES = {
   game: { body: gameBody, titleKey: 'writing.game.title' },
   drama: { body: dramaBody, titleKey: 'writing.drama.title' },
   silent: { body: silentBody, titleKey: 'writing.silent.title' },
+  barks: { body: barksBody, titleKey: 'writing.barks.title' },
+  sestina: { body: sestinaBody, titleKey: 'writing.sestina.title' },
+  sonnet: { body: sonnetBody, titleKey: 'writing.sonnet.title' },
 }
 
 const dateOf = (at) => new Date(at).toLocaleDateString(settings.locale, { year: 'numeric', month: 'long', day: 'numeric' })
@@ -358,6 +399,9 @@ const rhymeSection = (d) => novelSection(d, 'rhyme', `## ${t('writing.rhyme.titl
 const scriptSection = (d) => novelSection(d, 'script', `## ${t('writing.script.title')}`)
 const gameSection = (d) => novelSection(d, 'game', `## ${t('writing.game.title')}`)
 const dramaSection = (d) => novelSection(d, 'drama', `## ${t('writing.drama.title')}`)
+const sonnetSection = (d) => novelSection(d, 'sonnet', `## ${t('writing.sonnet.title')}`)
+const sestinaSection = (d) => novelSection(d, 'sestina', `## ${t('writing.sestina.title')}`)
+const barksSection = (d) => novelSection(d, 'barks', `## ${t('writing.barks.title')}`)
 const silentSection = (d) => novelSection(d, 'silent', `## ${t('writing.silent.title')}`)
 function storySection(d) {
   const s = d['story-cards']?.data
@@ -387,7 +431,7 @@ export async function buildMarkdown({ zineIds = [], includeDrafts = true } = {})
 
   if (includeDrafts) {
     const d = Object.fromEntries((await getAllDrafts()).map((r) => [r.id, r]))
-    const practices = [timedSection(d), haikuSection(d), cutupSection(d), rhymeSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d), silentSection(d), scriptSection(d), gameSection(d), dramaSection(d)].filter(Boolean)
+    const practices = [timedSection(d), haikuSection(d), cutupSection(d), rhymeSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d), silentSection(d), scriptSection(d), gameSection(d), dramaSection(d), sonnetSection(d), sestinaSection(d), barksSection(d)].filter(Boolean)
     if (practices.length) parts.push(`# ${tl('writing.title')}\n\n${practices.join('\n\n')}`)
   }
   return parts.join('\n\n') + '\n'

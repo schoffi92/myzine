@@ -17,7 +17,7 @@ import { hasText } from '../sync/merge'
  * loses anything (even when the page wouldn't offer Save yet).
  */
 const props = defineProps({
-  kind: { type: String, required: true }, // practice draft id: snowflake | mosaic | story-cards | taboo | interview | situation | meter | rhyme | script | game | drama | silent
+  kind: { type: String, required: true }, // practice draft id: snowflake | mosaic | story-cards | taboo | interview | situation | meter | rhyme | script | game | drama | silent | sonnet | sestina | barks
   data: { type: Object, required: true },
   defaultTitle: { type: String, default: '' },
   canSave: { type: Boolean, default: true },
