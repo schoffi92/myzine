@@ -210,7 +210,9 @@ export async function importAll(data) {
     (data.includesImages === undefined && !data.images?.length && !(data.pages || []).some((p) => p.imageId))
   const local = (await Promise.all(zines.map((z) => listPages(z.id)))).flat()
   const localById = new Map(local.map((p) => [p.id, p]))
-  const incoming = (data.pages || []).filter((p) => typeof p?.id === 'string').map((p) => {
+  const zineIds = new Set(zines.map((z) => z.id))
+  // only pages of the zines in the file (others would belong to no zine here)
+  const incoming = (data.pages || []).filter((p) => typeof p?.id === 'string' && zineIds.has(p.zineId)).map((p) => {
     if (p.imageId) return { ...p, imageElsewhere: false }
     if (!withoutImages && !p.imageElsewhere) return p
     const mine = localById.get(p.id)?.imageId ?? null

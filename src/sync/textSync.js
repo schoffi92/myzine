@@ -114,12 +114,16 @@ export async function deleteEarlier(keys) {
 /**
  * Swap the current and the earlier version, so the user can swap back.
  * Writing practices: whole draft records. Zines: title, description, colour
- * and page texts (images stay where they are).
+ * and page texts (images stay where they are). Pages a sync removed come back
+ * (as text: their pictures went with them); pages only the current version
+ * has are removed when they have no picture: their text goes into the
+ * swapped earlier version, so swapping back brings them back too.
  */
 export async function restoreEarlier(keys) {
   const now = Date.now()
   const puts = { drafts: [], zines: [], pages: [] }
   const deletes = []
+  const pageDeletes = []
 
   for (const key of keys) {
     const prev = await get('drafts', PREV + key)
@@ -135,10 +139,21 @@ export async function restoreEarlier(keys) {
       const { savedAt, ...old } = prev.data
       puts.drafts.push({ id: PREV + key, data: { savedAt: now, ...zineSnapshot(zine, pages) }, updatedAt: now })
       puts.zines.push({ ...zine, title: old.title, description: old.description, color: old.color || zine.color, updatedAt: now })
-      const oldById = new Map((old.pages || []).map((p) => [p.id, p]))
+      const oldPages = (old.pages || []).filter((p) => typeof p?.id === 'string')
+      const oldById = new Map(oldPages.map((p) => [p.id, p]))
+      const curById = new Map(pages.map((p) => [p.id, p]))
+      for (const o of oldPages) {
+        const p = curById.get(o.id)
+        const text = { title: o.title ?? '', body: o.body ?? '', layout: o.layout || p?.layout || 'image-top', order: o.order ?? p?.order ?? 0 }
+        puts.pages.push(p ? { ...p, ...text } : { id: o.id, zineId: id, imageId: null, ...text })
+      }
+      // pages the earlier version didn't have: without a picture they go (their text is in the swap);
+      // with one they stay, after the restored pages
+      let next = Math.max(-1, ...oldPages.map((p) => p.order ?? 0)) + 1
       for (const p of pages) {
-        const o = oldById.get(p.id)
-        if (o) puts.pages.push({ ...p, title: o.title, body: o.body, layout: o.layout || p.layout, order: o.order ?? p.order })
+        if (oldById.has(p.id)) continue
+        if (p.imageId) puts.pages.push({ ...p, order: next++ })
+        else pageDeletes.push(p.id)
       }
       continue
     }
@@ -152,6 +167,7 @@ export async function restoreEarlier(keys) {
 
   await transaction(['zines', 'pages', 'drafts'], 'readwrite', (s) => {
     for (const id of deletes) s.drafts.delete(id)
+    for (const id of pageDeletes) s.pages.delete(id)
     for (const r of puts.drafts) s.drafts.put(r)
     for (const z of puts.zines) s.zines.put(z)
     for (const p of puts.pages) s.pages.put(p)
