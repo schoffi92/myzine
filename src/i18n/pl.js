@@ -4,7 +4,7 @@ export default {
   copy: { title: 'Skopiuj ten tekst', hint: 'Przeglądarka nie pozwoliła na kopiowanie. Tekst poniżej jest zaznaczony: naciśnij Ctrl+C (⌘C na Macu) albo na telefonie przytrzymaj go i wybierz Kopiuj.', close: 'Zamknij' },
 
   home: {
-    tagline: 'Pisz, składaj i dziel się własnymi małymi zinami.',
+    tagline: 'Pisz, składaj i dziel się własnymi małymi zinami.',
     metaDescription: 'Twórz 8-stronicowe ziny z jednej kartki A4 i ćwicz kreatywne pisanie krok po kroku: wiersze, sonety, opowiadania, scenariusze. Za darmo, bez rejestracji.',
     writing: 'Ćwiczenia pisarskie',
     writingDesc: 'Ćwiczenia, które pomogą słowom popłynąć',
@@ -2160,7 +2160,7 @@ export default {
         link: 'https://github.com/schoffi92/myzine',
       },
     ],
-  },
+  },
   notFound: {
     title: 'Nie znaleziono strony',
     text: 'Pod tym adresem nie ma strony. Mogła zostać przeniesiona albo w linku jest literówka.',

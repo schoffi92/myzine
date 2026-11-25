@@ -4,7 +4,7 @@ export default {
   copy: { title: 'Copiez ce texte', hint: 'Votre navigateur n’a pas autorisé la copie. Le texte ci-dessous est sélectionné : appuyez sur Ctrl+C (⌘C sur Mac) ou, sur un téléphone, appuyez longuement dessus et choisissez Copier.', close: 'Fermer' },
 
   home: {
-    tagline: 'Écris, plie et partage tes propres petits zines.',
+    tagline: 'Écris, plie et partage tes propres petits zines.',
     metaDescription: 'Crée des zines de 8 pages avec une feuille A4 et pratique l’écriture créative pas à pas : poèmes, sonnets, récits, scénarios. Gratuit, sans compte.',
     writing: 'Exercices d’écriture',
     writingDesc: 'Des exercices pour libérer les mots',
@@ -2164,7 +2164,7 @@ export default {
         link: 'https://github.com/schoffi92/myzine',
       },
     ],
-  },
+  },
   notFound: {
     title: 'Page introuvable',
     text: 'Il n’y a pas de page à cette adresse. Elle a peut-être été déplacée, ou le lien contient une faute de frappe.',

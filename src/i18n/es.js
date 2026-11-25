@@ -4,7 +4,7 @@ export default {
   copy: { title: 'Copia este texto', hint: 'Tu navegador no permitió copiar. El texto de abajo está seleccionado: pulsa Ctrl+C (⌘C en un Mac) o, en el móvil, mantenlo pulsado y elige Copiar.', close: 'Cerrar' },
 
   home: {
-    tagline: 'Escribe, dobla y comparte tus propios fanzines.',
+    tagline: 'Escribe, dobla y comparte tus propios fanzines.',
     metaDescription: 'Crea fanzines de 8 páginas con una hoja A4 y practica escritura creativa paso a paso: poemas, sonetos, relatos, guiones y diálogos. Gratis, sin registro.',
     writing: 'Prácticas de escritura',
     writingDesc: 'Ejercicios para que fluyan las palabras',
@@ -2163,7 +2163,7 @@ export default {
         link: 'https://github.com/schoffi92/myzine',
       },
     ],
-  },
+  },
   notFound: {
     title: 'Página no encontrada',
     text: 'No hay ninguna página en esta dirección. Puede que se haya movido o que el enlace tenga un error.',
