@@ -9,6 +9,7 @@ import { interviewQuestion } from '../composables/interview'
 import { situationText } from '../composables/situation'
 import { meterTopic, otherRhythm } from '../composables/meter'
 import { rhymeTopic, stanzasText, activeSchemes } from '../composables/rhyme'
+import { promptText, scriptPlainText, hasScript } from '../composables/script'
 
 /*
  * Readable Markdown export of the user's zines and writing practices,
@@ -117,9 +118,15 @@ function cutupSection(d) {
  * work in the export, for saved works (savedWorkMarkdown) and their print view.
  */
 
-/** Move Markdown headings by `by` levels (user text never starts with #: it's escaped). */
+/**
+ * Move Markdown headings by `by` levels (user text never starts with #: it's
+ * escaped). Fenced code blocks (the screenplay) are left as they are.
+ */
 const shiftHeadings = (md, by) =>
-  md.replace(/^(#{1,6}) /gm, (_, h) => `${'#'.repeat(Math.min(6, Math.max(1, h.length + by)))} `)
+  md
+    .split(/(^```\n[\s\S]*?\n```$)/m)
+    .map((part, i) => (i % 2 ? part : part.replace(/^(#{1,6}) /gm, (_, h) => `${'#'.repeat(Math.min(6, Math.max(1, h.length + by)))} `)))
+    .join('')
 
 function snowflakeBody(s) {
   if (!s || (!s.one?.trim() && !s.five?.some((x) => x.trim()) && !s.paras?.some((x) => x.trim()))) return null
@@ -227,6 +234,22 @@ function rhymeBody(s) {
   return out
 }
 
+/**
+ * The screenplay in a fenced code block, so the fixed-width layout keeps its
+ * indents. A line starting with ``` would close the fence: a zero-width space
+ * goes in front of it.
+ */
+function scriptBody(s) {
+  if (!hasScript(s?.blocks)) return null
+  const out = []
+  if (s.title?.trim()) out.push(`**${t('writing.script.titleLabel')}:** ${inline(s.title)}`)
+  const premise = promptText(s, t)
+  if (premise) out.push(`**${t('writing.script.promptLabel')}:** ${inline(premise)}`)
+  const text = scriptPlainText(s.blocks).replace(/^(\s*)```/gm, '$1​```')
+  out.push(`\`\`\`\n${text}\n\`\`\``)
+  return out
+}
+
 /** Draft id → { body, title key } of the practices that can save works. */
 export const NOVEL_PRACTICES = {
   snowflake: { body: snowflakeBody, titleKey: 'writing.snowflake.title' },
@@ -237,6 +260,7 @@ export const NOVEL_PRACTICES = {
   situation: { body: situationBody, titleKey: 'writing.situation.title' },
   meter: { body: meterBody, titleKey: 'writing.meter.title' },
   rhyme: { body: rhymeBody, titleKey: 'writing.rhyme.title' },
+  script: { body: scriptBody, titleKey: 'writing.script.title' },
 }
 
 const dateOf = (at) => new Date(at).toLocaleDateString(settings.locale, { year: 'numeric', month: 'long', day: 'numeric' })
@@ -280,6 +304,7 @@ const interviewSection = (d) => novelSection(d, 'interview', `## ${t('writing.in
 const situationSection = (d) => novelSection(d, 'situation', `## ${t('writing.situation.title')}`)
 const meterSection = (d) => novelSection(d, 'meter', `## ${t('writing.meter.title')}`)
 const rhymeSection = (d) => novelSection(d, 'rhyme', `## ${t('writing.rhyme.title')}`)
+const scriptSection = (d) => novelSection(d, 'script', `## ${t('writing.script.title')}`)
 function storySection(d) {
   const s = d['story-cards']?.data
   const title = s?.title?.trim() ? `: ${inline(s.title)} (${storyKind(s)})` : ''
@@ -308,7 +333,7 @@ export async function buildMarkdown({ zineIds = [], includeDrafts = true } = {})
 
   if (includeDrafts) {
     const d = Object.fromEntries((await getAllDrafts()).map((r) => [r.id, r]))
-    const practices = [timedSection(d), haikuSection(d), cutupSection(d), rhymeSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d)].filter(Boolean)
+    const practices = [timedSection(d), haikuSection(d), cutupSection(d), rhymeSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d), scriptSection(d)].filter(Boolean)
     if (practices.length) parts.push(`# ${tl('writing.title')}\n\n${practices.join('\n\n')}`)
   }
   return parts.join('\n\n') + '\n'

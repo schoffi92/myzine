@@ -30,6 +30,10 @@ const sections = [
       { to: { name: 'mosaic' }, icon: '▦', key: 'writing.mosaic', level: 4 },
     ],
   },
+  {
+    key: 'scripts',
+    practices: [{ to: { name: 'script' }, icon: '🎬', key: 'writing.script', level: 2 }],
+  },
 ]
 
 const LEVELS = [1, 2, 3, 4]

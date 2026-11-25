@@ -1,6 +1,6 @@
 /*
  * A small Markdown → HTML renderer for the Markdown that src/export/markdown.js
- * writes (headings, paragraphs, forced line breaks, > quotes, - lists, ---,
+ * writes (headings, paragraphs, forced line breaks, > quotes, - lists, ---, ``` code blocks,
  * **bold**, *italic*, backslash escapes). Not a general Markdown parser.
  * Everything is HTML-escaped first, so user text can't inject markup.
  */
@@ -21,7 +21,17 @@ function inline(text) {
 const para = (ls) => ls.map((l, i) => inline(l.replace(/ {2,}$/, '')) + (i < ls.length - 1 ? (/ {2,}$/.test(l) ? '<br>' : ' ') : '')).join('')
 
 export function mdToHtml(md) {
-  const blocks = md.replace(/\r\n/g, '\n').split(/\n{2,}/)
+  // ``` fenced blocks (the screenplay) are kept exactly, blank lines and spaces included
+  return md
+    .replace(/\r\n/g, '\n')
+    .split(/^```\n([\s\S]*?)\n```$/m)
+    .map((part, i) => (i % 2 ? `<pre>${escHtml(part)}</pre>` : textToHtml(part)))
+    .filter(Boolean)
+    .join('\n')
+}
+
+function textToHtml(md) {
+  const blocks = md.split(/\n{2,}/)
   const out = []
   for (const block of blocks) {
     const ls = block.split('\n').filter((l) => l.length)

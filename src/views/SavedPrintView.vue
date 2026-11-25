@@ -9,7 +9,7 @@ import { mdToHtml } from '../export/mdToHtml'
 /* Print page for one saved work of a novel practice (A4, plain text layout). */
 const props = defineProps({ kind: { type: String, required: true }, id: { type: String, required: true } })
 
-const ROUTES = { snowflake: 'snowflake', mosaic: 'mosaic', 'story-cards': 'story', taboo: 'taboo', interview: 'interview', situation: 'situation', meter: 'meter', rhyme: 'rhyme' }
+const ROUTES = { snowflake: 'snowflake', mosaic: 'mosaic', 'story-cards': 'story', taboo: 'taboo', interview: 'interview', situation: 'situation', meter: 'meter', rhyme: 'rhyme', script: 'script' }
 const back = computed(() => ({ name: ROUTES[props.kind] || 'writing' }))
 const backLabel = computed(() => tl(NOVEL_PRACTICES[props.kind]?.titleKey || 'writing.title'))
 
@@ -65,6 +65,8 @@ const printPage = () => window.print()
 .sheet :deep(blockquote) { margin: 1rem 0; padding: 0.2rem 1rem; border-left: 3px solid #e85d3f; font-style: italic; }
 .sheet :deep(hr) { border: 0; text-align: center; margin: 1.2rem 0; }
 .sheet :deep(hr)::after { content: '*'; color: #888; }
+/* the screenplay: Courier 12 pt, its own layout */
+.sheet :deep(pre) { font: 12pt/1 'Courier Prime', 'Courier New', Courier, monospace; white-space: pre; overflow-x: auto; margin: 1.2rem 0; }
 @media (max-width: 640px) { .sheet { padding: 1.5rem 1.2rem; } }
 @media print {
   .container { padding: 0; max-width: none; }
