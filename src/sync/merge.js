@@ -30,6 +30,7 @@ const PRACTICE_PAGES = [
   [/^rhyme$/, 'rhyme', 'writing.rhyme.title'],
   [/^script$/, 'script', 'writing.script.title'],
   [/^game$/, 'game', 'writing.game.title'],
+  [/^drama$/, 'drama', 'writing.drama.title'],
 ]
 
 /** Where a saved earlier version can be found: { to, titleKey } or { to, title } for zines. */
@@ -40,7 +41,7 @@ export function placeOf(key, title) {
 }
 
 /** Settings and ids, not writing: a form that only has these is still empty. */
-const NOT_TEXT = new Set(['id', 'key', 'step', 'sep', 'kind', 'color', 'layout', 'order', 'enabled', 'at', 'season', 'angle', 'savedAt', 'updatedAt', 'sitKey', 'first', 'topicKey', 'marks', 'counts', 'feet', 'lineCount', 'stanzas', 'confirmed', 'promptKey', 'ownPromptKey', 'part'])
+const NOT_TEXT = new Set(['id', 'key', 'step', 'sep', 'kind', 'color', 'layout', 'order', 'enabled', 'at', 'season', 'angle', 'savedAt', 'updatedAt', 'sitKey', 'first', 'topicKey', 'marks', 'counts', 'feet', 'lineCount', 'stanzas', 'confirmed', 'promptKey', 'ownPromptKey', 'part', 'genre', 'rank'])
 
 /** Does the value hold anything the user wrote (or pulled: tarot cards)? Empty forms don't count. */
 export function hasText(v, key) {

@@ -9,7 +9,7 @@ import { mdToHtml } from '../export/mdToHtml'
 /* Print page for one saved work of a novel practice (A4, plain text layout). */
 const props = defineProps({ kind: { type: String, required: true }, id: { type: String, required: true } })
 
-const ROUTES = { snowflake: 'snowflake', mosaic: 'mosaic', 'story-cards': 'story', taboo: 'taboo', interview: 'interview', situation: 'situation', meter: 'meter', rhyme: 'rhyme', script: 'script', game: 'game' }
+const ROUTES = { snowflake: 'snowflake', mosaic: 'mosaic', 'story-cards': 'story', taboo: 'taboo', interview: 'interview', situation: 'situation', meter: 'meter', rhyme: 'rhyme', script: 'script', game: 'game', drama: 'drama' }
 const back = computed(() => ({ name: ROUTES[props.kind] || 'writing' }))
 const backLabel = computed(() => tl(NOVEL_PRACTICES[props.kind]?.titleKey || 'writing.title'))
 

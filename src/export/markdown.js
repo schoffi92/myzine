@@ -11,6 +11,7 @@ import { meterTopic, otherRhythm } from '../composables/meter'
 import { rhymeTopic, stanzasText, activeSchemes } from '../composables/rhyme'
 import { promptText, scriptPlainText, hasScript } from '../composables/script'
 import { promptText as gamePrompt } from '../composables/gameScript'
+import { promptText as dramaPrompt, hasScene, scenePlainText } from '../composables/drama'
 
 /*
  * Readable Markdown export of the user's zines and writing practices,
@@ -268,6 +269,23 @@ function gameBody(s) {
   return out.length ? out : null
 }
 
+/** Shakespearean drama: the writer's own scene (part 8) first, then the guided practice. */
+function dramaBody(s) {
+  const out = []
+  const piece = (heading, scene) => {
+    if (!hasScene(scene)) return
+    out.push(`### ${heading}`)
+    if (scene.title?.trim()) out.push(`**${t('writing.drama.titleLabel')}:** ${inline(scene.title)}`)
+    const premise = dramaPrompt(scene, t)
+    if (premise) out.push(`**${t('writing.drama.promptLabel')}:** ${inline(premise)}`)
+    if (scene.genre) out.push(`**${t('writing.drama.genreLabel')}:** ${t(`writing.drama.genres.${scene.genre}`)}`)
+    out.push(fence(scenePlainText(scene, t, settings.locale)))
+  }
+  piece(t('writing.drama.ownHeading'), s?.own)
+  piece(t('writing.drama.practiceHeading'), s?.practice)
+  return out.length ? out : null
+}
+
 /** Draft id → { body, title key } of the practices that can save works. */
 export const NOVEL_PRACTICES = {
   snowflake: { body: snowflakeBody, titleKey: 'writing.snowflake.title' },
@@ -280,6 +298,7 @@ export const NOVEL_PRACTICES = {
   rhyme: { body: rhymeBody, titleKey: 'writing.rhyme.title' },
   script: { body: scriptBody, titleKey: 'writing.script.title' },
   game: { body: gameBody, titleKey: 'writing.game.title' },
+  drama: { body: dramaBody, titleKey: 'writing.drama.title' },
 }
 
 const dateOf = (at) => new Date(at).toLocaleDateString(settings.locale, { year: 'numeric', month: 'long', day: 'numeric' })
@@ -325,6 +344,7 @@ const meterSection = (d) => novelSection(d, 'meter', `## ${t('writing.meter.titl
 const rhymeSection = (d) => novelSection(d, 'rhyme', `## ${t('writing.rhyme.title')}`)
 const scriptSection = (d) => novelSection(d, 'script', `## ${t('writing.script.title')}`)
 const gameSection = (d) => novelSection(d, 'game', `## ${t('writing.game.title')}`)
+const dramaSection = (d) => novelSection(d, 'drama', `## ${t('writing.drama.title')}`)
 function storySection(d) {
   const s = d['story-cards']?.data
   const title = s?.title?.trim() ? `: ${inline(s.title)} (${storyKind(s)})` : ''
@@ -353,7 +373,7 @@ export async function buildMarkdown({ zineIds = [], includeDrafts = true } = {})
 
   if (includeDrafts) {
     const d = Object.fromEntries((await getAllDrafts()).map((r) => [r.id, r]))
-    const practices = [timedSection(d), haikuSection(d), cutupSection(d), rhymeSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d), scriptSection(d), gameSection(d)].filter(Boolean)
+    const practices = [timedSection(d), haikuSection(d), cutupSection(d), rhymeSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d), scriptSection(d), gameSection(d), dramaSection(d)].filter(Boolean)
     if (practices.length) parts.push(`# ${tl('writing.title')}\n\n${practices.join('\n\n')}`)
   }
   return parts.join('\n\n') + '\n'

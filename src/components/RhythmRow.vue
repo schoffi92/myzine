@@ -9,6 +9,8 @@ import RhythmMark from './RhythmMark.vue'
  * per syllable (tap to mark stress, or long/short in Hungarian), grouped by
  * word, and how many feet fit the rhythm. With `editCounts` every word gets
  * −/+ to fix a wrong syllable estimate. See writing/meter.js.
+ * `check` and `offset`: a half of a longer line (a shared line in the drama
+ * practice) shown with the whole line's result; `offset` is where it starts.
  */
 const props = defineProps({
   text: { type: String, default: '' },
@@ -19,18 +21,20 @@ const props = defineProps({
   counts: { type: Object, default: () => ({}) },
   editCounts: { type: Boolean, default: false },
   readonly: { type: Boolean, default: false },
+  check: { type: Object, default: null },
+  offset: { type: Number, default: 0 },
 })
 const emit = defineEmits(['mark', 'count'])
 
 const hu = computed(() => usesLength(props.locale))
 const words = computed(() => analyzeLine(props.text, props.locale, props.marks, props.counts))
-const result = computed(() => checkLine(lineValues(words.value), props.rhythm, props.feet, props.locale))
+const result = computed(() => props.check ?? checkLine(lineValues(words.value), props.rhythm, props.feet, props.locale))
 
 /** Is the foot a syllable belongs to off the rhythm? */
 const badSlot = (s) => {
   const r = result.value
   if (!r) return false
-  const foot = Math.floor(s.pos / 2)
+  const foot = Math.floor((s.pos + props.offset) / 2)
   return foot < r.feet.length ? !r.feet[foot] : !r.countOk
 }
 

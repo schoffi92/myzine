@@ -31,6 +31,7 @@ const views = {
   rhyme: () => import('./views/RhymeView.vue'),
   script: () => import('./views/ScriptView.vue'),
   game: () => import('./views/GameScriptView.vue'),
+  drama: () => import('./views/DramaView.vue'),
   'story-print': () => import('./views/StoryPrintView.vue'),
   'saved-print': () => import('./views/SavedPrintView.vue'),
   share: () => import('./views/ShareView.vue'),
