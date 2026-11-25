@@ -41,6 +41,7 @@ export const PAGES = [
   { path: 'writing/character-interview', name: 'interview', meta: { title: 'writing.interview.title', description: 'writing.interview.card' } },
   { path: 'writing/difficult-situation', name: 'situation', meta: { title: 'writing.situation.title', description: 'writing.situation.card' } },
   { path: 'writing/screenplay', name: 'script', meta: { title: 'writing.script.title', description: 'writing.script.card' } },
+  { path: 'writing/game-dialogue', name: 'game', meta: { title: 'writing.game.title', description: 'writing.game.card' } },
   { path: 'writing/story-cards/print', name: 'story-print', meta: { title: 'writing.story.printTitle', noindex: true } },
   { path: 'writing/saved/:kind/:id/print', name: 'saved-print', meta: { title: 'writing.works.printTitle', noindex: true } },
   { path: 'share', name: 'share', meta: { title: 'share.title', description: 'share.tip', noindex: true } },

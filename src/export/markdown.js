@@ -10,6 +10,7 @@ import { situationText } from '../composables/situation'
 import { meterTopic, otherRhythm } from '../composables/meter'
 import { rhymeTopic, stanzasText, activeSchemes } from '../composables/rhyme'
 import { promptText, scriptPlainText, hasScript } from '../composables/script'
+import { promptText as gamePrompt } from '../composables/gameScript'
 
 /*
  * Readable Markdown export of the user's zines and writing practices,
@@ -235,19 +236,36 @@ function rhymeBody(s) {
 }
 
 /**
- * The screenplay in a fenced code block, so the fixed-width layout keeps its
- * indents. A line starting with ``` would close the fence: a zero-width space
- * goes in front of it.
+ * Text in a fenced code block, kept exactly (the screenplay's indents, a Yarn
+ * script). A line starting with ``` would close the fence: a zero-width
+ * space goes in front of it.
  */
+const fence = (text) => '```\n' + text.replace(/^(\s*)```/gm, '$1​```') + '\n```'
+
+/** The screenplay, laid out as on the page. */
 function scriptBody(s) {
   if (!hasScript(s?.blocks)) return null
   const out = []
   if (s.title?.trim()) out.push(`**${t('writing.script.titleLabel')}:** ${inline(s.title)}`)
   const premise = promptText(s, t)
   if (premise) out.push(`**${t('writing.script.promptLabel')}:** ${inline(premise)}`)
-  const text = scriptPlainText(s.blocks).replace(/^(\s*)```/gm, '$1​```')
-  out.push(`\`\`\`\n${text}\n\`\`\``)
+  out.push(fence(scriptPlainText(s.blocks)))
   return out
+}
+
+/** Game dialogue: the writer's own conversation (part 6) first, then the guided practice. */
+function gameBody(s) {
+  const out = []
+  const piece = (heading, title, premise, src) => {
+    if (!src?.trim()) return
+    out.push(`### ${heading}`)
+    if (title?.trim()) out.push(`**${t('writing.game.titleLabel')}:** ${inline(title)}`)
+    if (premise) out.push(`**${t('writing.game.promptLabel')}:** ${inline(premise)}`)
+    out.push(fence(src.replace(/\s+$/, '')))
+  }
+  piece(t('writing.game.ownHeading'), s?.ownTitle, gamePrompt(s, t, true), s?.ownSource)
+  piece(t('writing.game.practiceHeading'), s?.title, gamePrompt(s, t), s?.source)
+  return out.length ? out : null
 }
 
 /** Draft id → { body, title key } of the practices that can save works. */
@@ -261,6 +279,7 @@ export const NOVEL_PRACTICES = {
   meter: { body: meterBody, titleKey: 'writing.meter.title' },
   rhyme: { body: rhymeBody, titleKey: 'writing.rhyme.title' },
   script: { body: scriptBody, titleKey: 'writing.script.title' },
+  game: { body: gameBody, titleKey: 'writing.game.title' },
 }
 
 const dateOf = (at) => new Date(at).toLocaleDateString(settings.locale, { year: 'numeric', month: 'long', day: 'numeric' })
@@ -305,6 +324,7 @@ const situationSection = (d) => novelSection(d, 'situation', `## ${t('writing.si
 const meterSection = (d) => novelSection(d, 'meter', `## ${t('writing.meter.title')}`)
 const rhymeSection = (d) => novelSection(d, 'rhyme', `## ${t('writing.rhyme.title')}`)
 const scriptSection = (d) => novelSection(d, 'script', `## ${t('writing.script.title')}`)
+const gameSection = (d) => novelSection(d, 'game', `## ${t('writing.game.title')}`)
 function storySection(d) {
   const s = d['story-cards']?.data
   const title = s?.title?.trim() ? `: ${inline(s.title)} (${storyKind(s)})` : ''
@@ -333,7 +353,7 @@ export async function buildMarkdown({ zineIds = [], includeDrafts = true } = {})
 
   if (includeDrafts) {
     const d = Object.fromEntries((await getAllDrafts()).map((r) => [r.id, r]))
-    const practices = [timedSection(d), haikuSection(d), cutupSection(d), rhymeSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d), scriptSection(d)].filter(Boolean)
+    const practices = [timedSection(d), haikuSection(d), cutupSection(d), rhymeSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d), scriptSection(d), gameSection(d)].filter(Boolean)
     if (practices.length) parts.push(`# ${tl('writing.title')}\n\n${practices.join('\n\n')}`)
   }
   return parts.join('\n\n') + '\n'

@@ -32,7 +32,10 @@ const sections = [
   },
   {
     key: 'scripts',
-    practices: [{ to: { name: 'script' }, icon: '🎬', key: 'writing.script', level: 2 }],
+    practices: [
+      { to: { name: 'script' }, icon: '🎬', key: 'writing.script', level: 2 },
+      { to: { name: 'game' }, icon: '🎮', key: 'writing.game', level: 3 },
+    ],
   },
 ]
 
