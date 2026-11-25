@@ -2,7 +2,7 @@ import { watch } from 'vue'
 import { START_LOCATION } from 'vue-router'
 import { router } from '../router'
 import { settings } from './settings'
-import { DEFAULT_LOCALE } from '../seoRoutes'
+import { DEFAULT_LOCALE, PREFIXED_LOCALES } from '../seoRoutes'
 
 /*
  * Keeps the URL language (/hu/…) and the chosen language in sync.
@@ -14,7 +14,14 @@ import { DEFAULT_LOCALE } from '../seoRoutes'
  *    the others through hreflang links.
  */
 
-const urlLocale = (route) => route.params.lang || DEFAULT_LOCALE
+/** The language of a route: its :lang param, or (on the not-found page) the address's prefix. */
+const urlLocale = (route) => {
+  if (route.name === 'notfound') {
+    const first = route.path.split('/')[1]
+    return PREFIXED_LOCALES.includes(first) ? first : DEFAULT_LOCALE
+  }
+  return route.params.lang || DEFAULT_LOCALE
+}
 const langParam = (locale) => (locale === DEFAULT_LOCALE ? '' : locale)
 
 export function installLocaleRouting() {
@@ -22,6 +29,7 @@ export function installLocaleRouting() {
     if (
       from === START_LOCATION &&
       to.name &&
+      to.name !== 'notfound' &&
       !to.params.lang &&
       settings.locale &&
       settings.locale !== DEFAULT_LOCALE
@@ -46,7 +54,7 @@ export function installLocaleRouting() {
     () => settings.locale,
     (locale) => {
       const route = router.currentRoute.value
-      if (!route.name || urlLocale(route) === locale) return
+      if (!route.name || route.name === 'notfound' || urlLocale(route) === locale) return
       router.replace({
         name: route.name,
         params: { ...route.params, lang: langParam(locale) },

@@ -26,8 +26,8 @@ export const PREFIXED_LOCALES = LOCALES.filter((l) => l !== DEFAULT_LOCALE)
  * meta.noindex marks app-only pages that shouldn't appear in search results.
  */
 export const PAGES = [
-  { path: '', name: 'home', meta: { description: 'home.tagline' } },
-  { path: 'writing', name: 'writing', meta: { title: 'writing.title', description: 'writing.intro' } },
+  { path: '', name: 'home', meta: { description: 'home.metaDescription' } },
+  { path: 'writing', name: 'writing', meta: { title: 'writing.title', description: 'writing.metaDescription' } },
   { path: 'writing/blackout', name: 'blackout', meta: { title: 'writing.blackout.title', description: 'writing.blackout.card' } },
   { path: 'writing/15-minute-poem', name: 'timed', meta: { title: 'writing.timed.title', description: 'writing.timed.card' } },
   { path: 'writing/haiku', name: 'haiku', meta: { title: 'writing.haiku.title', description: 'writing.haiku.card' } },

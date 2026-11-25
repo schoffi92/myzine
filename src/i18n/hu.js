@@ -4,7 +4,8 @@ export default {
   copy: { title: 'Másold ki ezt a szöveget', hint: 'A böngésződ nem engedte a másolást. Az alábbi szöveg ki van jelölve: nyomd meg a Ctrl+C-t (Macen ⌘C), telefonon pedig tartsd rajta az ujjad, és válaszd a Másolást.', close: 'Bezárás' },
 
   home: {
-    tagline: 'Írj, hajtogass és oszd meg a saját kis zine-jaidat.',
+    tagline: 'Írj, hajtogass és oszd meg a saját kis zine-jaidat.',
+    metaDescription: 'Készíts 8 oldalas zine-t egy A4-es lapból, és gyakorold a kreatív írást lépésről lépésre: vers, szonett, történet, forgatókönyv. Ingyenes, regisztráció nélkül.',
     writing: 'Írásgyakorlatok',
     writingDesc: 'Gyakorlatok, hogy beinduljanak a szavak',
     create: 'Zine készítése',
@@ -118,6 +119,7 @@ export default {
     },
     title: 'Írásgyakorlatok',
     intro: 'Rövid gyakorlatok bemelegítésnek, mielőtt megtöltesz egy zine-t.',
+    metaDescription: 'Ingyenes kreatív írásgyakorlatok azonnali visszajelzéssel: haiku, blackout vers, rím és ritmus, szonett, hópehely-módszer, forgatókönyv, játékpárbeszéd, ink.',
     soon: 'Hamarosan újabb gyakorlatok érkeznek.',
     open: 'Kezdjük',
     sections: {
@@ -1148,7 +1150,7 @@ export default {
     },
     barks: {
       title: 'Bekiabálások',
-      card: 'Írd meg azokat a rövid mondatokat, amelyeket egy játékszereplő magától mond: őrségben, amikor észreveszi a játékost, amikor megsebesül, amikor győz. Próbáld ki őket, aztán töltsd le szövegtáblázatként.',
+      card: 'Írd meg a rövid mondatokat, amelyeket egy játékszereplő magától mond: őrségben, ha észrevesz, ha megsebesül, ha győz. Próbáld ki, és töltsd le táblázatként.',
       intro: 'A játékokban a szereplők kérdezés nélkül is beszélnek: az őr dünnyög az őrhelyén, kiabál, ha meglát, nyög, ha eltalálják. Ezeket a rövid mondatokat angolul barknak hívják. Írj egy készletet egyetlen szereplőnek: minden pillanatra sok rövid változatot, mindet ugyanazon a hangon, és hallgasd meg, hogyan szólnak, amikor ismétlődnek.',
       learnTitle: 'Mik azok a bekiabálások?',
       whatTitle: 'Rövidek, sokan vannak, a szereplőhöz illenek',
@@ -2159,5 +2161,11 @@ export default {
         link: 'https://github.com/schoffi92/myzine',
       },
     ],
+  },
+  notFound: {
+    title: 'Az oldal nem található',
+    text: 'Ezen a címen nincs oldal. Lehet, hogy elköltözött, vagy elírás van a linkben.',
+    home: 'Ugrás a kezdőlapra',
+    writing: 'Az írásgyakorlatok',
   },
 }

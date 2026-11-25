@@ -4,7 +4,8 @@ export default {
   copy: { title: 'Skopiuj ten tekst', hint: 'Przeglądarka nie pozwoliła na kopiowanie. Tekst poniżej jest zaznaczony: naciśnij Ctrl+C (⌘C na Macu) albo na telefonie przytrzymaj go i wybierz Kopiuj.', close: 'Zamknij' },
 
   home: {
-    tagline: 'Pisz, składaj i dziel się własnymi małymi zinami.',
+    tagline: 'Pisz, składaj i dziel się własnymi małymi zinami.',
+    metaDescription: 'Twórz 8-stronicowe ziny z jednej kartki A4 i ćwicz kreatywne pisanie krok po kroku: wiersze, sonety, opowiadania, scenariusze. Za darmo, bez rejestracji.',
     writing: 'Ćwiczenia pisarskie',
     writingDesc: 'Ćwiczenia, które pomogą słowom popłynąć',
     create: 'Stwórz zin',
@@ -118,6 +119,7 @@ export default {
     },
     title: 'Ćwiczenia pisarskie',
     intro: 'Krótkie ćwiczenia na rozgrzewkę przed wypełnieniem zina.',
+    metaDescription: 'Darmowe ćwiczenia z kreatywnego pisania z natychmiastową podpowiedzią: haiku, blackout, rym i metrum, sonet, metoda płatka śniegu, scenariusz, dialogi i ink.',
     soon: 'Wkrótce pojawią się kolejne ćwiczenia.',
     open: 'Zaczynamy',
     sections: {
@@ -1147,7 +1149,7 @@ export default {
     },
     barks: {
       title: 'Okrzyki postaci',
-      card: 'Napisz krótkie kwestie, które postać w grze mówi sama: na warcie, gdy zauważa gracza, gdy obrywa, gdy wygrywa. Przetestuj je w grze i wyeksportuj jako tabelę kwestii.',
+      card: 'Napisz krótkie kwestie, które postać w grze mówi sama: na warcie, gdy zauważa gracza, gdy obrywa, gdy wygrywa. Przetestuj je i wyeksportuj jako tabelę.',
       intro: 'W grach postacie mówią, choć nikt ich nie pyta: strażnik mruczy na warcie, krzyczy, gdy cię zauważy, jęczy, gdy oberwie. Takie kwestie to po angielsku barks, „szczeknięcia”. Napisz zestaw dla jednej postaci, wiele krótkich wariantów na każdy moment, wszystkie jednym głosem, i posłuchaj, jak brzmią, gdy się powtarzają.',
       learnTitle: 'Czym są okrzyki',
       whatTitle: 'Krótkie, liczne, w charakterze',
@@ -2158,5 +2160,11 @@ export default {
         link: 'https://github.com/schoffi92/myzine',
       },
     ],
+  },
+  notFound: {
+    title: 'Nie znaleziono strony',
+    text: 'Pod tym adresem nie ma strony. Mogła zostać przeniesiona albo w linku jest literówka.',
+    home: 'Przejdź na stronę główną',
+    writing: 'Zobacz ćwiczenia pisarskie',
   },
 }

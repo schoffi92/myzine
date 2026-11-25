@@ -4,7 +4,8 @@ export default {
   copy: { title: 'Copiez ce texte', hint: 'Votre navigateur n’a pas autorisé la copie. Le texte ci-dessous est sélectionné : appuyez sur Ctrl+C (⌘C sur Mac) ou, sur un téléphone, appuyez longuement dessus et choisissez Copier.', close: 'Fermer' },
 
   home: {
-    tagline: 'Écris, plie et partage tes propres petits zines.',
+    tagline: 'Écris, plie et partage tes propres petits zines.',
+    metaDescription: 'Crée des zines de 8 pages avec une feuille A4 et pratique l’écriture créative pas à pas : poèmes, sonnets, récits, scénarios. Gratuit, sans compte.',
     writing: 'Exercices d’écriture',
     writingDesc: 'Des exercices pour libérer les mots',
     create: 'Créer un zine',
@@ -118,6 +119,7 @@ export default {
     },
     title: 'Exercices d’écriture',
     intro: 'De courts exercices pour s’échauffer avant de remplir un zine.',
+    metaDescription: 'Exercices d’écriture créative gratuits avec retour immédiat : haïku, poésie blackout, rime et mètre, sonnet, méthode flocon, scénario, dialogues de jeu et ink.',
     soon: 'D’autres exercices arrivent bientôt.',
     open: 'Commencer',
     sections: {
@@ -1151,7 +1153,7 @@ export default {
     },
     barks: {
       title: 'Barks',
-      card: 'Écris les petites répliques qu’un personnage de jeu dit tout seul : de garde, en repérant le joueur, blessé, vainqueur. Teste-les en jeu, puis exporte-les en table de répliques.',
+      card: 'Écris les petites répliques qu’un personnage de jeu dit tout seul : de garde, en repérant le joueur, blessé, vainqueur. Teste-les, puis exporte-les.',
       intro: 'Dans les jeux, les personnages parlent sans qu’on leur demande rien : un garde marmonne pendant sa ronde, crie quand il te repère, gémit quand il est touché. Ces répliques s’appellent des barks. Écris-en une série pour un personnage, plusieurs courtes variantes pour chaque moment, toutes de la même voix, et écoute ce qu’elles donnent quand elles se répètent.',
       learnTitle: 'Ce que sont les barks',
       whatTitle: 'Courts, nombreux, dans le personnage',
@@ -2162,5 +2164,11 @@ export default {
         link: 'https://github.com/schoffi92/myzine',
       },
     ],
+  },
+  notFound: {
+    title: 'Page introuvable',
+    text: 'Il n’y a pas de page à cette adresse. Elle a peut-être été déplacée, ou le lien contient une faute de frappe.',
+    home: 'Aller à l’accueil',
+    writing: 'Voir les exercices d’écriture',
   },
 }

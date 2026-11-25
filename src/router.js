@@ -57,14 +57,8 @@ export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: `/:lang(${PREFIXED_LOCALES.join('|')})?`, children: pages },
-    // unknown address: home page, in the language of the URL when it has one
-    {
-      path: '/:pathMatch(.*)*',
-      redirect: (to) => {
-        const first = to.path.split('/')[1]
-        return { name: 'home', params: { lang: PREFIXED_LOCALES.includes(first) ? first : '' } }
-      },
-    },
+    // unknown address: a "not found" page (the server sends it with status 404), in the URL's language
+    { path: '/:pathMatch(.*)*', name: 'notfound', component: () => import('./views/NotFoundView.vue'), meta: { title: 'notFound.title', noindex: true } },
   ],
   scrollBehavior: (to, from, saved) => saved || { top: 0 },
 })

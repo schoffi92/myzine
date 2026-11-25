@@ -4,7 +4,8 @@ export default {
   copy: { title: 'Diesen Text kopieren', hint: 'Dein Browser hat das Kopieren nicht erlaubt. Der Text unten ist markiert: Drücke Strg+C (⌘C auf dem Mac) oder halte ihn auf dem Handy gedrückt und wähle Kopieren.', close: 'Schließen' },
 
   home: {
-    tagline: 'Schreibe, falte und teile deine eigenen kleinen Zines.',
+    tagline: 'Schreibe, falte und teile deine eigenen kleinen Zines.',
+    metaDescription: 'Gestalte 8-seitige Zines aus einem A4-Blatt und übe kreatives Schreiben Schritt für Schritt: Gedichte, Sonette, Geschichten, Drehbücher. Kostenlos, ohne Konto.',
     writing: 'Schreibübungen',
     writingDesc: 'Übungen, die die Worte zum Fließen bringen',
     create: 'Zine erstellen',
@@ -118,6 +119,7 @@ export default {
     },
     title: 'Schreibübungen',
     intro: 'Kurze Übungen zum Aufwärmen, bevor du ein Zine füllst.',
+    metaDescription: 'Kostenlose Schreibübungen mit direktem Feedback: Haiku, Blackout-Poesie, Reim und Versmaß, Sonett, Schneeflockenmethode, Drehbuch, Spieldialoge und ink.',
     soon: 'Weitere Übungen folgen bald.',
     open: 'Los geht’s',
     sections: {
@@ -1148,7 +1150,7 @@ export default {
     },
     barks: {
       title: 'Barks',
-      card: 'Schreib die kurzen Sätze, die eine Spielfigur von selbst sagt: auf Wache, wenn sie dich entdeckt, verletzt, siegreich. Teste sie im Spiel und exportiere sie als Zeilentabelle.',
+      card: 'Schreib die kurzen Sätze, die eine Spielfigur von selbst sagt: auf Wache, beim Entdecken, verletzt, siegreich. Teste sie und exportiere sie als Tabelle.',
       intro: 'In Spielen reden Figuren, ohne gefragt zu werden: Eine Wache murmelt beim Rundgang, ruft, wenn sie dich entdeckt, stöhnt, wenn sie getroffen wird. Diese Sätze heißen Barks. Schreib einen Satz Barks für eine Figur, viele kurze Varianten für jeden Moment, alle mit einer Stimme, und hör, wie sie klingen, wenn sie sich wiederholen.',
       learnTitle: 'Was Barks sind',
       whatTitle: 'Kurz, viele, in der Rolle',
@@ -2160,5 +2162,11 @@ export default {
         link: 'https://github.com/schoffi92/myzine',
       },
     ],
+  },
+  notFound: {
+    title: 'Seite nicht gefunden',
+    text: 'Unter dieser Adresse gibt es keine Seite. Vielleicht wurde sie verschoben, oder der Link enthält einen Tippfehler.',
+    home: 'Zur Startseite',
+    writing: 'Zu den Schreibübungen',
   },
 }

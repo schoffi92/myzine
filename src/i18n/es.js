@@ -4,7 +4,8 @@ export default {
   copy: { title: 'Copia este texto', hint: 'Tu navegador no permitió copiar. El texto de abajo está seleccionado: pulsa Ctrl+C (⌘C en un Mac) o, en el móvil, mantenlo pulsado y elige Copiar.', close: 'Cerrar' },
 
   home: {
-    tagline: 'Escribe, dobla y comparte tus propios fanzines.',
+    tagline: 'Escribe, dobla y comparte tus propios fanzines.',
+    metaDescription: 'Crea fanzines de 8 páginas con una hoja A4 y practica escritura creativa paso a paso: poemas, sonetos, relatos, guiones y diálogos. Gratis, sin registro.',
     writing: 'Prácticas de escritura',
     writingDesc: 'Ejercicios para que fluyan las palabras',
     create: 'Crear fanzine',
@@ -118,6 +119,7 @@ export default {
     },
     title: 'Prácticas de escritura',
     intro: 'Ejercicios breves para calentar antes de llenar un fanzine.',
+    metaDescription: 'Ejercicios de escritura creativa gratis con respuesta al momento: haiku, poesía blackout, rima y métrica, soneto, método copo de nieve, guion, diálogos e ink.',
     soon: 'Pronto habrá más prácticas.',
     open: 'Empezar',
     sections: {
@@ -1150,7 +1152,7 @@ export default {
     },
     barks: {
       title: 'Frases de ambiente (barks)',
-      card: 'Escribe las frases cortas que un personaje de videojuego dice por su cuenta: de guardia, al ver al jugador, herido, al ganar. Pruébalas y expórtalas como tabla de frases.',
+      card: 'Escribe las frases cortas que un personaje de videojuego dice solo: de guardia, al ver al jugador, herido, al ganar. Pruébalas y expórtalas como tabla.',
       intro: 'En los videojuegos los personajes hablan sin que nadie les pregunte: un guardia murmura durante la ronda, grita cuando te ve, se queja cuando le dan. Estas frases se llaman barks. Escribe un juego de barks para un personaje, muchas variantes cortas para cada momento, todas con la misma voz, y escucha cómo suenan al repetirse.',
       learnTitle: 'Qué son los barks',
       whatTitle: 'Cortas, muchas, con carácter',
@@ -2161,5 +2163,11 @@ export default {
         link: 'https://github.com/schoffi92/myzine',
       },
     ],
+  },
+  notFound: {
+    title: 'Página no encontrada',
+    text: 'No hay ninguna página en esta dirección. Puede que se haya movido o que el enlace tenga un error.',
+    home: 'Ir a la página de inicio',
+    writing: 'Ver los ejercicios de escritura',
   },
 }

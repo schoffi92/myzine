@@ -4,7 +4,8 @@ export default {
   copy: { title: 'Copy this text', hint: 'Your browser didn’t allow copying. The text below is selected: press Ctrl+C (⌘C on a Mac), or on a phone long-press it and choose Copy.', close: 'Close' },
 
   home: {
-    tagline: 'Write, fold and share your own little zines.',
+    tagline: 'Write, fold and share your own little zines.',
+    metaDescription: 'Make 8-page zines from one sheet of A4 and practise creative writing step by step: poems, sonnets, stories, screenplays, game dialogue. Free, no sign-up.',
     writing: 'Writing Practices',
     writingDesc: 'Exercises to get the words flowing',
     create: 'Create Zine',
@@ -118,6 +119,7 @@ export default {
     },
     title: 'Writing Practices',
     intro: 'Short exercises to warm up before you fill a zine.',
+    metaDescription: 'Free creative writing exercises with live feedback: haiku, blackout poetry, rhyme and meter, sonnets, the snowflake method, screenplays, game dialogue and ink.',
     soon: 'More practices coming soon.',
     open: 'Start',
     sections: {
@@ -2158,5 +2160,11 @@ export default {
         link: 'https://github.com/schoffi92/myzine',
       },
     ],
+  },
+  notFound: {
+    title: 'Page not found',
+    text: 'There is no page at this address. It may have moved, or the link has a typo.',
+    home: 'Go to the home page',
+    writing: 'See the writing practices',
   },
 }

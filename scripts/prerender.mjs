@@ -52,15 +52,16 @@ if (!SITE) {
 log(`site: ${SITE}`)
 
 /* ---------- 4 (first, so it exists even without a browser). sitemap ---------- */
+// No <lastmod>: one build date on every page would tell search engines that
+// everything changed at every deploy, and they learn to ignore it.
 async function writeSitemap() {
-  const today = new Date().toISOString().slice(0, 10)
   const alternates = (p) =>
     [...LOCALES.map((l) => [l, l]), ['x-default', DEFAULT_LOCALE]]
       .map(([hreflang, l]) => `    <xhtml:link rel="alternate" hreflang="${hreflang}" href="${SITE}${localizedPath(l, p)}"/>`)
       .join('\n')
   const urls = PUBLIC_PATHS.flatMap((p) =>
     LOCALES.map(
-      (l) => `  <url>\n    <loc>${SITE}${localizedPath(l, p)}</loc>\n    <lastmod>${today}</lastmod>\n${alternates(p)}\n  </url>`,
+      (l) => `  <url>\n    <loc>${SITE}${localizedPath(l, p)}</loc>\n${alternates(p)}\n  </url>`,
     ),
   )
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

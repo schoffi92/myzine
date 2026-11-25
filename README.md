@@ -57,16 +57,31 @@ normal client-side app.
 
 ## Hosting
 
-Deploy the contents of `dist/`. The server must serve pre-rendered pages and
-fall back to the app shell (`app.html`) for everything else. For nginx:
+Deploy the contents of `dist/`. The server serves the pre-rendered pages, the
+app shell (`app.html`) for the app-only pages (zine editor/reader/print, share,
+print views: they show what is stored in the visitor's browser), and a real
+404 for any other address, with the app shell as its body so the visitor sees
+the app's "not found" page. For nginx:
 
 ```nginx
 root /var/www/myzine/current;   # with npm run deploy (below)
 
 location / {
-    try_files $uri $uri/index.html /app.html;
+    # pre-rendered pages and files; anything else is not a page
+    try_files $uri $uri/index.html =404;
 }
+
+# app-only pages, in every language
+location ~ ^/(?:(?:de|es|hu|fr|pl)/)?(?:zine/|share/?$|writing/story-cards/print/?$|writing/saved/) {
+    try_files /app.html =404;
+}
+
+# unknown addresses: status 404, and the app shows its "not found" page
+error_page 404 /app.html;
 ```
+
+A soft 404 (an unknown address answered with 200) makes search engines index
+broken links as copies of the home page, so keep the `=404`.
 
 ### Publishing with `npm run deploy`
 
