@@ -9,8 +9,10 @@ import { edges, reachable, startNode } from '../writing/yarn'
  * leads there. A jump to a missing node points to a dashed red box; a node
  * nothing leads to is greyed out in the last column. Clicking a box emits
  * `goto` with its title line.
+ * Other story formats (ink) pass a ready `graph` instead of a parsed Yarn script:
+ * { nodes: [{ title, line }], edges: [{ from, to, label, line, missing }], start, reachable: Set }.
  */
-const props = defineProps({ parsed: { type: Object, required: true } })
+const props = defineProps({ parsed: { type: Object, default: null }, graph: { type: Object, default: null } })
 const emit = defineEmits(['goto'])
 
 const W = 150
@@ -25,10 +27,11 @@ const cubic = (t, p0, p1, p2, p3) => [0, 1].map((k) => (1 - t) ** 3 * p0[k] + 3 
 const short = (s, n = 18) => (s.length > n ? `${s.slice(0, n - 1)}…` : s)
 
 const layout = computed(() => {
-  const nodes = props.parsed.nodes.filter((n) => n.title)
-  const es = edges(props.parsed)
-  const start = startNode(props.parsed)?.title
-  const reach = reachable(props.parsed)
+  const g = props.graph
+  const nodes = g ? g.nodes : props.parsed.nodes.filter((n) => n.title)
+  const es = g ? g.edges : edges(props.parsed)
+  const start = g ? g.start : startNode(props.parsed)?.title
+  const reach = g ? g.reachable : reachable(props.parsed)
 
   // depth: breadth-first from the start node
   const depth = new Map()

@@ -16,6 +16,7 @@ import { promptText as silentPrompt, hasSilent, toBlocks as silentBlocks } from 
 import { promptText as sonnetPrompt, hasSonnet, plainText as sonnetText } from '../composables/sonnet'
 import { hasSestina, plainText as sestinaText } from '../composables/sestina'
 import { promptText as barksPrompt, hasBarks, plainText as barksText } from '../composables/barks'
+import { promptText as inkPrompt } from '../composables/inkStory'
 
 /*
  * Readable Markdown export of the user's zines and writing practices,
@@ -336,6 +337,21 @@ function barksBody(s) {
   return out
 }
 
+/** Interactive fiction (ink): the writer's own story (part 7) first, then the guided practice. */
+function inkBody(s) {
+  const out = []
+  const piece = (heading, title, premise, src) => {
+    if (!src?.trim()) return
+    out.push(`### ${heading}`)
+    if (title?.trim()) out.push(`**${t('writing.ink.titleLabel')}:** ${inline(title)}`)
+    if (premise) out.push(`**${t('writing.ink.promptLabel')}:** ${inline(premise)}`)
+    out.push(fence(src.replace(/\s+$/, '')))
+  }
+  piece(t('writing.ink.ownHeading'), s?.ownTitle, inkPrompt(s, t, true), s?.ownSource)
+  piece(t('writing.ink.practiceHeading'), s?.title, inkPrompt(s, t), s?.source)
+  return out.length ? out : null
+}
+
 /** Draft id → { body, title key } of the practices that can save works. */
 export const NOVEL_PRACTICES = {
   snowflake: { body: snowflakeBody, titleKey: 'writing.snowflake.title' },
@@ -350,6 +366,7 @@ export const NOVEL_PRACTICES = {
   game: { body: gameBody, titleKey: 'writing.game.title' },
   drama: { body: dramaBody, titleKey: 'writing.drama.title' },
   silent: { body: silentBody, titleKey: 'writing.silent.title' },
+  ink: { body: inkBody, titleKey: 'writing.ink.title' },
   barks: { body: barksBody, titleKey: 'writing.barks.title' },
   sestina: { body: sestinaBody, titleKey: 'writing.sestina.title' },
   sonnet: { body: sonnetBody, titleKey: 'writing.sonnet.title' },
@@ -402,6 +419,7 @@ const dramaSection = (d) => novelSection(d, 'drama', `## ${t('writing.drama.titl
 const sonnetSection = (d) => novelSection(d, 'sonnet', `## ${t('writing.sonnet.title')}`)
 const sestinaSection = (d) => novelSection(d, 'sestina', `## ${t('writing.sestina.title')}`)
 const barksSection = (d) => novelSection(d, 'barks', `## ${t('writing.barks.title')}`)
+const inkSection = (d) => novelSection(d, 'ink', `## ${t('writing.ink.title')}`)
 const silentSection = (d) => novelSection(d, 'silent', `## ${t('writing.silent.title')}`)
 function storySection(d) {
   const s = d['story-cards']?.data
@@ -431,7 +449,7 @@ export async function buildMarkdown({ zineIds = [], includeDrafts = true } = {})
 
   if (includeDrafts) {
     const d = Object.fromEntries((await getAllDrafts()).map((r) => [r.id, r]))
-    const practices = [timedSection(d), haikuSection(d), cutupSection(d), rhymeSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d), silentSection(d), scriptSection(d), gameSection(d), dramaSection(d), sonnetSection(d), sestinaSection(d), barksSection(d)].filter(Boolean)
+    const practices = [timedSection(d), haikuSection(d), cutupSection(d), rhymeSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d), silentSection(d), scriptSection(d), gameSection(d), dramaSection(d), sonnetSection(d), sestinaSection(d), barksSection(d), inkSection(d)].filter(Boolean)
     if (practices.length) parts.push(`# ${tl('writing.title')}\n\n${practices.join('\n\n')}`)
   }
   return parts.join('\n\n') + '\n'

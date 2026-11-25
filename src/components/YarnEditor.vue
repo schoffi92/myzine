@@ -13,6 +13,8 @@ const props = defineProps({
   marks: { type: Object, default: () => ({}) }, // line → 'error' | 'warn' | 'info'
   label: { type: String, default: '' },
   placeholder: { type: String, default: '' },
+  // Yarn: a line starting with -> is an option, and what's under it is indented. Off for ink, where -> is a divert.
+  yarnOptions: { type: Boolean, default: true },
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -61,7 +63,7 @@ function insert(tool) {
     const end = lineEnd(s, pos)
     const cur = s.slice(start, end)
     let indent = cur.match(/^[ ]*/)[0]
-    if (/^\s*->/.test(cur) && !/^\s*->/.test(text)) indent += '    ' // under an option: one level deeper
+    if (props.yarnOptions && /^\s*->/.test(cur) && !/^\s*->/.test(text)) indent += '    ' // under an option: one level deeper
     text = text.split('\n').map((l) => (l ? indent + l : l)).join('\n')
     if (!cur.trim()) {
       value = s.slice(0, start) + text + s.slice(end)
@@ -92,7 +94,8 @@ function onKey(e) {
   const cur = s.slice(start, lineEnd(s, pos))
   const prevStart = start > 0 ? lineStart(s, start - 1) : -1
   const prev = prevStart >= 0 ? s.slice(prevStart, start - 1) : ''
-  const meaningful = /^\s+\S/.test(cur) || /^\s*->/.test(cur) || /^\s*->/.test(prev) || /^\s+\S/.test(prev)
+  const option = (l) => props.yarnOptions && /^\s*->/.test(l)
+  const meaningful = /^\s+\S/.test(cur) || option(cur) || option(prev) || /^\s+\S/.test(prev)
   if (!meaningful) return // let Tab move the focus
   e.preventDefault()
   if (e.shiftKey) {

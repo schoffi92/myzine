@@ -39,6 +39,7 @@ const sections = [
       { to: { name: 'script' }, icon: '🎬', key: 'writing.script', level: 2 },
       { to: { name: 'barks' }, icon: '💬', key: 'writing.barks', level: 2 },
       { to: { name: 'game' }, icon: '🎮', key: 'writing.game', level: 3 },
+      { to: { name: 'ink' }, icon: '📖', key: 'writing.ink', level: 4 },
       { to: { name: 'drama' }, icon: '🎭', key: 'writing.drama', level: 4 },
     ],
   },

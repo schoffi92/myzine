@@ -33,6 +33,7 @@ const views = {
   game: () => import('./views/GameScriptView.vue'),
   drama: () => import('./views/DramaView.vue'),
   silent: () => import('./views/SilentView.vue'),
+  ink: () => import('./views/InkView.vue'),
   barks: () => import('./views/BarksView.vue'),
   sestina: () => import('./views/SestinaView.vue'),
   sonnet: () => import('./views/SonnetView.vue'),

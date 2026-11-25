@@ -45,6 +45,7 @@ export const PAGES = [
   { path: 'writing/sonnet', name: 'sonnet', meta: { title: 'writing.sonnet.title', description: 'writing.sonnet.card' } },
   { path: 'writing/sestina', name: 'sestina', meta: { title: 'writing.sestina.title', description: 'writing.sestina.card' } },
   { path: 'writing/barks', name: 'barks', meta: { title: 'writing.barks.title', description: 'writing.barks.card' } },
+  { path: 'writing/ink-story', name: 'ink', meta: { title: 'writing.ink.title', description: 'writing.ink.card' } },
   { path: 'writing/game-dialogue', name: 'game', meta: { title: 'writing.game.title', description: 'writing.game.card' } },
   { path: 'writing/shakespeare-scene', name: 'drama', meta: { title: 'writing.drama.title', description: 'writing.drama.card' } },
   { path: 'writing/story-cards/print', name: 'story-print', meta: { title: 'writing.story.printTitle', noindex: true } },

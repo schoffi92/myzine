@@ -32,6 +32,7 @@ const PRACTICE_PAGES = [
   [/^game$/, 'game', 'writing.game.title'],
   [/^drama$/, 'drama', 'writing.drama.title'],
   [/^silent$/, 'silent', 'writing.silent.title'],
+  [/^ink$/, 'ink', 'writing.ink.title'],
   [/^barks$/, 'barks', 'writing.barks.title'],
   [/^sestina$/, 'sestina', 'writing.sestina.title'],
   [/^sonnet$/, 'sonnet', 'writing.sonnet.title'],
