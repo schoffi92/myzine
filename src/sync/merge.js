@@ -31,6 +31,7 @@ const PRACTICE_PAGES = [
   [/^script$/, 'script', 'writing.script.title'],
   [/^game$/, 'game', 'writing.game.title'],
   [/^drama$/, 'drama', 'writing.drama.title'],
+  [/^silent$/, 'silent', 'writing.silent.title'],
 ]
 
 /** Where a saved earlier version can be found: { to, titleKey } or { to, title } for zines. */

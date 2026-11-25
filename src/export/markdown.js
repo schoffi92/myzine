@@ -12,6 +12,7 @@ import { rhymeTopic, stanzasText, activeSchemes } from '../composables/rhyme'
 import { promptText, scriptPlainText, hasScript } from '../composables/script'
 import { promptText as gamePrompt } from '../composables/gameScript'
 import { promptText as dramaPrompt, hasScene, scenePlainText } from '../composables/drama'
+import { promptText as silentPrompt, hasSilent, toBlocks as silentBlocks } from '../composables/silent'
 
 /*
  * Readable Markdown export of the user's zines and writing practices,
@@ -286,6 +287,17 @@ function dramaBody(s) {
   return out.length ? out : null
 }
 
+/** What the camera sees: the silent scene on a screenplay page. */
+function silentBody(s) {
+  if (!hasSilent(s) || !Array.isArray(s.lines)) return null
+  const out = []
+  if (s.title?.trim()) out.push(`**${t('writing.silent.titleLabel')}:** ${inline(s.title)}`)
+  const premise = silentPrompt(s, t)
+  if (premise) out.push(`**${t('writing.silent.promptLabel')}:** ${inline(premise)}`)
+  out.push(fence(scriptPlainText(silentBlocks(s, t('writing.silent.fadeOut')))))
+  return out
+}
+
 /** Draft id → { body, title key } of the practices that can save works. */
 export const NOVEL_PRACTICES = {
   snowflake: { body: snowflakeBody, titleKey: 'writing.snowflake.title' },
@@ -299,6 +311,7 @@ export const NOVEL_PRACTICES = {
   script: { body: scriptBody, titleKey: 'writing.script.title' },
   game: { body: gameBody, titleKey: 'writing.game.title' },
   drama: { body: dramaBody, titleKey: 'writing.drama.title' },
+  silent: { body: silentBody, titleKey: 'writing.silent.title' },
 }
 
 const dateOf = (at) => new Date(at).toLocaleDateString(settings.locale, { year: 'numeric', month: 'long', day: 'numeric' })
@@ -345,6 +358,7 @@ const rhymeSection = (d) => novelSection(d, 'rhyme', `## ${t('writing.rhyme.titl
 const scriptSection = (d) => novelSection(d, 'script', `## ${t('writing.script.title')}`)
 const gameSection = (d) => novelSection(d, 'game', `## ${t('writing.game.title')}`)
 const dramaSection = (d) => novelSection(d, 'drama', `## ${t('writing.drama.title')}`)
+const silentSection = (d) => novelSection(d, 'silent', `## ${t('writing.silent.title')}`)
 function storySection(d) {
   const s = d['story-cards']?.data
   const title = s?.title?.trim() ? `: ${inline(s.title)} (${storyKind(s)})` : ''
@@ -373,7 +387,7 @@ export async function buildMarkdown({ zineIds = [], includeDrafts = true } = {})
 
   if (includeDrafts) {
     const d = Object.fromEntries((await getAllDrafts()).map((r) => [r.id, r]))
-    const practices = [timedSection(d), haikuSection(d), cutupSection(d), rhymeSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d), scriptSection(d), gameSection(d), dramaSection(d)].filter(Boolean)
+    const practices = [timedSection(d), haikuSection(d), cutupSection(d), rhymeSection(d), meterSection(d), snowflakeSection(d), mosaicSection(d), storySection(d), tabooSection(d), situationSection(d), interviewSection(d), silentSection(d), scriptSection(d), gameSection(d), dramaSection(d)].filter(Boolean)
     if (practices.length) parts.push(`# ${tl('writing.title')}\n\n${practices.join('\n\n')}`)
   }
   return parts.join('\n\n') + '\n'

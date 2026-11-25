@@ -33,6 +33,7 @@ const sections = [
   {
     key: 'scripts',
     practices: [
+      { to: { name: 'silent' }, icon: '🎥', key: 'writing.silent', level: 1 },
       { to: { name: 'script' }, icon: '🎬', key: 'writing.script', level: 2 },
       { to: { name: 'game' }, icon: '🎮', key: 'writing.game', level: 3 },
       { to: { name: 'drama' }, icon: '🎭', key: 'writing.drama', level: 4 },

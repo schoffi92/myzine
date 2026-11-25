@@ -40,6 +40,7 @@ export const PAGES = [
   { path: 'writing/taboo', name: 'taboo', meta: { title: 'writing.taboo.title', description: 'writing.taboo.card' } },
   { path: 'writing/character-interview', name: 'interview', meta: { title: 'writing.interview.title', description: 'writing.interview.card' } },
   { path: 'writing/difficult-situation', name: 'situation', meta: { title: 'writing.situation.title', description: 'writing.situation.card' } },
+  { path: 'writing/silent-scene', name: 'silent', meta: { title: 'writing.silent.title', description: 'writing.silent.card' } },
   { path: 'writing/screenplay', name: 'script', meta: { title: 'writing.script.title', description: 'writing.script.card' } },
   { path: 'writing/game-dialogue', name: 'game', meta: { title: 'writing.game.title', description: 'writing.game.card' } },
   { path: 'writing/shakespeare-scene', name: 'drama', meta: { title: 'writing.drama.title', description: 'writing.drama.card' } },

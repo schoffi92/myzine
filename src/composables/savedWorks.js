@@ -3,7 +3,7 @@ import { loadDraftData, saveDraftData } from '../db/drafts'
 
 /*
  * Saved works of a novel practice (Snowflake, Mosaic, Storytelling cards,
- * Taboo, Character interview, Difficult situation, Iamb and trochee, Rhyme schemes, Screenplay, Game dialogue, Shakespearean drama), stored in IndexedDB (drafts store) under `<practice id>-saved` as
+ * Taboo, Character interview, Difficult situation, Iamb and trochee, Rhyme schemes, Screenplay, Game dialogue, Shakespearean drama, What the camera sees), stored in IndexedDB (drafts store) under `<practice id>-saved` as
  * { works: [{ id, title, at, data }] }, newest first. `data` is a snapshot of
  * the practice's draft at the moment of saving.
  */

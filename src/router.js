@@ -32,6 +32,7 @@ const views = {
   script: () => import('./views/ScriptView.vue'),
   game: () => import('./views/GameScriptView.vue'),
   drama: () => import('./views/DramaView.vue'),
+  silent: () => import('./views/SilentView.vue'),
   'story-print': () => import('./views/StoryPrintView.vue'),
   'saved-print': () => import('./views/SavedPrintView.vue'),
   share: () => import('./views/ShareView.vue'),
